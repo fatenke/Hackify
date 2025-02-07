@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Hackathon {
+    private int id_hackathon;
     private int id_organisateur;
     private String nom_hackathon;
     private String description;
@@ -25,6 +26,21 @@ public class Hackathon {
         this.date_fin = date_fin;
         this.lieu=lieu;
         this.conditions_participation=conditions_participation;
+    }
+    public Hackathon(int id_hackathon,int id_organisateur,String nom_hackathon,String description,String theme,LocalDateTime date_debut, LocalDateTime date_fin,String lieu,String conditions_participation) {
+        this.id_hackathon=id_hackathon;
+        this.id_organisateur=id_organisateur;
+        this.nom_hackathon=nom_hackathon;
+        this.description=description;
+        this.theme= theme;
+        this.date_debut = date_debut;
+        this.date_fin = date_fin;
+        this.lieu=lieu;
+        this.conditions_participation=conditions_participation;
+    }
+
+    public int getId_hackathon() {
+        return id_hackathon;
     }
 
     public String getNom_hackathon() {

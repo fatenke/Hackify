@@ -30,6 +30,22 @@ public class Main {
 
         //hackathonService.add(hackathon);
 
+
+        Hackathon hackathon1 = new Hackathon(
+                1,
+                2,
+                "Hack4Impact",
+                "Un hackathon pour l'impact social",
+                "Tech for Good",
+                LocalDateTime.of(2025, 7, 15, 9, 0),
+                LocalDateTime.of(2025, 7, 17, 18, 0),
+                "Sfax",
+                "Ouvert aux étudiants et aux startups"
+        );
+
+
+        hackathonService.update(hackathon1);
+
         List<Hackathon> hackathons = hackathonService.getAll();
 
         if (hackathons.isEmpty()) {
@@ -39,6 +55,10 @@ public class Main {
                 System.out.println(hackathons);
             }
         }
+
+        hackathonService.delete(hackathon1);
+
+
 
 
 
