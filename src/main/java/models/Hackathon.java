@@ -58,4 +58,18 @@ public class Hackathon {
     public String getConditions_participation() {
         return conditions_participation;
     }
+
+    @Override
+    public String toString() {
+        return "Hackathon{" +
+                ", id_organisateur=" + id_organisateur +
+                ", nom_hackathon='" + nom_hackathon + '\'' +
+                ", description='" + description + '\'' +
+                ", date_debut=" + date_debut +
+                ", date_fin=" + date_fin +
+                ", lieu='" + lieu + '\'' +
+                ", theme='" + theme + '\'' +
+                "conditions_participation='" + conditions_participation + '\'' +
+                '}';
+    }
 }

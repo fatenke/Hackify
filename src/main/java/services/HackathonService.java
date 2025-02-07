@@ -6,7 +6,9 @@ import util.MyConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HackathonService implements GlobalInterface<Hackathon> {
@@ -31,11 +33,16 @@ public class HackathonService implements GlobalInterface<Hackathon> {
             statement.setString(6, hackathon.getTheme());
             statement.setString(7, hackathon.getConditions_participation());
             statement.setInt(8, hackathon.getId_organisateur());
+
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Hackathon ajouté avec succès !");
+            } else {
+                System.out.println(" Aucune ligne insérée, vérifie la requête !");
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-
 
     }
 
@@ -46,8 +53,34 @@ public class HackathonService implements GlobalInterface<Hackathon> {
 
     @Override
     public List<Hackathon> getAll() {
-        return List.of();
+        List<Hackathon> hackathons = new ArrayList<>();
+        String req = "SELECT * FROM `hackathon`";
+
+        try (PreparedStatement statement = connection.prepareStatement(req);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                Hackathon hackathon = new Hackathon(
+                        //resultSet.getInt("id"),
+                        resultSet.getInt("id_organisateur"),
+                        resultSet.getString("nom_hackathon"),
+                        resultSet.getString("description"),
+                        resultSet.getString("theme"),
+                        resultSet.getTimestamp("date_debut").toLocalDateTime(),
+                        resultSet.getTimestamp("date_fin").toLocalDateTime(),
+                        resultSet.getString("lieu"),
+                        resultSet.getString("conditions_participation")
+                );
+                hackathons.add(hackathon);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return hackathons;
     }
+
+
 
     @Override
     public void delete(Hackathon hackathon) {
