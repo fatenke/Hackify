@@ -91,4 +91,26 @@ public class ChatService implements GlobalInterface<Chat> {
         }
     }
 
+//chat par defaut (rooms)
+    public void addDefaultChats(int communauteId) {
+        String sql = "INSERT INTO chat (communaute_id, nom, type, date_creation) VALUES (?, ?, ?, ?)";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            for (ChatType type : ChatType.values()) {
+                if (type != ChatType.CUSTOM) { // Ignore CUSTOM type
+                    stmt.setInt(1, communauteId);
+                    stmt.setString(2, type.name()); // Chat name = type
+                    stmt.setString(3, type.name()); // Enum to string
+                    stmt.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
+
+                    stmt.executeUpdate();
+                }
+            }
+            System.out.println("Chats par défaut ajoutés pour la communauté ID: " + communauteId);
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de l'ajout des chats par défaut : " + e.getMessage());
+        }
+    }
+
+
 }
