@@ -1,0 +1,24 @@
+.list-view {
+    -fx-background-color: #e6f2ff;  /* Light blue background */
+    -fx-border-color: #4fa3f7;      /* Blue border color */
+    -fx-border-width: 2px;          /* Border width */
+    -fx-font-size: 14px;             /* Font size */
+    -fx-padding: 10px;               /* Padding */
+    -fx-background-insets: 0;        /* No inset */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 5, 0, 2, 2);  /* Shadow effect */
+}
+
+/* Style for each ListCell (items in ListView) */
+.list-cell {
+    -fx-background-color: #ffffff;  /* White background for each item */
+    -fx-font-size: 14px;             /* Font size */
+    -fx-text-fill: #333333;          /* Dark text color */
+    -fx-padding: 10px;               /* Padding */
+    -fx-background-insets: 0;        /* No inset */
+}
+
+/* Hover effect for list items */
+.list-cell:hover {
+    -fx-background-color: #cce0ff;  /* Light blue on hover */
+    -fx-cursor: hand;                /* Hand cursor on hover */
+}
