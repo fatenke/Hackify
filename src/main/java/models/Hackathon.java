@@ -38,6 +38,16 @@ public class Hackathon {
         this.lieu=lieu;
         this.conditions_participation=conditions_participation;
     }
+    public Hackathon(String nom_hackathon,String description,String theme,LocalDateTime date_debut, LocalDateTime date_fin,String lieu,String conditions_participation) {
+        this.nom_hackathon=nom_hackathon;
+        this.description=description;
+        this.theme= theme;
+        this.date_debut = date_debut;
+        this.date_fin = date_fin;
+        this.lieu=lieu;
+        this.conditions_participation=conditions_participation;
+
+    }
 
     public int getId_hackathon() {
         return id_hackathon;

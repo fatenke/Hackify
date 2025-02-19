@@ -19,11 +19,7 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.33</version>
         </dependency>
-        <dependency>
-            <groupId>org.glavo.hmcl.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>19-ea+10-loongson64</version>
-        </dependency>
+
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
@@ -34,14 +30,6 @@
             <artifactId>javafx-controls</artifactId>
             <version>24-ea+5</version>
         </dependency>
-
-
-        <dependency>
-            <groupId>org.glavo.hmcl.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>19-ea+10-loongson64</version>
-        </dependency>
-
 
     </dependencies>
 
