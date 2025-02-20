@@ -1,12 +1,18 @@
 package gui;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import models.Hackathon;
 import services.HackathonService;
 import javafx.scene.control.Label;
 
+import java.io.IOException;
 import java.util.List;
 
 public class AfficherHachathon {
@@ -17,37 +23,46 @@ public class AfficherHachathon {
     @FXML
     void initialize() {
         List<Hackathon> hackathons = hackathonService.getAll();
-        /*gp_hackathon.add(new Label("Nom"), 0, 0);
-        gp_hackathon.add(new Label("Description"), 1, 0);
-
-        int row = 1; // Commence à la ligne 1 (ligne 0 est pour les en-têtes)
-
-        for (Hackathon h : hackathons) {
-            gp_hackathon.add(new Label(h.getNom_hackathon()), 0, row); // Colonne 0 : Nom du hackathon
-            gp_hackathon.add(new Label(h.getDescription()), 1, row); // Colonne 1 : Description
-            row++;
-        }*/
-        int columns = 3; // Nombre de colonnes dans la grille
+        int columns = 2;
         int row = 0, col = 0;
 
         for (Hackathon h : hackathons) {
-            Label hackathonLabel = new Label(h.getNom_hackathon() + "\n" + h.getDescription());
-            hackathonLabel.setStyle("-fx-border-color: black; -fx-padding: 10px; -fx-alignment: center;");
 
-            gp_hackathon.add(hackathonLabel, col, row); // Ajouter dans la grille
+            VBox hackathonBox = new VBox();
+            hackathonBox.setStyle("-fx-border-color: black; -fx-padding: 10px; -fx-spacing: 5px; -fx-alignment: center;");
 
-            col++; // Passer à la colonne suivante
-            if (col == columns) { // Si on atteint la 3ème colonne, passer à la ligne suivante
+            Label hackathonLabel = new Label(h.toString());
+            Button updateButton = new Button("Update");
+
+            updateButton.setOnAction(event -> ouvrirUpdateHackathon(h));
+
+            hackathonBox.getChildren().addAll(hackathonLabel, updateButton);
+            gp_hackathon.add(hackathonBox, col, row);
+
+            col++;
+            if (col == columns) {
                 col = 0;
                 row++;
             }
         }
+
     }
+    private void ouvrirUpdateHackathon (Hackathon hackathon){
+        System.out.println("ID du hackathon à mettre à jour: " + hackathon.getId_hackathon());
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/UpdateHackathon.fxml"));
+            Parent root = loader.load();
 
+            UpdateHackathon hackathonToUpdate = loader.getController();
+            hackathonToUpdate.setHackathon(hackathon);
 
-    @FXML
-    void DetailsHackathon(ActionEvent event) {
-
+            Stage stage = new Stage();
+            stage.setTitle("Update Hackathon");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

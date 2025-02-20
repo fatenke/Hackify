@@ -85,17 +85,47 @@ public class Hackathon {
         return conditions_participation;
     }
 
+    public void setNom_hackathon(String nom_hackathon) {
+        this.nom_hackathon = nom_hackathon;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setConditions_participation(String conditions_participation) {
+        this.conditions_participation = conditions_participation;
+    }
+
+    public void setLieu(String lieu) {
+        this.lieu = lieu;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
+
+    public void setDate_debut(LocalDateTime date_debut) {
+        this.date_debut = date_debut;
+    }
+
+    public void setDate_fin(LocalDateTime date_fin) {
+        this.date_fin = date_fin;
+    }
+
     @Override
     public String toString() {
         return "Hackathon{" +
-                ", id_organisateur=" + id_organisateur +
-                ", nom_hackathon='" + nom_hackathon + '\'' +
-                ", description='" + description + '\'' +
-                ", date_debut=" + date_debut +
-                ", date_fin=" + date_fin +
-                ", lieu='" + lieu + '\'' +
-                ", theme='" + theme + '\'' +
-                "conditions_participation='" + conditions_participation + '\'' +
+                "\nid_organisateur=" + id_organisateur +
+                "\nnom_hackathon='" + nom_hackathon +
+                "\ndescription='" + description +
+                "\ndate_debut=" + date_debut +
+                "\ndate_fin=" + date_fin +
+                "\nlieu='" + lieu +
+                "\ntheme='" + theme +
+                "\nconditions_participation='" + conditions_participation +
                 '}';
     }
+
+
 }

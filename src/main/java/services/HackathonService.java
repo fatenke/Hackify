@@ -65,7 +65,7 @@ public class HackathonService implements GlobalInterface<Hackathon> {
             if (rowsAffected > 0) {
                 System.out.println("Hackathon mis à jour avec succès !");
             } else {
-                System.out.println("Aucun hackathon mis à jour, vérifie l'ID !");
+                System.out.println("Aucun hackathon mis à jour!");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -83,7 +83,7 @@ public class HackathonService implements GlobalInterface<Hackathon> {
 
             while (resultSet.next()) {
                 Hackathon hackathon = new Hackathon(
-                        //resultSet.getInt("id"),
+                        resultSet.getInt("id_hackathon"),
                         resultSet.getInt("id_organisateur"),
                         resultSet.getString("nom_hackathon"),
                         resultSet.getString("description"),
