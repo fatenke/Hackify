@@ -4,11 +4,14 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class TestFX extends Application {
+    private TabPane tabPane;
 
     public static void main(String[] args) {
         launch(args);
@@ -17,29 +20,68 @@ public class TestFX extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            // Load and display the first window (AjouterEvaluation.fxml)
-            FXMLLoader loader1 = new FXMLLoader(getClass().getResource("/AjouterEvaluation.fxml"));
-            Parent root1 = loader1.load();
-            Scene scene1 = new Scene(root1);
-            scene1.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
+            // Create TabPane
+            tabPane = new TabPane();
 
-            primaryStage.setScene(scene1);
-            primaryStage.setTitle("Ajouter Evaluation");
+            // Load initial content for tabs
+            loadTabs();
+
+            // Create Scene
+            Scene scene = new Scene(tabPane, 650, 600);
+            scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
+
+            primaryStage.setTitle("Evaluation Management");
+            primaryStage.setScene(scene);
             primaryStage.show();
 
-            // Load and display the second window (AjouterVote.fxml)
-            FXMLLoader loader2 = new FXMLLoader(getClass().getResource("/AjouterVote.fxml"));
-            Parent root2 = loader2.load();
-            Scene scene2 = new Scene(root2);
-            scene2.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error loading FXML files.");
+        }
+    }
 
-            Stage secondStage = new Stage();
-            secondStage.setScene(scene2);
-            secondStage.setTitle("Ajouter Vote");
-            secondStage.show();
+    private void loadTabs() {
+        try {
+            // Load only the content inside each tab, only once
+            Parent ajouterEvaluation = FXMLLoader.load(Thread.currentThread().getContextClassLoader().getResource("AjouterEvaluation.fxml"));
+            Parent afficherEvaluation = FXMLLoader.load(Thread.currentThread().getContextClassLoader().getResource("AfficherEvaluation.fxml"));
+            Parent ajouterVote = FXMLLoader.load(Thread.currentThread().getContextClassLoader().getResource("AjouterVote.fxml"));
+            Parent afficherVote = FXMLLoader.load(Thread.currentThread().getContextClassLoader().getResource("AfficherVote.fxml"));
 
+            // Create Tabs (They remain permanent)
+            Tab tab1 = new Tab("Ajouter Evaluation", ajouterEvaluation);
+            Tab tab2 = new Tab("Afficher Evaluation", afficherEvaluation);
+            Tab tab3 = new Tab("Ajouter Vote", ajouterVote);
+            Tab tab4 = new Tab("Afficher Vote", afficherVote);
+
+            // Make tabs permanent (don't let them close)
+            tab1.setClosable(false);
+            tab2.setClosable(false);
+            tab3.setClosable(false);
+            tab4.setClosable(false);
+
+            // Add tabs only once
+            tabPane.getTabs().setAll(tab1, tab2, tab3, tab4);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+        }
+    }
+
+    // Call this method when updating data, instead of reloading everything
+    public void updateContent() {
+        try {
+            // Update only the content in the existing tabs, not the whole tab set
+            Parent newAjouterEvaluation = FXMLLoader.load(Thread.currentThread().getContextClassLoader().getResource("AjouterEvaluation.fxml"));
+            Parent newAfficherEvaluation = FXMLLoader.load(Thread.currentThread().getContextClassLoader().getResource("AfficherEvaluation.fxml"));
+            Parent newAjouterVote = FXMLLoader.load(Thread.currentThread().getContextClassLoader().getResource("AjouterVote.fxml"));
+            Parent newAfficherVote = FXMLLoader.load(Thread.currentThread().getContextClassLoader().getResource("AfficherVote.fxml"));
+
+            tabPane.getTabs().get(0).setContent(newAjouterEvaluation);
+            tabPane.getTabs().get(1).setContent(newAfficherEvaluation);
+            tabPane.getTabs().get(2).setContent(newAjouterVote);
+            tabPane.getTabs().get(3).setContent(newAfficherVote);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

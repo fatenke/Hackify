@@ -1,28 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <AnchorPane prefHeight="539.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AjouterVote" style="-fx-background-color: #800080;">
     <children>
+        <ImageView fx:id="imageView" layoutX="480.0" layoutY="10.0" fitWidth="100.0" fitHeight="100.0">
+            <image>
+                <Image url="@ss.png" />
+            </image>
+        </ImageView>
         <TextField fx:id="TFIdVotant" layoutX="76.0" layoutY="92.0" promptText="IdVotant" style="-fx-font-size: 14px; -fx-background-color: #FFFFFF;"/>
-        <TextField fx:id="TFIdProjet" layoutX="76.0" layoutY="164.0" promptText="IdProjet" style="-fx-font-size: 14px; -fx-background-color: #FFFFFF;"/>
-        <TextField fx:id="TFIdHackathon" layoutX="76.0" layoutY="233.0" promptText="IdHackathon" style="-fx-font-size: 14px; -fx-background-color: #FFFFFF;"/>
-        <TextField fx:id="TFIdEvaluation" layoutX="76.0" layoutY="306.0" promptText="IdEvaluation" style="-fx-font-size: 14px; -fx-background-color: #FFFFFF;"/>
+        <ComboBox fx:id="CBIdHackathon" layoutX="76.0" layoutY="164.0" promptText="Sélectionnez un Hackathon" style="-fx-font-size: 14px;"/>
+        <ComboBox fx:id="CBIdProjet" layoutX="76.0" layoutY="233.0" promptText="Sélectionnez un Projet" style="-fx-font-size: 14px;"/>
+        <ComboBox fx:id="CBIdEvaluation" layoutX="76.0" layoutY="302.0" promptText="Sélectionnez une évaluation" style="-fx-font-size: 14px;"/>
         <TextField fx:id="TFValeurVote" layoutX="76.0" layoutY="369.0" promptText="ValeurVote" style="-fx-font-size: 14px; -fx-background-color: #FFFFFF;"/>
 
         <Label layoutX="76.0" layoutY="67.0" text="idVotant" style="-fx-font-size: 14px; -fx-text-fill: #FFFFFF;"/>
-        <Label layoutX="76.0" layoutY="139.0" text="idProjet" style="-fx-font-size: 14px; -fx-text-fill: #FFFFFF;"/>
-        <Label layoutX="76.0" layoutY="209.0" text="idHackathon" style="-fx-font-size: 14px; -fx-text-fill: #FFFFFF;"/>
+        <Label layoutX="76.0" layoutY="139.0" text="idHackathon" style="-fx-font-size: 14px; -fx-text-fill: #FFFFFF;"/>
+        <Label layoutX="76.0" layoutY="209.0" text="idProjet" style="-fx-font-size: 14px; -fx-text-fill: #FFFFFF;"/>
         <Label layoutX="77.0" layoutY="281.0" text="idEvaluation" style="-fx-font-size: 14px; -fx-text-fill: #FFFFFF;"/>
         <Label layoutX="76.0" layoutY="343.0" text="valeurVote" style="-fx-font-size: 14px; -fx-text-fill: #FFFFFF;"/>
         <Label layoutX="79.0" layoutY="403.0" text="Date" style="-fx-font-size: 14px; -fx-text-fill: #FFFFFF;"/>
 
         <Button layoutX="415.0" layoutY="472.0" mnemonicParsing="false" onAction="#ajouter" text="Ajouter" style="-fx-background-color: #4fa3f7; -fx-text-fill: #FFFFFF;"/>
         <Button layoutX="487.0" layoutY="472.0" mnemonicParsing="false" onAction="#afficher" text="Afficher" style="-fx-background-color: #4fa3f7; -fx-text-fill: #FFFFFF;"/>
+        <Button fx:id="btnGoToAjouterEvaluation" layoutX="560.0" layoutY="472.0" mnemonicParsing="false" onAction="#goToAjouterEvaluation" style="-fx-background-color: #4fa3f7; -fx-text-fill: #FFFFFF;" text="Page Evaluation" />
         <DatePicker fx:id="TFDate" layoutX="79.0" layoutY="421.0" style="-fx-font-size: 14px;"/>
     </children>
 </AnchorPane>

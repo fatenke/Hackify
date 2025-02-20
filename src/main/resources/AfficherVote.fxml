@@ -5,8 +5,15 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.HBox?>
 
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <AnchorPane prefHeight="400.0" prefWidth="625.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AfficherVote" style="-fx-background-color: #800080;">
     <children>
+        <ImageView fx:id="imageView" layoutX="480.0" layoutY="10.0" fitWidth="100.0" fitHeight="100.0">
+            <image>
+                <Image url="@ss.png" />
+            </image>
+        </ImageView>
         <!-- ListView with blue stylish design -->
         <ListView fx:id="listView" layoutX="14.0" layoutY="51.0" prefHeight="298.0" prefWidth="602.0"
                   style="-fx-background-color: #e6f2ff; -fx-border-color: #4fa3f7; -fx-border-width: 2px;

@@ -71,8 +71,7 @@ public class Vote {
 
     @Override
     public String toString() {
-        return "Vote{" +
-                "id=" + id +
+        return "id=" + id +
                 ", idEvaluation=" + idEvaluation +
                 ", idVotant=" + idVotant +
                 ", idProjet=" + idProjet +

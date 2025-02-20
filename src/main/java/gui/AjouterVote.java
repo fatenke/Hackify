@@ -1,70 +1,109 @@
 package gui;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
 import models.Vote;
 import services.VoteService;
+import services.EvaluationService;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 
 public class AjouterVote {
     private final VoteService voteService = new VoteService();
+    private final EvaluationService evaluationService = new EvaluationService();
 
     @FXML
     private TextField TFIdVotant;
 
     @FXML
-    private TextField TFIdProjet;
+    private ComboBox<Integer> CBIdHackathon; // Changed from TextField to ComboBox
 
     @FXML
-    private TextField TFIdHackathon;
+    private ComboBox<Integer> CBIdProjet; // Changed from TextField to ComboBox
 
     @FXML
-    private TextField TFIdEvaluation;
+    private ComboBox<Integer> CBIdEvaluation;
 
     @FXML
     private TextField TFValeurVote;
 
     @FXML
     private DatePicker TFDate;
+    @FXML
+    private Button btnGoToAjouterEvaluation;
 
     @FXML
+    public void initialize() {
+        loadHackathons();
+        loadEvaluations();
+        CBIdHackathon.setOnAction(event -> loadProjectsForHackathon());
+        TFDate.setValue(LocalDate.now());
+    }
+
+    private void loadEvaluations() {
+        try {
+            List<Integer> evaluationIds = evaluationService.getEvaluationIds();
+            CBIdEvaluation.setItems(FXCollections.observableArrayList(evaluationIds));
+        } catch (SQLException e) {
+            afficherAlerte("Erreur", "Impossible de charger les évaluations.");
+        }
+    }
+    private void loadHackathons() {
+        try {
+            List<Integer> hackathonIds = evaluationService.getHackathonIds();
+            CBIdHackathon.setItems(FXCollections.observableArrayList(hackathonIds));
+        } catch (SQLException e) {
+            afficherAlerte("Erreur", "Impossible de charger les hackathons.");
+        }
+    }
+
+    private void loadProjectsForHackathon() {
+        Integer selectedHackathon = CBIdHackathon.getValue();
+        if (selectedHackathon != null) {
+            try {
+                List<Integer> projectIds = evaluationService.getProjectsByHackathonId(selectedHackathon);
+                CBIdProjet.setItems(FXCollections.observableArrayList(projectIds));
+            } catch (SQLException e) {
+                afficherAlerte("Erreur", "Impossible de charger les projets pour ce hackathon.");
+            }
+        }
+    }
+    @FXML
     void ajouter(ActionEvent event) {
-        // Vérification des champs vides
-        if (TFIdVotant.getText().isEmpty() || TFIdProjet.getText().isEmpty() || TFIdHackathon.getText().isEmpty() ||
-                TFIdEvaluation.getText().isEmpty() || TFValeurVote.getText().isEmpty() || TFDate.getValue() == null) {
+        if (TFIdVotant.getText().isEmpty() || CBIdProjet.getValue() == null || CBIdHackathon.getValue() == null ||
+                CBIdEvaluation.getValue() == null || TFValeurVote.getText().isEmpty() || TFDate.getValue() == null) {
             afficherAlerte("Erreur de saisie", "Tous les champs doivent être remplis !");
             return;
         }
 
         try {
             int idVotant = Integer.parseInt(TFIdVotant.getText());
-            int idProjet = Integer.parseInt(TFIdProjet.getText());
-            int idHackathon = Integer.parseInt(TFIdHackathon.getText());
-            int idEvaluation = Integer.parseInt(TFIdEvaluation.getText());
+            int idProjet = CBIdProjet.getValue();
+            int idHackathon = CBIdHackathon.getValue();
+            int idEvaluation = CBIdEvaluation.getValue(); // Get value from ComboBox
             float valeurVote = Float.parseFloat(TFValeurVote.getText());
             LocalDate date = TFDate.getValue();
 
-            // Vérification des valeurs positives
             if (idVotant <= 0 || idProjet <= 0 || idHackathon <= 0 || idEvaluation <= 0) {
                 afficherAlerte("Erreur", "Les identifiants doivent être des nombres positifs.");
                 return;
             }
 
-            // Vérification de la plage des votes (0-10)
             if (valeurVote < 0 || valeurVote > 10) {
                 afficherAlerte("Erreur", "La valeur du vote doit être comprise entre 0 et 10.");
                 return;
             }
 
-            // Création de l'objet Vote et ajout dans la base
             Vote p = new Vote(valeurVote, date.toString(), idEvaluation, idVotant, idProjet, idHackathon);
             voteService.add(p);
 
@@ -86,9 +125,6 @@ public class AjouterVote {
         }
     }
 
-    /**
-     * Affiche une alerte avec un message personnalisé.
-     */
     private void afficherAlerte(String titre, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(titre);
@@ -97,15 +133,33 @@ public class AjouterVote {
         alert.showAndWait();
     }
 
-    /**
-     * Vide tous les champs après l'ajout.
-     */
     private void viderChamps() {
         TFIdVotant.clear();
-        TFIdProjet.clear();
-        TFIdHackathon.clear();
-        TFIdEvaluation.clear();
+        CBIdProjet.getSelectionModel().clearSelection();
+        CBIdHackathon.getSelectionModel().clearSelection();
+        CBIdEvaluation.getSelectionModel().clearSelection();
         TFValeurVote.clear();
         TFDate.setValue(null);
     }
+
+    public void goToAjouterEvaluation(ActionEvent actionEvent) {
+        try {
+            // Load the AjouterEvaluation.fxml
+            Parent root = FXMLLoader.load(getClass().getResource("/AjouterEvaluation.fxml"));
+
+            // Create a new stage for the AjouterEvaluation scene
+            Stage stage = new Stage();
+            stage.setTitle("Ajouter Evaluation");
+            stage.setScene(new Scene(root, 600, 539));
+            stage.show();
+
+            // Optionally close the current window (if desired)
+            Stage currentStage = (Stage) btnGoToAjouterEvaluation.getScene().getWindow();
+            currentStage.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error loading AjouterEvaluation.fxml.");
+        }
+    }
+
 }

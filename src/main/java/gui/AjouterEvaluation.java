@@ -4,27 +4,32 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
 import models.Evaluation;
 import services.EvaluationService;
+import tn.esprit.TestFX;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 
 public class AjouterEvaluation {
     private final EvaluationService evaluationService = new EvaluationService();
 
     @FXML
+    private Button btnGoToAjouterVote;
+
+    @FXML
     private TextField TFIdJury;
 
     @FXML
-    private TextField TFIdProjet;
+    private ComboBox<Integer> CBIdProjet;
 
     @FXML
-    private TextField TFIdHackathon;
+    private ComboBox<Integer> CBIdHackathon;
 
     @FXML
     private TextField TFNoteTech;
@@ -36,9 +41,37 @@ public class AjouterEvaluation {
     private DatePicker TFDate;
 
     @FXML
+    public void initialize() {
+        loadHackathons();
+        CBIdHackathon.setOnAction(event -> loadProjectsForSelectedHackathon());
+        TFDate.setValue(LocalDate.now());
+    }
+
+    private void loadHackathons() {
+        try {
+            List<Integer> hackathonIds = evaluationService.getHackathonIds();
+            CBIdHackathon.getItems().addAll(hackathonIds);
+        } catch (SQLException e) {
+            afficherAlerte("Erreur", "Impossible de charger les hackathons.");
+        }
+    }
+
+    private void loadProjectsForSelectedHackathon() {
+        CBIdProjet.getItems().clear();
+        Integer selectedHackathon = CBIdHackathon.getValue();
+        if (selectedHackathon != null) {
+            try {
+                List<Integer> projectIds = evaluationService.getProjectsByHackathonId(selectedHackathon);
+                CBIdProjet.getItems().addAll(projectIds);
+            } catch (SQLException e) {
+                afficherAlerte("Erreur", "Impossible de charger les projets pour ce hackathon.");
+            }
+        }
+    }
+
+    @FXML
     void ajouter(ActionEvent event) {
-        // Vérifier si les champs sont vides
-        if (TFIdJury.getText().isEmpty() || TFIdProjet.getText().isEmpty() || TFIdHackathon.getText().isEmpty() ||
+        if (TFIdJury.getText().isEmpty() || CBIdProjet.getValue() == null || CBIdHackathon.getValue() == null ||
                 TFNoteTech.getText().isEmpty() || TFNoteInnov.getText().isEmpty() || TFDate.getValue() == null) {
             afficherAlerte("Erreur de saisie", "Tous les champs doivent être remplis !");
             return;
@@ -46,13 +79,12 @@ public class AjouterEvaluation {
 
         try {
             int idJury = Integer.parseInt(TFIdJury.getText());
-            int idProjet = Integer.parseInt(TFIdProjet.getText());
-            int idHackathon = Integer.parseInt(TFIdHackathon.getText());
+            int idProjet = CBIdProjet.getValue();
+            int idHackathon = CBIdHackathon.getValue();
             float noteTech = Float.parseFloat(TFNoteTech.getText());
             float noteInnov = Float.parseFloat(TFNoteInnov.getText());
             LocalDate date = TFDate.getValue();
 
-            // Vérifier les valeurs des nombres
             if (idJury <= 0 || idProjet <= 0 || idHackathon <= 0) {
                 afficherAlerte("Erreur", "Les identifiants doivent être des nombres positifs.");
                 return;
@@ -63,7 +95,6 @@ public class AjouterEvaluation {
                 return;
             }
 
-            // Création de l'évaluation et ajout à la base de données
             Evaluation p = new Evaluation(noteTech, noteInnov, date.toString(), idJury, idProjet, idHackathon);
             evaluationService.add(p);
 
@@ -85,9 +116,6 @@ public class AjouterEvaluation {
         }
     }
 
-    /**
-     * Affiche une alerte avec un message personnalisé.
-     */
     private void afficherAlerte(String titre, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(titre);
@@ -96,15 +124,34 @@ public class AjouterEvaluation {
         alert.showAndWait();
     }
 
-    /**
-     * Vide tous les champs après l'ajout.
-     */
     private void viderChamps() {
         TFIdJury.clear();
-        TFIdProjet.clear();
-        TFIdHackathon.clear();
+        CBIdProjet.setValue(null);
+        CBIdProjet.getItems().clear();
+        CBIdHackathon.setValue(null);
         TFNoteTech.clear();
         TFNoteInnov.clear();
         TFDate.setValue(null);
+    }
+
+    public void goToAjouterVote(ActionEvent actionEvent) {
+        try {
+            // Load the AjouterVote.fxml
+            Parent root = FXMLLoader.load(getClass().getResource("/AjouterVote.fxml"));
+
+            // Create a new stage for the AjouterVote scene
+            Stage stage = new Stage();
+            stage.setTitle("Ajouter Vote");
+            stage.setScene(new Scene(root, 600, 539));
+            stage.show();
+
+            // Close the current window if necessary (optional)
+            Stage currentStage = (Stage) btnGoToAjouterVote.getScene().getWindow();
+            currentStage.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error loading AjouterVote.fxml.");
+        }
+
     }
 }
