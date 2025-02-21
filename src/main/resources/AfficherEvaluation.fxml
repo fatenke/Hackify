@@ -16,6 +16,8 @@
         <!-- ListView with blue stylish design -->
         <ListView fx:id="listView" layoutX="11.0" layoutY="100.0" prefHeight="298.0" prefWidth="602.0" style="-fx-background-color: #e6f2ff; -fx-border-color: #4fa3f7; -fx-border-width: 2px;                          -fx-font-size: 14px; -fx-padding: 10px; -fx-background-insets: 0; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 5, 0, 2, 2);" />
 
+        <Button fx:id="generatePdfButton" layoutX="380.0" layoutY="408.0" onAction="#generatePdf" style="-fx-background-color: #4fa3f7; -fx-text-fill: #FFFFFF; -fx-font-size: 14px;" text="Generate PDF" />
+
         <!-- Back button with added style -->
         <Button layoutX="506.0" layoutY="408.0" onAction="#backToAjouterEvaluation" style="-fx-background-color: #4fa3f7; -fx-text-fill: #FFFFFF; -fx-font-size: 14px;" text="Back" />
     </children>

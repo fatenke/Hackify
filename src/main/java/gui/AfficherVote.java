@@ -15,6 +15,10 @@ import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import models.Vote;
 import services.VoteService;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -108,6 +112,89 @@ public class AfficherVote {
             stage.show();  // Show the stage
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    @FXML
+    public void generateVotePdf(ActionEvent event) {
+        try {
+            // Create a new PDF document
+            PDDocument document = new PDDocument();
+
+            // Create the first page
+            PDPage page = new PDPage();
+            document.addPage(page);
+
+            // Prepare the content stream
+            PDPageContentStream contentStream = new PDPageContentStream(document, page);
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA, 12);  // Use Helvetica font
+            contentStream.setLeading(14.5f);
+            contentStream.newLineAtOffset(25, 750); // Start position
+
+            // Write the title
+            contentStream.showText("Votes Report");
+            contentStream.newLine();
+
+            // Set the initial Y position
+            float yPosition = 730;
+
+            // Iterate through the votes and add them to the PDF
+            for (Vote vote : listView.getItems()) {
+                // Check if the Y position is about to go off the page
+                if (yPosition < 50) {
+                    // Create a new page and reset Y position
+                    page = new PDPage();
+                    document.addPage(page);
+                    contentStream.close();
+                    contentStream = new PDPageContentStream(document, page);
+                    contentStream.beginText();
+                    contentStream.setFont(PDType1Font.HELVETICA, 12);  // Use Helvetica font
+                    contentStream.setLeading(14.5f);
+                    contentStream.newLineAtOffset(25, 750);
+                    yPosition = 730;  // Reset Y position for the new page
+                }
+
+                // Write vote details
+                contentStream.showText("Vote ID: " + vote.getId());
+                contentStream.newLine();
+                contentStream.showText("Evaluation ID: " + vote.getIdEvaluation());
+                contentStream.newLine();
+                contentStream.showText("Voter ID: " + vote.getIdVotant());
+                contentStream.newLine();
+                contentStream.showText("Project ID: " + vote.getIdProjet());
+                contentStream.newLine();
+                contentStream.showText("Hackathon ID: " + vote.getIdHackathon());
+                contentStream.newLine();
+                contentStream.showText("Vote Value: " + vote.getValeurVote());
+                contentStream.newLine();
+                contentStream.showText("Date: " + vote.getDate());
+                contentStream.newLine();
+                contentStream.newLine();
+
+                // Adjust the Y position after writing content
+                yPosition -= 90;  // Decrease the Y position to avoid overlapping
+            }
+
+            // End the content stream correctly
+            contentStream.endText();
+            contentStream.close();
+
+            // Save the document to a file
+            document.save("votes_report.pdf");
+            document.close();
+
+            // Inform the user that the PDF was generated
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Success");
+            alert.setContentText("PDF generated successfully!");
+            alert.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("An error occurred while generating the PDF.");
+            alert.showAndWait();
         }
     }
 }

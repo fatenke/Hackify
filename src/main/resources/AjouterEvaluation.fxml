@@ -5,13 +5,13 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-<AnchorPane prefHeight="539.0" prefWidth="600.0" style="-fx-background-color: #800080;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AjouterEvaluation">
+<AnchorPane prefHeight="545.0" prefWidth="679.0" style="-fx-background-color: #800080;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AjouterEvaluation">
    <children>
-      <ImageView fx:id="imageView" layoutX="480.0" layoutY="10.0" fitWidth="100.0" fitHeight="100.0">
+      <ImageView fx:id="imageView" fitHeight="100.0" fitWidth="100.0" layoutX="480.0" layoutY="10.0">
          <image>
             <Image url="@ss.png" />
          </image>
