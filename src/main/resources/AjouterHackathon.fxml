@@ -15,9 +15,9 @@
    <children>
       <AnchorPane layoutX="36.0" layoutY="21.0" prefHeight="486.0" prefWidth="776.0" style="-fx-background-color: #8c3c7f; -fx-background-radius: 15px;">
          <children>
-            <ImageView fitHeight="129.0" fitWidth="112.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="129.0" fitWidth="112.0" layoutX="8.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../../../../Downloads/475014563_642936295060496_5825400924354296074_n-removebg-preview.png" />
+                  <Image url="@Image/logo.png" />
                </image>
             </ImageView>
             <HBox layoutX="105.0" layoutY="80.0" prefHeight="43.0" prefWidth="266.0" style="-fx-background-color: #1e0425; -fx-spacing: 10; -fx-background-radius: 10px; -fx-alignment: center;">

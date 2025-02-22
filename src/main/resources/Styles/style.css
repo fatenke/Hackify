@@ -1,0 +1,36 @@
+.root {
+    -fx-background-color: #1e0425;
+}
+
+.title-label {
+    -fx-font-size: 24px;
+    -fx-text-fill: #e26e6c;
+    -fx-font-weight: bold;
+}
+
+.hackathon-card {
+    -fx-padding: 15px;
+    -fx-background-color: #1b3347;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, #82e9f1, 10, 0.5, 0, 0);
+}
+
+.hackathon-title {
+    -fx-font-size: 18px;
+    -fx-text-fill:  white;
+    -fx-font-weight: bold;
+}
+
+.hackathon-date, .hackathon-lieu {
+    -fx-font-size: 14px;
+    -fx-text-fill: white;
+}
+
+.btn-participer {
+    -fx-background-color: #82e9f1;
+    -fx-text-fill: #1e0425;
+    -fx-font-weight: bold;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}

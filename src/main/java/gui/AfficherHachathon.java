@@ -2,21 +2,26 @@ package gui;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import models.Hackathon;
+import models.Participation;
 import services.HackathonService;
-import javafx.scene.control.Label;
+import services.ParticipationService;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public class AfficherHachathon {
     private final HackathonService hackathonService= new HackathonService();
+    private final ParticipationService participationService= new ParticipationService();
 
     @FXML
     private GridPane gp_hackathon;
@@ -25,18 +30,34 @@ public class AfficherHachathon {
         List<Hackathon> hackathons = hackathonService.getAll();
         int columns = 2;
         int row = 0, col = 0;
-
         for (Hackathon h : hackathons) {
-
             VBox hackathonBox = new VBox();
-            hackathonBox.setStyle("-fx-border-color: black; -fx-padding: 10px; -fx-spacing: 5px; -fx-alignment: center;");
+            hackathonBox.getStyleClass().add("hackathon-card");
 
-            Label hackathonLabel = new Label(h.toString());
+            Label nom = new Label(h.getNom_hackathon());
+            nom.getStyleClass().add("hackathon-title");
+
+            Label date = new Label("📅 " + h.getDate_debut().toString());
+            date.getStyleClass().add("hackathon-date");
+
+            Label lieu = new Label("📍 " + h.getLieu());
+            lieu.getStyleClass().add("hackathon-lieu");
+            HBox hbox=new HBox();
             Button updateButton = new Button("Update");
+            Button deleteButton = new Button("Delete");
+            hbox.getChildren().addAll(updateButton,deleteButton);
+            deleteButton.getStyleClass().add("btn-participer");
+            updateButton.getStyleClass().add("btn-participer");
+            Button participateButton = new Button("Participate");
+            participateButton.getStyleClass().add("btn-participer");
+
 
             updateButton.setOnAction(event -> ouvrirUpdateHackathon(h));
+            participateButton.setOnAction(event -> participerHackathon(h));
+            deleteButton.setOnAction(event -> supprimerHackathon(h));
 
-            hackathonBox.getChildren().addAll(hackathonLabel, updateButton);
+
+            hackathonBox.getChildren().addAll(nom,date,lieu,hbox,participateButton);
             gp_hackathon.add(hackathonBox, col, row);
 
             col++;
@@ -63,6 +84,36 @@ public class AfficherHachathon {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void participerHackathon(Hackathon hackathon) {
+        Participation p= new Participation(hackathon.getId_hackathon());
+        participationService.add(p);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Participation");
+        alert.setHeaderText(null);
+        alert.setContentText("Vous avez participé à : " + hackathon.getNom_hackathon() + " Bonne chance!");
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.setStyle("-fx-background-color: linear-gradient(to right, #1E90FF, #9370DB, #FF69B4); " +
+                "-fx-text-fill: white; " +
+                "-fx-font-size: 14px; " +
+                "-fx-font-family: 'Arial';");
+        alert.showAndWait();
+
+    }
+    public void supprimerHackathon(Hackathon hackathon){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation de Suppression");
+        alert.setHeaderText(null);
+        alert.setContentText("Voulez-vous vraiment supprimer le hackathon : " + hackathon.getNom_hackathon() + " ?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            hackathonService.delete(hackathon);
+            System.out.println("Hackathon supprimé");
+        } else {
+            System.out.println("Suppression annulée");
+        }
+
     }
 
 }

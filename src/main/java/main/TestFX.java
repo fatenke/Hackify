@@ -18,6 +18,7 @@ public class TestFX extends Application {
 
     @Override
     public void start(Stage primaryStage)  {
+        /*FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterHackathon.fxml"));*/
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherHachathon.fxml"));
         try {
             Parent root = loader.load();

@@ -23,10 +23,9 @@ public class Participation {
         this.dateInscription = LocalDateTime.now();
         this.statut = statut;
     }
-    public Participation(int idParticipation, String statut) {
-        this.idParticipation=idParticipation;
+    public Participation(int idHackathon) {
+        this.id_hackathon=idHackathon;
 
-        this.statut = statut;
     }
 
     public int getIdParticipation() {
