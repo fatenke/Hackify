@@ -46,24 +46,24 @@ public class TestFX extends Application {
             Parent afficherEvaluation = FXMLLoader.load(getClass().getResource("/AfficherEvaluation.fxml"));
             Parent ajouterVote = FXMLLoader.load(getClass().getResource("/AjouterVote.fxml"));
             Parent afficherVote = FXMLLoader.load(getClass().getResource("/AfficherVote.fxml"));
-
+            Parent complexEvaluationAnalysis = FXMLLoader.load(getClass().getResource("/ComplexEvaluationAnalysis.fxml"));
 
             // Create Tabs
             Tab tab1 = new Tab("Ajouter Evaluation", ajouterEvaluation);
             Tab tab2 = new Tab("Afficher Evaluation", afficherEvaluation);
             Tab tab3 = new Tab("Ajouter Vote", ajouterVote);
             Tab tab4 = new Tab("Afficher Vote", afficherVote);
-
+            Tab tab5 = new Tab("Complex Evaluation Analysis", complexEvaluationAnalysis);
 
             // Make tabs permanent
             tab1.setClosable(false);
             tab2.setClosable(false);
             tab3.setClosable(false);
             tab4.setClosable(false);
-
+            tab5.setClosable(false);
 
             // Add all tabs
-            tabPane.getTabs().setAll(tab1, tab2, tab3, tab4);
+            tabPane.getTabs().setAll(tab1, tab2, tab3, tab4, tab5);
         } catch (IOException e) {
             e.printStackTrace();
         }

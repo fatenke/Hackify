@@ -5,6 +5,8 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="478.0" prefWidth="625.0" style="-fx-background-color: #800080;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AfficherVote">
     <children>
@@ -20,5 +22,10 @@
         <Button fx:id="generatePdfButton" layoutX="380.0" layoutY="408.0" onAction="#generateVotePdf" style="-fx-background-color: #4fa3f7; -fx-text-fill: #FFFFFF; -fx-font-size: 14px;" text="Generate PDF" />
 
         <Button layoutX="496.0" layoutY="410.0" onAction="#backToAjouterVote" style="-fx-background-color: #4fa3f7; -fx-text-fill: #FFFFFF; -fx-font-size: 14px;" text="Back" />
+      <Text fill="WHITE" layoutX="85.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Liste des votes">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Text>
     </children>
 </AnchorPane>

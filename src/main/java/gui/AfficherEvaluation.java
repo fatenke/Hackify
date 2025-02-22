@@ -197,5 +197,19 @@ public class AfficherEvaluation {
             alert.showAndWait();
         }
     }
+
+    public void goToAnalyse(ActionEvent actionEvent) {
+        try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ComplexEvaluationAnalysis.fxml"));
+        Parent root = loader.load();
+
+        // Create a new scene and set it to the current stage
+        Stage stage = (Stage) listView.getScene().getWindow();  // Get the current stage
+        stage.setScene(new Scene(root));  // Set the new scene (AjouterEvaluation.fxml)
+        stage.show();  // Show the stage
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    }
 }
 

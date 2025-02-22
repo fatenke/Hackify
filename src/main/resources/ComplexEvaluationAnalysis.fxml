@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="gui.ComplexEvaluationAnalysis">
+    <VBox spacing="10" alignment="CENTER">
+        <Label text="Analyse des evaluations" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+        <ListView fx:id="analysisListView" prefHeight="200" prefWidth="400"/>
+        <Label fx:id="averageTechLabel" text="Moyenne des notes techniques:"/>
+        <Label fx:id="averageInnovLabel" text="Moyenne des notes d'innovation:"/>
+        <Label fx:id="highestTechProjectLabel" text="Identifiant du Projet avec la plus haute note technique:"/>
+        <Label fx:id="highestInnovProjectLabel" text="Identifiant du Projet avec la plus haute note d'innovation:"/>
+        <Button layoutX="506.0" layoutY="408.0" onAction="#backToAfficherEvaluation" style="-fx-background-color: #4fa3f7; -fx-text-fill: #FFFFFF; -fx-font-size: 14px;" text="Back" />
+    </VBox>
+</AnchorPane>
