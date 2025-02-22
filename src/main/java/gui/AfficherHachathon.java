@@ -2,7 +2,6 @@ package gui;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -11,7 +10,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import models.Hackathon;
-import models.Participation;
 import services.HackathonService;
 import services.ParticipationService;
 
@@ -87,7 +85,24 @@ public class AfficherHachathon {
     }
 
     private void participerHackathon(Hackathon hackathon) {
-        Participation p= new Participation(hackathon.getId_hackathon());
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/HackathonDetails.fxml"));
+            /*Stage stage = new Stage();
+            Scene scene = new Scene(loader.load());
+
+            stage.setScene(scene);
+            stage.setTitle("Détails du Hackathon");
+            stage.show();*/
+            Parent newContent = loader.load();
+            HackathonDetails controller = loader.getController();
+            controller.setHackathon(hackathon);
+            Stage stage = (Stage) gp_hackathon.getScene().getWindow();
+            stage.getScene().setRoot(newContent);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        /*Participation p= new Participation(hackathon.getId_hackathon());
         participationService.add(p);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Participation");
@@ -98,7 +113,7 @@ public class AfficherHachathon {
                 "-fx-text-fill: white; " +
                 "-fx-font-size: 14px; " +
                 "-fx-font-family: 'Arial';");
-        alert.showAndWait();
+        alert.showAndWait();*/
 
     }
     public void supprimerHackathon(Hackathon hackathon){

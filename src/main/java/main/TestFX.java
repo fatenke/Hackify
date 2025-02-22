@@ -23,9 +23,12 @@ public class TestFX extends Application {
         try {
             Parent root = loader.load();
             Scene scene = new Scene(root);
+            /*primaryStage.setFullScreen(true);*/
+            primaryStage.setMaximized(true);
             primaryStage.setTitle("Gestion hackathon");
             primaryStage.setScene(scene);
             primaryStage.show();
+
 
 
         } catch (IOException e) {

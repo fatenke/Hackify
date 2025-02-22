@@ -25,4 +25,6 @@ public class EquipeService implements GlobalInterface<Equipe> {
     public void delete(Equipe equipe) {
 
     }
+
+
 }
