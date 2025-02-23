@@ -6,22 +6,25 @@ public class Projet {
     String statut;
     String priorite;
     String description;
+    String ressource; // New attribute added
 
     public Projet() {}
 
-    public Projet(int id_pr, String nom, String statut, String priorite, String description) {
+    public Projet(int id_pr, String nom, String statut, String priorite, String description, String ressource) {
         this.id_pr = id_pr;
         this.nom = nom;
         this.statut = statut;
         this.priorite = priorite;
         this.description = description;
+        this.ressource = ressource;
     }
 
-    public Projet(String nom, String statut, String priorite, String description) {
+    public Projet(String nom, String statut, String priorite, String description, String ressource) {
         this.nom = nom;
         this.statut = statut;
         this.priorite = priorite;
         this.description = description;
+        this.ressource = ressource;
     }
 
     public static void add(Projet p) {
@@ -67,6 +70,14 @@ public class Projet {
         this.priorite = priorite;
     }
 
+    public String getRessource() { // New getter for ressource
+        return ressource;
+    }
+
+    public void setRessource(String ressource) { // New setter for ressource
+        this.ressource = ressource;
+    }
+
     @Override
     public String toString() {
         return "Projet{" +
@@ -75,8 +86,7 @@ public class Projet {
                 ", statut='" + statut + '\'' +
                 ", priorite='" + priorite + '\'' +
                 ", description='" + description + '\'' +
+                ", ressource='" + ressource + '\'' + // Added ressource to toString
                 '}';
     }
-
-
 }

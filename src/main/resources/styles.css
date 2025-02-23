@@ -1,0 +1,91 @@
+.root {
+    -fx-background-color: linear-gradient(to bottom right, #1E90FF, #FF69B4); /* Blue to Pink gradient, matching the image */
+    -fx-padding: 20px; /* Add padding for a cleaner look */
+}
+
+/* Style for the GridPane containers (projects) */
+.grid-pane {
+    -fx-background-color: white; /* White background for each project box */
+    -fx-border-color: #d3d3d3; /* Light gray border */
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-padding: 10px; /* Padding inside each project box */
+    -fx-background-radius: 5px; /* Rounded corners for background */
+}
+
+/* Style for the VBox inside each project box */
+.vbox {
+    -fx-alignment: center; /* Center-align content vertically */
+    -fx-spacing: 5px; /* Spacing between labels and buttons */
+}
+
+/* Style for labels inside the project boxes */
+.label {
+    -fx-font-size: 14px; /* Readable font size */
+    -fx-text-fill: #333333; /* Dark gray text for readability */
+    -fx-wrap-text: true; /* Allow text to wrap if too long */
+}
+
+/* Style for text fields (if used elsewhere, but not in this FXML) */
+.text-field {
+    -fx-background-color: white;
+    -fx-border-color: #d3d3d3; /* Light gray border */
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-background-radius: 5px; /* Rounded corners for background */
+    -fx-padding: 8px; /* More padding for a spacious feel */
+    -fx-font-size: 14px; /* Readable font size */
+}
+
+/* Style for combo boxes (if used elsewhere, but not in this FXML) */
+.combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #d3d3d3; /* Light gray border */
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-background-radius: 5px; /* Rounded corners for background */
+    -fx-padding: 8px; /* More padding for a spacious feel */
+    -fx-font-size: 14px; /* Readable font size */
+}
+
+/* Style for action buttons (general style, but we’ll override for Update/Delete) */
+.action-button {
+    -fx-padding: 8px 16px; /* More padding for larger, touch-friendly buttons */
+    -fx-background-color: #D3D3D3; /* Light gray, matching the image */
+    -fx-text-fill: #333333; /* Dark gray text for readability */
+    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-background-radius: 5px; /* Rounded corners for background */
+    -fx-font-size: 14px; /* Readable font size */
+}
+
+.action-button:hover {
+    -fx-background-color: #C0C0C0; /* Slightly darker gray on hover */
+}
+
+/* Style for Update buttons (blue, matching the image) */
+.button.update-button {
+    -fx-background-color: #2196F3; /* Bright blue for Update */
+    -fx-text-fill: white;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 8px 16px;
+    -fx-font-size: 14px;
+}
+
+.button.update-button:hover {
+    -fx-background-color: #1976D2; /* Darker blue on hover */
+}
+
+/* Style for Delete buttons (red, matching the image) */
+.button.delete-button {
+    -fx-background-color: #f44336; /* Red for Delete */
+    -fx-text-fill: white;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 8px 16px;
+    -fx-font-size: 14px;
+}
+
+.button.delete-button:hover {
+    -fx-background-color: #da190b; /* Darker red on hover */
+}
