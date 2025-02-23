@@ -5,11 +5,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
@@ -22,6 +19,8 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import java.io.IOException;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class AfficherEvaluation {
 
@@ -29,11 +28,13 @@ public class AfficherEvaluation {
 
     @FXML
     private ListView<Evaluation> listView;
+    @FXML
+    private TextField searchField;
 
     @FXML
     void initialize() {
         ObservableList<Evaluation> evaluations = FXCollections.observableList(ps.getAll());
-
+        loadAllEvaluations();
         // Set the cell factory to display evaluations with Delete and Update buttons
         listView.setCellFactory(param -> new ListCell<>() {
             @Override
@@ -68,7 +69,10 @@ public class AfficherEvaluation {
         // Set ListView items
         listView.setItems(evaluations);
     }
-
+    private void loadAllEvaluations() {
+        ObservableList<Evaluation> evaluations = FXCollections.observableList(ps.getAll());
+        listView.setItems(evaluations);
+    }
     // Delete Evaluation method
     void deleteEvaluation(ActionEvent event, Evaluation evaluation) {
 
@@ -210,6 +214,35 @@ public class AfficherEvaluation {
     } catch (Exception e) {
         e.printStackTrace();
     }
+    }
+    @FXML
+    void searchByProjectId(ActionEvent event) {
+        String projectIdText = searchField.getText().trim();
+
+        if (projectIdText.isEmpty()) {
+            loadAllEvaluations(); // Reload all evaluations if search is empty
+        } else {
+            try {
+                int projectId = Integer.parseInt(projectIdText);
+                List<Evaluation> filteredEvaluations = ps.getAll().stream()
+                        .filter(e -> e.getIdProjet() == projectId)
+                        .collect(Collectors.toList());
+
+                listView.setItems(FXCollections.observableList(filteredEvaluations));
+
+                if (filteredEvaluations.isEmpty()) {
+                    showAlert("No results", "No evaluations found for Project ID: " + projectId);
+                }
+            } catch (NumberFormatException e) {
+                showAlert("Invalid input", "Please enter a valid numeric Project ID.");
+            }
+        }
+    }
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }
 
