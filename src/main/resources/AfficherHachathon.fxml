@@ -8,7 +8,12 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.layout.VBox?>
 <AnchorPane prefHeight="679.0" prefWidth="635.0" style="-fx-background-color: #1e0425;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AfficherHachathon">
+    <HBox>
+    <VBox minWidth="200">
+        <fx:include source="NavBar.fxml"/>
+    </VBox>
    <children>
       <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
       <GridPane fx:id="gp_hackathon" layoutX="62.0" layoutY="26.0" prefHeight="628.0" prefWidth="862.0">
@@ -24,6 +29,7 @@
       </GridPane>
       <HBox prefHeight="100.0" prefWidth="200.0" />
    </children>
+    </HBox>
     <stylesheets>
         <URL value="@/Styles/style.css" />
     </stylesheets>

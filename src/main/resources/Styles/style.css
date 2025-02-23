@@ -34,3 +34,11 @@
     -fx-border-radius: 5px;
     -fx-background-radius: 5px;
 }
+
+.vbox-style{
+-fx-text-fill: white;
+
+}
+.vbox-style .label {
+    -fx-text-fill: white; /* Change le texte des labels en blanc (si tu utilises des labels) */
+}

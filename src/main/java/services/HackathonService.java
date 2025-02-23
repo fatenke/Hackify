@@ -21,19 +21,19 @@ public class HackathonService implements GlobalInterface<Hackathon> {
 
     @Override
     public void add(Hackathon hackathon) {
-        String req = "INSERT INTO `hackathon`( `nom_hackathon`, `description`, `date_debut`, `date_fin`, `lieu`, `theme`, `conditions_participation`,`id_organisateur`) VALUES (?,?,?,?,?,?,?,?)";
+        String req = "INSERT INTO `hackathon`(`id_organisateur`, `nom_hackathon`, `description`, `date_debut`, `date_fin`, `lieu`, `theme`, `max_participants`, `type_participation`)  VALUES (?,?,?,?,?,?,?,?,?)";
         PreparedStatement statement;
         try {
             statement = connection.prepareStatement(req);
-            statement.setString(1, hackathon.getNom_hackathon());
-            statement.setString(2, hackathon.getDescription());
-            statement.setTimestamp(3, java.sql.Timestamp.valueOf(hackathon.getDate_debut()));
-            statement.setTimestamp(4, java.sql.Timestamp.valueOf(hackathon.getDate_fin()));
-            statement.setString(5, hackathon.getLieu());
-            statement.setString(6, hackathon.getTheme());
-            statement.setString(7, hackathon.getConditions_participation());
-            statement.setInt(8, hackathon.getId_organisateur());
-
+            statement.setInt(1, hackathon.getId_organisateur());
+            statement.setString(2, hackathon.getNom_hackathon());
+            statement.setString(3, hackathon.getDescription());
+            statement.setTimestamp(4, java.sql.Timestamp.valueOf(hackathon.getDate_debut()));
+            statement.setTimestamp(5, java.sql.Timestamp.valueOf(hackathon.getDate_fin()));
+            statement.setString(6, hackathon.getLieu());
+            statement.setString(7, hackathon.getTheme());
+            statement.setInt(8, hackathon.getMax_participants());
+            statement.setString(9, hackathon.getType_participation());
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("Hackathon ajouté avec succès !");
@@ -49,7 +49,7 @@ public class HackathonService implements GlobalInterface<Hackathon> {
     @Override
     public void update(Hackathon hackathon) {
 
-        String req = "UPDATE `hackathon` SET `nom_hackathon`=?,`description`=?,`date_debut`=?,`date_fin`=?,`lieu`=?,`theme`=?,`conditions_participation`=? WHERE `id_hackathon`= ? ";
+        String req = "UPDATE `hackathon` SET `nom_hackathon`=?,`description`=?,`date_debut`=?,`date_fin`=?,`lieu`=?,`theme`=? WHERE `id_hackathon`= ? ";
 
         try (PreparedStatement statement = connection.prepareStatement(req)) {
             statement.setString(1, hackathon.getNom_hackathon());
@@ -58,7 +58,7 @@ public class HackathonService implements GlobalInterface<Hackathon> {
             statement.setTimestamp(4, java.sql.Timestamp.valueOf(hackathon.getDate_fin()));
             statement.setString(5, hackathon.getLieu());
             statement.setString(6, hackathon.getTheme());
-            statement.setString(7, hackathon.getConditions_participation());
+            /*statement.setString(7, hackathon.getConditions_participation());*/
             statement.setInt(8, hackathon.getId_hackathon());
 
             int rowsAffected = statement.executeUpdate();
@@ -90,8 +90,8 @@ public class HackathonService implements GlobalInterface<Hackathon> {
                         resultSet.getString("theme"),
                         resultSet.getTimestamp("date_debut").toLocalDateTime(),
                         resultSet.getTimestamp("date_fin").toLocalDateTime(),
-                        resultSet.getString("lieu"),
-                        resultSet.getString("conditions_participation")
+                        resultSet.getString("lieu")
+                        /*resultSet.getString("conditions_participation")*/
                 );
                 hackathons.add(hackathon);
             }

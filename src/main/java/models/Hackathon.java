@@ -12,12 +12,13 @@ public class Hackathon {
     private LocalDateTime date_fin;
     private String lieu;
     private String theme;
-    private String conditions_participation;
+    private String type_participation;
+    private int max_participants;
 
     public Hackathon() {
     }
 
-    public Hackathon(int id_organisateur,String nom_hackathon,String description,String theme,LocalDateTime date_debut, LocalDateTime date_fin,String lieu,String conditions_participation) {
+    public Hackathon(int id_organisateur,String nom_hackathon,String description,String theme,LocalDateTime date_debut, LocalDateTime date_fin,String lieu,String type_participation) {
         this.id_organisateur=id_organisateur;
         this.nom_hackathon=nom_hackathon;
         this.description=description;
@@ -25,9 +26,10 @@ public class Hackathon {
         this.date_debut = date_debut;
         this.date_fin = date_fin;
         this.lieu=lieu;
-        this.conditions_participation=conditions_participation;
+        this.type_participation=type_participation;
+
     }
-    public Hackathon(int id_hackathon,int id_organisateur,String nom_hackathon,String description,String theme,LocalDateTime date_debut, LocalDateTime date_fin,String lieu,String conditions_participation) {
+    public Hackathon(int id_hackathon,int id_organisateur,String nom_hackathon,String description,String theme,LocalDateTime date_debut, LocalDateTime date_fin,String lieu/*,String type_participation*/) {
         this.id_hackathon=id_hackathon;
         this.id_organisateur=id_organisateur;
         this.nom_hackathon=nom_hackathon;
@@ -36,17 +38,17 @@ public class Hackathon {
         this.date_debut = date_debut;
         this.date_fin = date_fin;
         this.lieu=lieu;
-        this.conditions_participation=conditions_participation;
+        /*this.type_participation=type_participation;*/
     }
-    public Hackathon(String nom_hackathon,String description,String theme,LocalDateTime date_debut, LocalDateTime date_fin,String lieu,String conditions_participation) {
+    public Hackathon(String nom_hackathon,String description,String theme,LocalDateTime date_debut, LocalDateTime date_fin,String lieu,String type_participation,int max_participants) {
         this.nom_hackathon=nom_hackathon;
         this.description=description;
         this.theme= theme;
         this.date_debut = date_debut;
         this.date_fin = date_fin;
         this.lieu=lieu;
-        this.conditions_participation=conditions_participation;
-
+        this.type_participation=type_participation;
+        this.max_participants=max_participants;
     }
 
     public int getId_hackathon() {
@@ -81,8 +83,12 @@ public class Hackathon {
         return theme;
     }
 
-    public String getConditions_participation() {
-        return conditions_participation;
+    public String getType_participation() {
+        return type_participation;
+    }
+
+    public int getMax_participants() {
+        return max_participants;
     }
 
     public void setNom_hackathon(String nom_hackathon) {
@@ -93,9 +99,7 @@ public class Hackathon {
         this.description = description;
     }
 
-    public void setConditions_participation(String conditions_participation) {
-        this.conditions_participation = conditions_participation;
-    }
+
 
     public void setLieu(String lieu) {
         this.lieu = lieu;
@@ -113,6 +117,14 @@ public class Hackathon {
         this.date_fin = date_fin;
     }
 
+    public void setType_participation(String type_participation) {
+        this.type_participation = type_participation;
+    }
+
+    public void setMax_participants(int max_participants) {
+        this.max_participants = max_participants;
+    }
+
     @Override
     public String toString() {
         return "Hackathon{" +
@@ -123,7 +135,7 @@ public class Hackathon {
                 "\ndate_fin=" + date_fin +
                 "\nlieu='" + lieu +
                 "\ntheme='" + theme +
-                "\nconditions_participation='" + conditions_participation +
+                 +
                 '}';
     }
 

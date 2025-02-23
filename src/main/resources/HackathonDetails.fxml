@@ -2,37 +2,18 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="789.0" prefWidth="1261.0" style="-fx-background-color: #1e0425;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.HackathonDetails">
-<VBox layoutX="-2.0" prefHeight="964.0" prefWidth="430.0" style="-fx-background-color: #286371;">
-    <children>
-        <HBox prefHeight="141.0" prefWidth="283.0">
-            <children>
-                <ImageView fitHeight="150.0" fitWidth="133.0" pickOnBounds="true" preserveRatio="true">
-                    <image>
-                        <Image url="@Image/logo.png" />
-                    </image>
-                </ImageView>
-                <Label alignment="TOP_CENTER" style="-fx-label-padding: 30px;" text="hackify" textFill="WHITE">
-                    <font>
-                        <Font size="24.0" />
-                    </font>
-                </Label>
-            </children>
-        </HBox>
-        <HBox prefHeight="86.0" prefWidth="283.0" style="-fx-background-color: #1b3347; -fx-background-radius: 15px;" />
-    </children>
-</VBox>
+    <VBox minWidth="200">
+        <fx:include source="NavBar.fxml"/>
+    </VBox>
 <VBox alignment="CENTER" layoutX="617.0" layoutY="14.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="678.0" prefWidth="629.0">
     <Label fx:id="labelNom" text="Nom du Hackathon:" />
     <Label fx:id="labelDateDebut" text="Date du Hackathon:" />
-    <Label fx:id="labelDateFin" text="Date fin du Hackathon:" />
+    <Label fx:id="labelDateFin" style="-fx-text-fill: white;" text="Date fin du Hackathon:" />
     <Label fx:id="labelLieu" text="Lieu du Hackathon:" />
     <Label fx:id="labelTheme" text="theme du Hackathon:" />
     <Label fx:id="labelDescription" text="Description du Hackathon:" />

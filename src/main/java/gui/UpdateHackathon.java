@@ -48,7 +48,7 @@ public class UpdateHackathon {
         tf_nom.setText(h.getNom_hackathon());
         tf_description.setText(h.getDescription());
         tf_lieu.setText(h.getLieu());
-        tf_condition.setText(h.getConditions_participation());
+        /*tf_condition.setText(h.getConditions_participation());*/
         tf_theme.setText(h.getTheme());
         dp_date_debut.setValue(h.getDate_debut().toLocalDate());
         dp_date_fin.setValue(h.getDate_fin().toLocalDate());
@@ -66,7 +66,7 @@ public class UpdateHackathon {
         hackathon.setNom_hackathon(tf_nom.getText().trim());
         hackathon.setDescription(tf_description.getText().trim());
         hackathon.setLieu(tf_lieu.getText().trim());
-        hackathon.setConditions_participation(tf_condition.getText().trim());
+        /*hackathon.setConditions_participation(tf_condition.getText().trim());*/
         hackathon.setTheme(tf_theme.getText().trim());
         hackathon.setDate_debut(dp_date_debut.getValue().atTime(LocalTime.of(sp_heure_debut.getValue(), 0)));
         hackathon.setDate_fin(dp_date_fin.getValue().atTime(LocalTime.of(sp_heure_fin.getValue(), 0)));
