@@ -3,7 +3,6 @@ package gui;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -74,11 +73,9 @@ public class AfficherHachathon {
 
             UpdateHackathon hackathonToUpdate = loader.getController();
             hackathonToUpdate.setHackathon(hackathon);
+            Stage stage = (Stage) gp_hackathon.getScene().getWindow();
+            stage.getScene().setRoot(root);
 
-            Stage stage = new Stage();
-            stage.setTitle("Update Hackathon");
-            stage.setScene(new Scene(root));
-            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -87,12 +84,6 @@ public class AfficherHachathon {
     private void participerHackathon(Hackathon hackathon) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/HackathonDetails.fxml"));
-            /*Stage stage = new Stage();
-            Scene scene = new Scene(loader.load());
-
-            stage.setScene(scene);
-            stage.setTitle("Détails du Hackathon");
-            stage.show();*/
             Parent newContent = loader.load();
             HackathonDetails controller = loader.getController();
             controller.setHackathon(hackathon);
