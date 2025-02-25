@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Text?>
+<?import java.net.URL?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="gui.HistoriqueParticipation"
+            prefHeight="400.0" prefWidth="600.0">
+        <HBox style="-fx-spacing: 20;">
+        <VBox minWidth="200">
+                <fx:include source="NavBar.fxml" />
+        </VBox>
+                <VBox spacing="10">
+
+                        <Text text="Historique de Participation" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+                        <!-- GridPane pour afficher l'historique des participations -->
+                        <GridPane styleClass="grid-pane" fx:id="participationGrid" hgap="10" vgap="10">
+                                <!-- Titres des colonnes -->
+                                <Text text="Hackathon" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                                <Text text="Date" GridPane.rowIndex="0" GridPane.columnIndex="1" style="-fx-font-weight: bold;"/>
+                                <Text text="Status" GridPane.rowIndex="0" GridPane.columnIndex="2" style="-fx-font-weight: bold;"/>
+                                <Text text="Action" GridPane.rowIndex="0" GridPane.columnIndex="3" style="-fx-font-weight: bold;"/>
+                        </GridPane>
+
+                        <!-- Bouton de retour à l'accueil -->
+                        <Button text="Retour à l'accueil" fx:id="homeButton"/>
+                </VBox>
+        </HBox>
+        <stylesheets>
+                <URL value="@/Styles/style.css" />
+        </stylesheets>
+
+
+</AnchorPane>

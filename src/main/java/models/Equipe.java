@@ -43,4 +43,6 @@ public class Equipe {
     public void setNom_equipe(String nom_equipe) {
         this.nom_equipe = nom_equipe;
     }
+
+
 }

@@ -7,6 +7,7 @@ public class Participation {
     private int idParticipant;
     private int id_hackathon;
     private LocalDateTime dateInscription;
+    private boolean estEquipe;
     private String statut;
 
 
@@ -47,6 +48,7 @@ public class Participation {
     public LocalDateTime getDateInscription() {
         return dateInscription;
     }
+
 
     @Override
     public String toString() {

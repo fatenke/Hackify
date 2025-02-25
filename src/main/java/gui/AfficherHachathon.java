@@ -24,6 +24,9 @@ public class AfficherHachathon {
     private GridPane gp_hackathon;
     @FXML
     void initialize() {
+        loadHackathons();
+    }
+    public void loadHackathons(){
         List<Hackathon> hackathons = hackathonService.getAll();
         int columns = 2;
         int row = 0, col = 0;
@@ -83,7 +86,8 @@ public class AfficherHachathon {
 
     private void participerHackathon(Hackathon hackathon) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/HackathonDetails.fxml"));
+            /*FXMLLoader loader = new FXMLLoader(getClass().getResource("/HackathonDetails.fxml"));*/
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterParticipation.fxml"));
             Parent newContent = loader.load();
             HackathonDetails controller = loader.getController();
             controller.setHackathon(hackathon);
@@ -116,6 +120,8 @@ public class AfficherHachathon {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             hackathonService.delete(hackathon);
             System.out.println("Hackathon supprimé");
+            gp_hackathon.getChildren().clear();
+            loadHackathons();
         } else {
             System.out.println("Suppression annulée");
         }

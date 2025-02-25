@@ -19,9 +19,9 @@
    <VBox minWidth="200">
       <fx:include source="NavBar.fxml" />
    </VBox>
-<AnchorPane layoutX="528.0" layoutY="46.0" prefHeight="700.0" prefWidth="776.0" style="-fx-background-color: #A0528D; -fx-background-radius: 15px;" AnchorPane.bottomAnchor="28.399999999999977" AnchorPane.leftAnchor="528.0" AnchorPane.topAnchor="46.0">
+<AnchorPane layoutX="528.0" layoutY="46.0" prefHeight="700.0" prefWidth="776.0" style="-fx-background-color: #D291BC; -fx-background-radius: 15px;" AnchorPane.bottomAnchor="28.399999999999977" AnchorPane.leftAnchor="528.0" AnchorPane.topAnchor="46.0">
    <children>
-      <VBox layoutX="99.0" layoutY="62.0" prefHeight="130.0" prefWidth="270.0" style="-fx-background-color: #1e0425; -fx-spacing: 10; -fx-background-radius: 10px; -fx-padding: 15px;">
+      <VBox layoutX="97.0" layoutY="89.0" prefHeight="50.0" prefWidth="270.0" style="-fx-background-color: #1e0425; -fx-spacing: 5; -fx-background-radius: 10px; -fx-padding: 20px;">
          <children>
             <Label alignment="TOP_LEFT" text="Nom" textFill="#82e9f1">
                   <font>
@@ -30,35 +30,35 @@
             <TextField fx:id="tf_nom" prefHeight="26.0" prefWidth="244.0" promptText="Entrez le nom du hackathon" style="-fx-background-radius: 5px;" />
          </children>
       </VBox>
-      <VBox layoutX="407.0" layoutY="84.0" prefHeight="50.0" prefWidth="266.0" style="-fx-background-color: #1e0425; -fx-spacing: 10; -fx-background-radius: 10px; -fx-padding: 15px;">
+      <VBox layoutX="407.0" layoutY="91.0" prefHeight="50.0" prefWidth="270.0" style="-fx-background-color: #1e0425; -fx-spacing: 10; -fx-background-radius: 10px; -fx-padding: 15px;">
          <children>
             <Label text="lieu" textFill="#82e9f1">
                   <font>
                      <Font size="18.0" />
                   </font></Label>
-            <TextField fx:id="tf_lieu" promptText="Lieu" />
+            <TextField fx:id="tf_lieu" prefHeight="38.0" prefWidth="240.0" promptText="Indiquez le lieu de l’événement" />
          </children>
       </VBox>
-      <VBox layoutX="407.0" layoutY="340.0" prefHeight="84.0" prefWidth="266.0" style="-fx-background-color: #1e0425; -fx-spacing: 10; -fx-background-radius: 10px; -fx-padding: 15px;">
+      <VBox layoutX="407.0" layoutY="377.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="50.0" prefWidth="270.0" style="-fx-background-color: #1e0425; -fx-spacing: 10; -fx-background-radius: 10px; -fx-padding: 15px;">
          <children>
             <Label text="Description" textFill="#82e9f1">
                   <font>
                      <Font size="18.0" />
                   </font></Label>
-            <TextArea fx:id="tf_description" prefHeight="64.0" prefWidth="198.0" promptText="Entrez une description" />
+            <TextArea fx:id="tf_description" prefHeight="64.0" prefWidth="198.0" promptText="Décrivez brièvement le hackathon" />
          </children>
       </VBox>
-      <VBox layoutX="99.0" layoutY="206.0" prefHeight="130.0" prefWidth="270.0" style="-fx-background-color: #1e0425; -fx-spacing: 10; -fx-background-radius: 10px; -fx-padding: 15px;">
+      <VBox layoutX="97.0" layoutY="209.0" prefHeight="130.0" prefWidth="270.0" style="-fx-background-color: #1e0425; -fx-spacing: 10; -fx-background-radius: 10px; -fx-padding: 15px;">
          <children>
             <Label prefHeight="27.0" prefWidth="211.0" text="Date et heure de début" textFill="#82e9f1">
                   <font>
                      <Font size="18.0" />
                   </font></Label>
-            <DatePicker fx:id="dp_date_debut" promptText="Début" style="-fx-border-color: #82e9f1;" />
+            <DatePicker fx:id="dp_date_debut" promptText="Sélectionnez la date" style="-fx-border-color: #82e9f1;" />
             <Spinner fx:id="sp_heure_debut" editable="true" prefHeight="26.0" prefWidth="59.0" style="-fx-border-color: #82e9f1;" />
          </children>
       </VBox>
-      <VBox layoutX="407.0" layoutY="193.0" prefHeight="120.0" prefWidth="266.0" style="-fx-background-color: #1e0425; -fx-spacing: 10; -fx-background-radius: 10px; -fx-padding: 15px;">
+      <VBox layoutX="407.0" layoutY="209.0" prefHeight="130.0" prefWidth="270.0" style="-fx-background-color: #1e0425; -fx-spacing: 10; -fx-background-radius: 10px; -fx-padding: 15px;">
          <children>
             <Label prefHeight="18.0" prefWidth="174.0" text="Date et heure fin" textFill="#82e9f1">
                   <font>
@@ -68,22 +68,22 @@
             <Spinner fx:id="sp_heure_fin" prefHeight="26.0" prefWidth="59.0" style="-fx-border-color: #82e9f1;" />
          </children>
       </VBox>
-      <VBox layoutX="104.0" layoutY="339.0" prefHeight="106.0" prefWidth="266.0" style="-fx-background-color: #1e0425; -fx-spacing: 10; -fx-background-radius: 10px; -fx-padding: 15px;">
+      <VBox layoutX="97.0" layoutY="377.0" prefHeight="50.0" prefWidth="270.0" style="-fx-background-color: #1e0425; -fx-spacing: 10; -fx-background-radius: 10px; -fx-padding: 15px;">
          <children>
             <Label text="Théme" textFill="#82e9f1">
                   <font>
                      <Font size="18.0" />
                   </font></Label>
-            <TextField fx:id="tf_theme" promptText="Théme" />
+            <TextField fx:id="tf_theme" promptText="Ex : Intelligence Artificielle, Santé, Fintech…" />
          </children>
       </VBox>
-      <Button layoutX="211.0" layoutY="612.0" mnemonicParsing="false" onAction="#ajouterHackathon" prefHeight="58.0" prefWidth="378.0" style="-fx-background-color: #3498DB; -fx-background-radius: 15px;" text=" Ajouter un hackathon">
+      <Button layoutX="181.0" layoutY="644.0" mnemonicParsing="false" onAction="#ajouterHackathon" prefHeight="58.0" prefWidth="414.0" style="-fx-background-color: #3498DB; -fx-background-radius: 15px;" text=" Ajouter un hackathon">
             <font>
                <Font size="24.0" />
             </font></Button>
-      <VBox layoutX="105.0" layoutY="456.0" prefHeight="106.0" prefWidth="266.0" style="-fx-background-color: #1e0425; -fx-spacing: 10; -fx-background-radius: 10px; -fx-padding: 15px;">
+      <VBox layoutX="97.0" layoutY="524.0" prefHeight="50.0" prefWidth="270.0" style="-fx-background-color: #1e0425; -fx-spacing: 10; -fx-background-radius: 10px; -fx-padding: 15px;">
          <children>
-            <Label text="type de participation" textFill="#82e9f1">
+            <Label text="Type de participation" textFill="#82e9f1">
                   <font>
                      <Font size="18.0" />
                   </font></Label>
@@ -98,15 +98,20 @@
             </ComboBox>
          </children>
       </VBox>
-      <VBox layoutX="407.0" layoutY="456.0" prefHeight="106.0" prefWidth="278.0" style="-fx-background-color: #1e0425; -fx-spacing: 10; -fx-background-radius: 10px; -fx-padding: 15px;">
+      <VBox layoutX="407.0" layoutY="524.0" prefHeight="50.0" prefWidth="270.0" style="-fx-background-color: #1e0425; -fx-spacing: 10; -fx-background-radius: 10px; -fx-padding: 15px;">
          <children>
-            <Label text="Nombre Max de Participations" textFill="#82e9f1">
+            <Label text="Nombre Max de participations" textFill="#82e9f1">
                   <font>
                      <Font size="18.0" />
                   </font></Label>
-            <TextField fx:id="tbNbrMax" promptText="nbr" />
+            <TextField fx:id="tbNbrMax" promptText="Ex : 50, 100..." />
          </children>
       </VBox>
+         <Label layoutX="150.0" layoutY="14.0" text="Ajoutez un nouveau hackathon !" textFill="#1e0425">
+            <font>
+               <Font size="36.0" />
+            </font>
+         </Label>
    </children>
 </AnchorPane>
 </AnchorPane>

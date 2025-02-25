@@ -18,6 +18,9 @@ public class NavBar {
     private Button btAjouterHackathon;
 
     @FXML
+    private Button btHistoriqueParticipation;
+
+    @FXML
     void AfficherHackathon(ActionEvent event) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherHachathon.fxml"));
         try {
@@ -34,13 +37,23 @@ public class NavBar {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterHackathon.fxml"));
         try {
             Parent newContent = loader.load();
-            Stage stage = (Stage) btAfficherHackathon.getScene().getWindow();
+            Stage stage = (Stage) btAjouterHackathon.getScene().getWindow();
             stage.getScene().setRoot(newContent);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
+    @FXML
+    void AfficherParticipation(ActionEvent event) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/HistoriqueParticipation.fxml"));
+        try {
+            Parent newContent = loader.load();
+            Stage stage = (Stage) btAjouterHackathon.getScene().getWindow();
+            stage.getScene().setRoot(newContent);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }

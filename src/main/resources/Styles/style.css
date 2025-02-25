@@ -9,17 +9,35 @@
 }
 
 .hackathon-card {
+-fx-background-color: #FAF4F4;
+    /*-fx-background-radius: 20px;
+    -fx-padding: 15px;
+    -fx-spacing: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 5, 5);
+    -fx-border-color: transparent;*/
+    -fx-background-color: #FAF4F4;
+        -fx-background-radius: 20px;
+        -fx-padding: 15px;
+        -fx-spacing: 20px;
+        /*-fx-effect: dropshadow(gaussian, #82e9f1, 40, 0.5, 0, 0);;*/
+        -fx-effect: dropshadow(gaussian, rgba(0, 102, 255, 0.4), 10, 0.3, 5, 5),
+                         dropshadow(gaussian, rgba(0, 0, 0, 0.2), 15, 0.2, 3, 3);
+    /*
     -fx-padding: 15px;
     -fx-background-color: #1b3347;
     -fx-border-radius: 10px;
     -fx-background-radius: 10px;
-    -fx-effect: dropshadow(gaussian, #82e9f1, 10, 0.5, 0, 0);
+    */
 }
-
+.hackathon-card:hover {
+    -fx-translate-y: -5px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 15, 0.3, 5, 5);
+}
 .hackathon-title {
     -fx-font-size: 18px;
-    -fx-text-fill:  white;
+    /*-fx-text-fill:  white;*/
     -fx-font-weight: bold;
+    -fx-text-fill: #777;
 }
 
 .hackathon-date, .hackathon-lieu {
@@ -41,4 +59,53 @@
 }
 .vbox-style .label {
     -fx-text-fill: white; /* Change le texte des labels en blanc (si tu utilises des labels) */
+}
+
+
+/*historique participation*/
+
+
+
+.text {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-padding: 10;
+}
+
+/* Style des GridPane pour l'affichage de l'historique */
+.grid-pane {
+    -fx-border-color: #ddd;
+    -fx-border-width: 1px;
+    -fx-padding: 10;
+    -fx-spacing: 10;
+}
+
+/* Style des colonnes dans le GridPane (titres des colonnes) */
+.grid-pane .text {
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 5;
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+}
+
+/* Style des lignes du GridPane */
+.grid-pane .row {
+    -fx-border-color: #eee;
+    -fx-border-width: 0 0 1px 0;
+}
+
+/* Style pour les boutons */
+.button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10;
+    -fx-border-radius: 5px;
+    -fx-cursor: hand;
+}
+
+/* Change la couleur du bouton au survol */
+.button:hover {
+    -fx-background-color: #2980b9;
 }
