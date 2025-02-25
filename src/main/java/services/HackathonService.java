@@ -121,4 +121,14 @@ public class HackathonService implements GlobalInterface<Hackathon> {
 
 
     }
+    public Hackathon getHackathonById(int id){
+        Hackathon hackathon = new Hackathon();
+        List<Hackathon> hackathons = getAll();
+        for(Hackathon h :hackathons){
+            if(h.getId_hackathon()==id){
+                hackathon=h;
+            }
+        }
+        return hackathon;
+    }
 }

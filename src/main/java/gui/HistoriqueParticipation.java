@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import models.Hackathon;
 import models.Participation;
 import services.HackathonService;
 import services.ParticipationService;
@@ -13,6 +14,7 @@ import services.ParticipationService;
 
 public class HistoriqueParticipation {
     ParticipationService ps =new ParticipationService();
+    HackathonService hs = new HackathonService();
     @FXML
     private GridPane participationGrid;
     @FXML
@@ -33,8 +35,10 @@ public class HistoriqueParticipation {
         var participations = ps.getAll();
         int row = 2; // commencer à la ligne 2 (la ligne 1 est pour les titres)
         for (Participation participation : participations) {
+            Hackathon hackathon= hs.getHackathonById(participation.getIdHackathon());
             // Ajouter les détails de chaque participation
             /*Text hackathonText = new Text(participation.getHackathon());*/
+            Text name = new Text(hackathon.getNom_hackathon());
 
             Text statusText = new Text(participation.getStatut());
             statusText.getStyleClass().add("text");
@@ -43,13 +47,16 @@ public class HistoriqueParticipation {
             Button cancelButton = new Button("Annuler");
             cancelButton.setOnAction(e -> handleCancelParticipation(participation));
 
+            Button detaillsButton = new Button("voir detaills hackathon");
+
             // Ajouter les éléments dans les cellules du GridPane
-           /* participationGrid.add(hackathonText, 0, row);
-            participationGrid.add(dateText, 1, row);*/
+           /* participationGrid.add(hackathonText, 0, row);*/
+            participationGrid.add(name, 0, row);
             participationGrid.add(statusText, 2, row);
             participationGrid.add(cancelButton, 3, row);
+            participationGrid.add(detaillsButton, 4, row);
 
-            row++; // Passer à la ligne suivante
+            row++;
         }
     }
 
