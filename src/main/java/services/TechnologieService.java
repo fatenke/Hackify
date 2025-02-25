@@ -3,10 +3,7 @@ package services;
 import models.Technologie;
 import util.DBConnection;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,15 +14,16 @@ public class TechnologieService implements IService<Technologie> {
     public TechnologieService() {
         this.conn = DBConnection.getInstance().getConn();
     }
-
     @Override
     public void add(Technologie technologie) {
-        String SQL = "INSERT INTO technologie (nom_tech, type_tech, complexite, documentaire) VALUES ('" +
-                technologie.getNom_tech() + "','" + technologie.getType_tech() + "','" +
-                technologie.getComplexite() + "','" + technologie.getDocumentaire() + "')";
-
-        try (Statement stmt = conn.createStatement()) {
-            stmt.executeUpdate(SQL);
+        String SQL = "INSERT INTO `technologie` (`nom_tech`, `type_tech`, `complexite`, `documentaire`, `compatibilite`) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement pstmt = conn.prepareStatement(SQL)) {
+            pstmt.setString(1, technologie.getNom_tech());
+            pstmt.setString(2, technologie.getType_tech());
+            pstmt.setString(3, technologie.getComplexite());
+            pstmt.setString(4, technologie.getDocumentaire());
+            pstmt.setString(5, technologie.getCompatibilite());
+            pstmt.executeUpdate();
             System.out.println("Technologie ajoutée avec succès !");
         } catch (SQLException e) {
             System.out.println("Erreur lors de l'ajout de la technologie : " + e.getMessage());
@@ -38,6 +36,7 @@ public class TechnologieService implements IService<Technologie> {
                 "', type_tech = '" + technologie.getType_tech() +
                 "', complexite = '" + technologie.getComplexite() +
                 "', documentaire = '" + technologie.getDocumentaire() +
+                "', compatibilite = '" + technologie.getCompatibilite() +
                 "' WHERE id_tech = " + technologie.getId_tech();
 
         try (Statement stmt = conn.createStatement()) {
@@ -83,6 +82,7 @@ public class TechnologieService implements IService<Technologie> {
                 t.setType_tech(rs.getString("type_tech"));
                 t.setComplexite(rs.getString("complexite"));
                 t.setDocumentaire(rs.getString("documentaire"));
+                t.setCompatibilite(rs.getString("compatibilite")); // Added to retrieve compatibilite from the database
 
                 // Ajouter la technologie à la liste des technologies
                 technologies.add(t);

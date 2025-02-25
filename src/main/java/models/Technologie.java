@@ -2,28 +2,30 @@ package models;
 
 public class Technologie {
 
-
     int id_tech;
     String nom_tech;
     String type_tech;
     String complexite;
     String documentaire;
-
+    String compatibilite; // Changed to String instead of List<String>
 
     public Technologie() {}
 
-    public Technologie(int id_tech, String nom_tech, String type_tech, String complexite, String documentaire) {
+    public Technologie(int id_tech, String nom_tech, String type_tech, String complexite, String documentaire, String compatibilite) {
         this.id_tech = id_tech;
         this.nom_tech = nom_tech;
         this.type_tech = type_tech;
         this.complexite = complexite;
         this.documentaire = documentaire;
+        this.compatibilite = compatibilite;
     }
-    public Technologie( String nom_tech, String type_tech, String complexite, String documentaire) {
+
+    public Technologie(String nom_tech, String type_tech, String complexite, String documentaire, String compatibilite) {
         this.nom_tech = nom_tech;
         this.type_tech = type_tech;
         this.complexite = complexite;
         this.documentaire = documentaire;
+        this.compatibilite = compatibilite;
     }
 
     public int getId_tech() {
@@ -66,6 +68,14 @@ public class Technologie {
         this.documentaire = documentaire;
     }
 
+    public String getCompatibilite() { // Updated getter for compatibilite as String
+        return compatibilite;
+    }
+
+    public void setCompatibilite(String compatibilite) { // Updated setter for compatibilite as String
+        this.compatibilite = compatibilite;
+    }
+
     @Override
     public String toString() {
         return "Technologie{" +
@@ -74,6 +84,7 @@ public class Technologie {
                 ", type_tech='" + type_tech + '\'' +
                 ", complexite='" + complexite + '\'' +
                 ", documentaire='" + documentaire + '\'' +
+                ", compatibilite='" + compatibilite + '\'' + // Updated toString for String type
                 '}';
     }
 }

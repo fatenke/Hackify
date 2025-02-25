@@ -6,13 +6,16 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+import java.util.Objects;
+
+public class
+Main extends Application {
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjoutProjet.fxml"));
-        Parent root = loader.load();
-        Scene scene = new Scene(root);
-        primaryStage.setScene(scene);
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/AjoutProjet.fxml")));
+        primaryStage.setTitle("Ajouter Technologie");
+        primaryStage.setScene(new Scene(root, 859, 636));
         primaryStage.show();
     }
 
