@@ -81,22 +81,25 @@ public class AfficherHachathon {
             hbox.setAlignment(Pos.CENTER);
             Button updateButton = new Button("Update");
             Button deleteButton = new Button("Delete");
-            Button participateButton = new Button("Participate");
+            if(participationService.getNebrParticipantPerHackathon(h.getId_hackathon())<h.getMax_participants()){
+                Button participateButton = new Button("Participate");
+                participateButton.getStyleClass().add("btn-action");
+                participateButton.setOnAction(event -> participerHackathon(h));
+                textContainer.getChildren().addAll(nom, date, lieu, hbox, participateButton);
+            }
+            else {
+                textContainer.getChildren().addAll(nom, date, lieu, hbox);
+                participationService.refuserParticipationsEnAttente(h.getId_hackathon());
+            }
             Button showButton = new Button("Voir Participants");
-
             updateButton.getStyleClass().add("btn-action");
             deleteButton.getStyleClass().add("btn-action");
-            participateButton.getStyleClass().add("btn-action");
             showButton.getStyleClass().add("btn-action");
-
             updateButton.setOnAction(event -> ouvrirUpdateHackathon(h));
             deleteButton.setOnAction(event -> supprimerHackathon(h));
-            participateButton.setOnAction(event -> participerHackathon(h));
             showButton.setOnAction(event -> afficherParticipants(h));
-
-
             hbox.getChildren().addAll(updateButton, deleteButton,showButton);
-            textContainer.getChildren().addAll(nom, date, lieu, hbox, participateButton);
+
 
             // Superposer les éléments pour créer l'effet 3D
             stack.getChildren().addAll(frontFace, textContainer);

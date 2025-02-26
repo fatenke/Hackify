@@ -2,6 +2,7 @@ package models;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 public class Hackathon {
     private int id_hackathon;
@@ -15,6 +16,8 @@ public class Hackathon {
     private String type_participation;
     private int max_participants;
 
+    private List<Participation> participants;
+
     public Hackathon() {
     }
 
@@ -27,6 +30,7 @@ public class Hackathon {
         this.date_fin = date_fin;
         this.lieu=lieu;
         this.type_participation=type_participation;
+
 
     }
     public Hackathon(int id_hackathon,int id_organisateur,String nom_hackathon,String description,String theme,LocalDateTime date_debut, LocalDateTime date_fin,String lieu/*,String type_participation*/) {

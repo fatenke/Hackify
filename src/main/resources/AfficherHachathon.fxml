@@ -19,7 +19,7 @@
         <fx:include source="NavBar.fxml" />
     </VBox>
        <VBox alignment="TOP_CENTER" prefHeight="964.0" prefWidth="1117.0" style="-fx-spacing: 30px; -fx-padding: 20px;">
-           <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="83.0" prefWidth="403.0" style="-fx-background-color: #286371; -fx-padding: 15px;">
+           <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="83.0" prefWidth="403.0" style="-fx-background-color: #286371; -fx-padding: 15px; -fx-background-radius: 15px;">
            <Label prefHeight="27.0" prefWidth="268.0" text="Trouver un hackathon " textFill="WHITE">
                <font>
                    <Font size="18.0" />
@@ -30,7 +30,7 @@
                <Insets left="600.0" />
             </VBox.margin>
            </VBox>
-      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Hackathons" wrappingWidth="157.20970916748047">
+      <Text fill="#82e9f1" strokeType="OUTSIDE" strokeWidth="0.0" text="Hackathons" wrappingWidth="157.20970916748047">
             <font>
                <Font size="18.0" />
             </font></Text>

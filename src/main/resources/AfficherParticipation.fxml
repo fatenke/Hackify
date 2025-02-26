@@ -10,5 +10,28 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="gui.AfficherParticipation"
             prefHeight="400.0" prefWidth="600.0">
+    <HBox style="-fx-spacing: 20;">
+    <VBox minWidth="200">
+        <fx:include source="NavBar.fxml" />
+    </VBox>
+
+        <VBox spacing="10">
+            <Label text="Liste des Participants" style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+            <!-- Liste des participants -->
+            <VBox fx:id="participantsList" spacing="10">
+                <!-- Chaque participant sera ajouté ici dynamiquement via le contrôleur -->
+            </VBox>
+
+            <!-- Boutons d'action -->
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="Valider" fx:id="validerButton" />
+                <Button text="Refuser" fx:id="refuserButton" />
+            </HBox>
+        </VBox>
+
+
+
+    </HBox>
 
 </AnchorPane>

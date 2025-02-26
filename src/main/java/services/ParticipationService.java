@@ -113,4 +113,31 @@ public class ParticipationService implements GlobalInterface<Participation> {
         }
         return participation;
     }
+
+    public int getNebrParticipantPerHackathon(int id_hackathon){
+        int count = 0;
+        try {
+            String req = "SELECT COUNT(*) FROM participation WHERE id_hackathon = ? AND statut = 'validé'";
+            PreparedStatement ps = connection.prepareStatement(req);
+            ps.setInt(1, id_hackathon);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Erreur lors de la récupération du nombre de participants : " + ex.getMessage());
+        }
+        return count;
+    }
+    public void refuserParticipationsEnAttente(int idHackathon) {
+        try {
+            String req = "UPDATE participation SET statut = 'refusé' WHERE id_hackathon = ? AND statut = 'en attente'";
+            PreparedStatement ps = connection.prepareStatement(req);
+            ps.setInt(1, idHackathon);
+            ps.executeUpdate();
+            System.out.println("Toutes les participations en attente ont été refusées pour le hackathon ID: " + idHackathon);
+        } catch (SQLException ex) {
+            System.out.println("Erreur lors de la mise à jour des participations : " + ex.getMessage());
+        }
+    }
 }
