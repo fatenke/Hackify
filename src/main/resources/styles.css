@@ -3,52 +3,34 @@
     -fx-padding: 20px; /* Add padding for a cleaner look */
 }
 
-/* Style for the GridPane containers (projects) */
+/* Style for the GridPane containers (technologies/projects) */
 .grid-pane {
-    -fx-background-color: white; /* White background for each project box */
+    -fx-background-color: white; /* White background for each technology box */
     -fx-border-color: #d3d3d3; /* Light gray border */
     -fx-border-width: 1px;
     -fx-border-radius: 5px; /* Rounded corners */
-    -fx-padding: 10px; /* Padding inside each project box */
+    -fx-padding: 10px; /* Padding inside each technology box */
     -fx-background-radius: 5px; /* Rounded corners for background */
+    -fx-hgap: 10px; /* Horizontal gap between columns */
+    -fx-vgap: 10px; /* Vertical gap between rows */
 }
 
-/* Style for the VBox inside each project box */
+/* Style for the VBox inside each technology box */
 .vbox {
     -fx-alignment: center; /* Center-align content vertically */
     -fx-spacing: 5px; /* Spacing between labels and buttons */
+    -fx-padding: 5px; /* Padding inside the VBox for better spacing */
 }
 
-/* Style for labels inside the project boxes */
+/* Style for labels inside the technology boxes */
 .label {
     -fx-font-size: 14px; /* Readable font size */
     -fx-text-fill: #333333; /* Dark gray text for readability */
     -fx-wrap-text: true; /* Allow text to wrap if too long */
+    -fx-max-width: 200px; /* Limit label width to prevent overflow */
 }
 
-/* Style for text fields (if used elsewhere, but not in this FXML) */
-.text-field {
-    -fx-background-color: white;
-    -fx-border-color: #d3d3d3; /* Light gray border */
-    -fx-border-width: 1px;
-    -fx-border-radius: 5px; /* Rounded corners */
-    -fx-background-radius: 5px; /* Rounded corners for background */
-    -fx-padding: 8px; /* More padding for a spacious feel */
-    -fx-font-size: 14px; /* Readable font size */
-}
-
-/* Style for combo boxes (if used elsewhere, but not in this FXML) */
-.combo-box {
-    -fx-background-color: white;
-    -fx-border-color: #d3d3d3; /* Light gray border */
-    -fx-border-width: 1px;
-    -fx-border-radius: 5px; /* Rounded corners */
-    -fx-background-radius: 5px; /* Rounded corners for background */
-    -fx-padding: 8px; /* More padding for a spacious feel */
-    -fx-font-size: 14px; /* Readable font size */
-}
-
-/* Style for action buttons (general style, but we’ll override for Update/Delete) */
+/* Style for action buttons (general style, but overridden for specific types) */
 .action-button {
     -fx-padding: 8px 16px; /* More padding for larger, touch-friendly buttons */
     -fx-background-color: #D3D3D3; /* Light gray, matching the image */
@@ -90,23 +72,38 @@
     -fx-background-color: #da190b; /* Darker red on hover */
 }
 
-.tts-button {
-    -fx-background-color: #4CAF50; /* Green button */
+/* Style for Listen buttons (green, matching the image) */
+.button.listen-button {
+    -fx-background-color: #4CAF50; /* Green for Listen */
     -fx-text-fill: white;
-    -fx-padding: 5;
-    -fx-font-size: 12;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 8px 16px;
+    -fx-font-size: 14px;
 }
 
-.tts-button:hover {
+.button.listen-button:hover {
     -fx-background-color: #45a049; /* Darker green on hover */
-}
-.speak-button {
-    -fx-background-color: #4CAF50; /* Green button */
-    -fx-text-fill: white;
-    -fx-padding: 5;
-    -fx-font-size: 12;
 }
 
-.speak-button:hover {
-    -fx-background-color: #45a049; /* Darker green on hover */
+/* Style for text fields (if used elsewhere, but not in this FXML) */
+.text-field {
+    -fx-background-color: white;
+    -fx-border-color: #d3d3d3; /* Light gray border */
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-background-radius: 5px; /* Rounded corners for background */
+    -fx-padding: 8px; /* More padding for a spacious feel */
+    -fx-font-size: 14px; /* Readable font size */
+}
+
+/* Style for combo boxes (if used elsewhere, but not in this FXML) */
+.combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #d3d3d3; /* Light gray border */
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-background-radius: 5px; /* Rounded corners for background */
+    -fx-padding: 8px; /* More padding for a spacious feel */
+    -fx-font-size: 14px; /* Readable font size */
 }

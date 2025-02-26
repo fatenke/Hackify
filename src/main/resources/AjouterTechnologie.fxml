@@ -3,21 +3,25 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="636.0" prefWidth="859.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AjouterTechnologie">
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<AnchorPane prefHeight="636.0" prefWidth="859.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AjouterTechnologie">
     <children>
-        <TabPane layoutX="7.0" layoutY="13.0" prefHeight="483.0" prefWidth="710.0" tabClosingPolicy="UNAVAILABLE">
+        <TabPane layoutX="7.0" layoutY="13.0" prefHeight="641.0" prefWidth="876.0" tabClosingPolicy="UNAVAILABLE">
             <tabs>
                 <Tab text=" Ajouter technologie">
                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="638.0" prefWidth="889.0">
                             <children>
                                 <Label layoutX="40.0" layoutY="56.0" prefHeight="18.0" prefWidth="64.0" text="Nom :">
                                     <font>
@@ -46,26 +50,42 @@
                                         <Font size="15.0" />
                                     </font>
                                 </Label>
-                                <Button fx:id="b6" layoutX="465.0" layoutY="372.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="158.0" text="Ajouter" onAction="#ajouterAction" />
+                                <Button fx:id="b6" layoutX="465.0" layoutY="372.0" mnemonicParsing="false" onAction="#ajouterAction" prefHeight="32.0" prefWidth="158.0" text="Ajouter" />
                                 <ComboBox fx:id="t4" layoutX="175.0" layoutY="227.0" prefWidth="150.0" />
                                 <ComboBox fx:id="t3" layoutX="175.0" layoutY="175.0" prefWidth="150.0" />
-                                <!-- <ImageView fx:id="imageView" fitHeight="156.0" fitWidth="164.0" layoutX="525.0" layoutY="-8.0">
-     <image>
-         <Image url="/java-logo.png"/>
-     </image>
- </ImageView> -->
+
+                                <ImageView fx:id="imageView" fitHeight="156.0" fitWidth="164.0" layoutX="525.0" layoutY="-8.0">
+                                    <image>
+                                        <Image url="/java-logo.png"/>
+                                    </image>
+                                </ImageView>
                             </children>
                         </AnchorPane>
                     </content>
                 </Tab>
-                <Tab text="Modifier ou supprimer technologie">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
                 <Tab text="Afficher technologire">
                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                        <AnchorPane prefHeight="538.0" prefWidth="808.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+                            <children>
+                                <ScrollPane fx:id="scrollPaneTech" fitToWidth="true" hbarPolicy="AS_NEEDED" layoutX="2.0" layoutY="2.0" prefHeight="534.0" prefWidth="804.0" vbarPolicy="ALWAYS">
+                                    <content>
+                                        <GridPane fx:id="gridTech" prefHeight="520.0" prefWidth="800.0">
+                                            <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="250.0" /> <!-- Column for first technology -->
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="250.0" /> <!-- Column for second technology -->
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="250.0" /> <!-- Column for third technology -->
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints maxHeight="200.0" minHeight="30.0" prefHeight="170.0" vgrow="SOMETIMES" />
+                                                <RowConstraints maxHeight="200.0" minHeight="30.0" prefHeight="170.0" vgrow="SOMETIMES" />
+                                                <RowConstraints maxHeight="200.0" minHeight="30.0" prefHeight="170.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                            <!-- You can dynamically add Labels, Buttons, or other nodes here in your controller to display technology data -->
+                                        </GridPane>
+                                    </content>
+                                </ScrollPane>
+                            </children>
+                        </AnchorPane>
                     </content>
                 </Tab>
             </tabs>
