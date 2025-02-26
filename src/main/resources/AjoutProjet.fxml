@@ -8,11 +8,16 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="689.0" prefWidth="765.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AjouterProjet">
    <children>
       <TextField fx:id="a1" layoutX="136.0" layoutY="80.0" prefHeight="38.0" prefWidth="373.0" promptText="nom" AnchorPane.leftAnchor="136.0" AnchorPane.topAnchor="80.0" />
+      <HBox spacing="10" layoutX="509.0" layoutY="80.0" AnchorPane.leftAnchor="509.0" AnchorPane.topAnchor="80.0">
+         <children>
+            <Button fx:id="listenNom" text="Speak" onAction="#handleVoiceInputNom" styleClass="speak-button" />
+         </children>
+      </HBox>
+
       <ComboBox fx:id="a2" blendMode="SRC_ATOP" layoutX="136.0" layoutY="166.0" prefWidth="250.0" promptText="statut" AnchorPane.leftAnchor="136.0" AnchorPane.topAnchor="166.0">
          <items>
             <FXCollections fx:factory="observableArrayList">
@@ -22,6 +27,12 @@
             </FXCollections>
          </items>
       </ComboBox>
+      <HBox spacing="10" layoutX="386.0" layoutY="166.0" AnchorPane.leftAnchor="386.0" AnchorPane.topAnchor="166.0">
+         <children>
+            <Button fx:id="listenStatut" text="Speak" onAction="#handleVoiceInputStatut" styleClass="speak-button" />
+         </children>
+      </HBox>
+
       <ComboBox fx:id="a3" layoutX="136.0" layoutY="266.0" prefWidth="250.0" promptText="priorite" visibleRowCount="100" AnchorPane.leftAnchor="136.0" AnchorPane.topAnchor="266.0">
          <items>
             <FXCollections fx:factory="observableArrayList">
@@ -31,34 +42,37 @@
             </FXCollections>
          </items>
       </ComboBox>
+      <HBox spacing="10" layoutX="386.0" layoutY="266.0" AnchorPane.leftAnchor="386.0" AnchorPane.topAnchor="266.0">
+         <children>
+            <Button fx:id="listenPriorite" text="Speak" onAction="#handleVoiceInputPriorite" styleClass="speak-button" />
+         </children>
+      </HBox>
+
       <TextField fx:id="a4" layoutX="165.0" layoutY="434.0" prefHeight="100.0" prefWidth="506.0" promptText="description" AnchorPane.leftAnchor="136.0" AnchorPane.topAnchor="434.0" />
+      <HBox spacing="10" layoutX="671.0" layoutY="434.0" AnchorPane.leftAnchor="671.0" AnchorPane.topAnchor="434.0">
+         <children>
+            <Button fx:id="listenDescription" text="Speak" onAction="#handleVoiceInputDescription" styleClass="speak-button" />
+         </children>
+      </HBox>
+
       <HBox alignment="CENTER_RIGHT" prefWidth="600.0" spacing="10" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0">
          <children>
             <Button mnemonicParsing="false" onAction="#ajouterAction" styleClass="action-button" text="ajouter" />
             <Button mnemonicParsing="false" onAction="#afficher" styleClass="action-button" text="Afficher" />
          </children>
       </HBox>
+
       <TextField fx:id="a5" layoutX="156.0" layoutY="380.0" prefHeight="30.0" prefWidth="250.0" promptText="ressource" AnchorPane.leftAnchor="136.0" />
-      <Label layoutX="68.0" layoutY="111.0" text="Nom :">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="68.0" layoutY="202.0" text="Statut:">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="56.0" layoutY="302.0" text="Priorite :">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="54.0" layoutY="390.0" text="Ressource :">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
+      <HBox spacing="10" layoutX="406.0" layoutY="380.0" AnchorPane.leftAnchor="406.0" AnchorPane.topAnchor="380.0">
+         <children>
+            <Button fx:id="listenRessource" text="Speak" onAction="#handleVoiceInputRessource" styleClass="speak-button" />
+         </children>
+      </HBox>
+
+      <Label layoutX="68.0" layoutY="111.0" text="Nom :" />
+      <Label layoutX="68.0" layoutY="202.0" text="Statut:" />
+      <Label layoutX="56.0" layoutY="302.0" text="Priorite :" />
+      <Label layoutX="54.0" layoutY="390.0" text="Ressource :" />
       <Label layoutX="54.0" layoutY="504.0" text="Description :" />
    </children>
 </AnchorPane>

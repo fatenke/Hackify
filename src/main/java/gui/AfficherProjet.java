@@ -16,7 +16,6 @@ import services.ProjetService;
 
 import java.io.IOException;
 import java.util.List;
-import javafx.scene.control.Button;
 
 public class AfficherProjet {
     private ProjetService projetService = new ProjetService();
@@ -29,22 +28,21 @@ public class AfficherProjet {
 
     @FXML
     private Button cancelaffichage;
+
     @FXML
     void initialize() {
-        // Add search listener (if searchField exists in FXML)
         if (searchField != null) {
             searchField.textProperty().addListener((obs, oldValue, newValue) -> {
                 filterProjects(newValue);
+
             });
         }
 
-        // Fetch and display all projects on the JavaFX Application Thread
         Platform.runLater(() -> displayProjects(projetService.getAll()));
     }
 
     public void refreshProjects() {
         System.out.println("Refreshing projects in AfficherProjet...");
-        // Ensure UI updates happen on the JavaFX Application Thread
         Platform.runLater(() -> {
             List<Projet> projets = projetService.getAll();
             System.out.println("Refreshed projects: " + projets);
@@ -53,18 +51,16 @@ public class AfficherProjet {
     }
 
     private void displayProjects(List<Projet> projets) {
-        g1.getChildren().clear(); // Clear existing content
+        g1.getChildren().clear();
 
-        int col = 0; // Start with column 0
-        int row = 0; // Start with row 0
+        int col = 0;
+        int row = 0;
 
-        // Iterate through each project and add it to the GridPane in a 3-column layout
         for (Projet p : projets) {
-            // Create a VBox to stack the project's attributes vertically
-            VBox projectBox = new VBox(5); // 5px spacing between elements
-            projectBox.getStyleClass().add("grid-pane"); // Apply CSS class instead of inline styles
+            VBox projectBox = new VBox(5);
+            projectBox.getStyleClass().add("grid-pane");
 
-            // Add project attributes to the VBox with tooltips
+            // Project attributes with tooltips
             Label nameLabel = new Label("Name: " + (p.getNom() != null ? p.getNom() : ""));
             nameLabel.setTooltip(new javafx.scene.control.Tooltip("Project Name: " + (p.getNom() != null ? p.getNom() : "")));
 
@@ -76,36 +72,40 @@ public class AfficherProjet {
 
             Label descLabel = new Label("Description: " + (p.getDescription() != null ? p.getDescription() : "..."));
             descLabel.setTooltip(new javafx.scene.control.Tooltip("Project Description: " + (p.getDescription() != null ? p.getDescription() : "...")));
-            descLabel.setWrapText(true); // Ensure long descriptions wrap
+            descLabel.setWrapText(true);
 
             Label ressourceLabel = new Label("Ressource: " + (p.getRessource() != null ? p.getRessource() : "..."));
             ressourceLabel.setTooltip(new javafx.scene.control.Tooltip("Project Ressource: " + (p.getRessource() != null ? p.getRessource() : "...")));
 
-            // Create an HBox to hold both Update and Delete buttons side by side
-            HBox buttonBox = new HBox(5); // 5px spacing between buttons
+            // HBox for Update and Delete buttons
+            HBox buttonBox = new HBox(5);
             Button updateButton = new Button("Update");
-            updateButton.getStyleClass().add("update-button"); // Apply CSS style class
+            updateButton.getStyleClass().add("update-button");
             updateButton.setTooltip(new javafx.scene.control.Tooltip("Update this project"));
             updateButton.setOnAction(e -> handleUpdate(p));
 
             Button deleteButton = new Button("Delete");
-            deleteButton.getStyleClass().add("delete-button"); // Apply CSS style class
+            deleteButton.getStyleClass().add("delete-button");
             deleteButton.setTooltip(new javafx.scene.control.Tooltip("Delete this project"));
             deleteButton.setOnAction(e -> handleDelete(p));
 
             buttonBox.getChildren().addAll(updateButton, deleteButton);
 
-            // Add labels and button box to the VBox
-            projectBox.getChildren().addAll(nameLabel, statusLabel, priorityLabel, descLabel, ressourceLabel, buttonBox);
+            // Add TTS button
+            Button ttsButton = new Button("Listen");
+            ttsButton.getStyleClass().add("tts-button"); // Optional: Add a CSS class for styling
+            ttsButton.setTooltip(new javafx.scene.control.Tooltip("Listen to project details"));
+            ttsButton.setOnAction(e -> handleTTS(p)); // Call TTS function
 
-            // Add the VBox to the GridPane
+            // Add all components to the VBox
+            projectBox.getChildren().addAll(nameLabel, statusLabel, priorityLabel, descLabel, ressourceLabel, buttonBox, ttsButton);
+
             g1.add(projectBox, col, row);
 
-            // Move to the next column; if at the end of the row, move to the next row
             col++;
-            if (col == 3) { // 3 columns per row
+            if (col == 3) {
                 col = 0;
-                row++; // Move to the next row for the next set of projects
+                row++;
             }
         }
     }
@@ -124,24 +124,22 @@ public class AfficherProjet {
             }
         }
 
-        displayProjects(filteredProjects); // Display filtered projects
+        displayProjects(filteredProjects);
     }
 
     private void handleUpdate(Projet p) {
-        // Handle the update logic here (e.g., open a dialog or navigate to an update screen)
         System.out.println("Updating project: " + (p.getNom() != null ? p.getNom() : ""));
         try {
-            // Load the UpdateProjet FXML and open it in a new stage
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/UpdateProjet.fxml"));
             Parent root = loader.load();
 
             UpdateProjet updateController = loader.getController();
             updateController.setProjet(p);
-            updateController.setAfficherProjetController(this); // Pass this controller to UpdateProjet
+            updateController.setAfficherProjetController(this);
 
-            javafx.stage.Stage stage = new javafx.stage.Stage();
+            Stage stage = new Stage();
             stage.setTitle("Update Project");
-            stage.setScene(new javafx.scene.Scene(root, 400, 400)); // Match the size in UpdateProjet.fxml
+            stage.setScene(new javafx.scene.Scene(root, 400, 400));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -149,19 +147,36 @@ public class AfficherProjet {
     }
 
     private void handleDelete(Projet p) {
-        // Handle the delete logic here
         try {
-            projetService.delete(p); // Delete the project using the service
+            projetService.delete(p);
             System.out.println("Project deleted: " + (p.getNom() != null ? p.getNom() : ""));
-            // Refresh the view by reinitializing the GridPane (re-load projects)
-            refreshProjects(); // Use the new refresh method
+            refreshProjects();
         } catch (Exception e) {
             System.out.println("Error deleting project: " + e.getMessage());
         }
     }
 
+    private void handleTTS(Projet p) {
+        // Prepare the text to speak (combine project details)
+        String textToSpeak = "Project Details: Name - " + (p.getNom() != null ? p.getNom() : "") +
+                ", Status - " + (p.getStatut() != null ? p.getStatut() : "") +
+                ", Priority - " + (p.getPriorite() != null ? p.getPriorite() : "") +
+                ", Description - " + (p.getDescription() != null ? p.getDescription() : "") +
+                ", Resource - " + (p.getRessource() != null ? p.getRessource() : "");
 
+        // Call Python script for TTS
+        try {
+            // Specify the path to your Python script (adjust the path as needed)
+            String pythonScriptPath = "C:\\Users\\Mega-Pc\\Desktop\\pi\\Projet\\python\\textToSpeech.py";
+            // Use ProcessBuilder to execute the Python script, passing the text as an argument
+            ProcessBuilder pb = new ProcessBuilder("python", pythonScriptPath, textToSpeak);
+            pb.redirectErrorStream(true); // Combine stdout and stderr
+            Process pProcess = pb.start();
+            // Optionally, read the output or wait for the process to complete
+            pProcess.waitFor();
+        } catch (IOException | InterruptedException e) {
+            System.out.println("Error executing TTS script: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }
-
-
-

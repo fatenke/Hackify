@@ -89,3 +89,24 @@
 .button.delete-button:hover {
     -fx-background-color: #da190b; /* Darker red on hover */
 }
+
+.tts-button {
+    -fx-background-color: #4CAF50; /* Green button */
+    -fx-text-fill: white;
+    -fx-padding: 5;
+    -fx-font-size: 12;
+}
+
+.tts-button:hover {
+    -fx-background-color: #45a049; /* Darker green on hover */
+}
+.speak-button {
+    -fx-background-color: #4CAF50; /* Green button */
+    -fx-text-fill: white;
+    -fx-padding: 5;
+    -fx-font-size: 12;
+}
+
+.speak-button:hover {
+    -fx-background-color: #45a049; /* Darker green on hover */
+}
