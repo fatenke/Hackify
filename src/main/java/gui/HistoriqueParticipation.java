@@ -48,6 +48,8 @@ public class HistoriqueParticipation {
             cancelButton.setOnAction(e -> handleCancelParticipation(participation));
 
             Button detaillsButton = new Button("voir detaills hackathon");
+            detaillsButton.setOnAction(e -> handleCancelParticipation(participation));
+
 
             // Ajouter les éléments dans les cellules du GridPane
            /* participationGrid.add(hackathonText, 0, row);*/
@@ -62,7 +64,6 @@ public class HistoriqueParticipation {
 
     public void handleCancelParticipation(Participation participation) {
         if (participation != null) {
-            // Vérifier et annuler la participation
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Annulation");
             alert.setHeaderText("Confirmer l'annulation de la participation");

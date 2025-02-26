@@ -40,6 +40,18 @@ public class Hackathon {
         this.lieu=lieu;
         /*this.type_participation=type_participation;*/
     }
+    public Hackathon(int id_hackathon,int id_organisateur,String nom_hackathon,String description,String theme,LocalDateTime date_debut, LocalDateTime date_fin,String lieu,int max_participants,String type_participation) {
+        this.id_hackathon=id_hackathon;
+        this.id_organisateur=id_organisateur;
+        this.nom_hackathon=nom_hackathon;
+        this.description=description;
+        this.theme= theme;
+        this.date_debut = date_debut;
+        this.date_fin = date_fin;
+        this.lieu=lieu;
+        this.type_participation=type_participation;
+        this.max_participants=max_participants;
+    }
     public Hackathon(String nom_hackathon,String description,String theme,LocalDateTime date_debut, LocalDateTime date_fin,String lieu,String type_participation,int max_participants) {
         this.nom_hackathon=nom_hackathon;
         this.description=description;
@@ -128,16 +140,16 @@ public class Hackathon {
     @Override
     public String toString() {
         return "Hackathon{" +
-                "\nid_organisateur=" + id_organisateur +
-                "\nnom_hackathon='" + nom_hackathon +
-                "\ndescription='" + description +
-                "\ndate_debut=" + date_debut +
-                "\ndate_fin=" + date_fin +
-                "\nlieu='" + lieu +
-                "\ntheme='" + theme +
-                 +
+                "date_debut=" + date_debut +
+                ", id_hackathon=" + id_hackathon +
+                ", id_organisateur=" + id_organisateur +
+                ", nom_hackathon='" + nom_hackathon + '\'' +
+                ", description='" + description + '\'' +
+                ", date_fin=" + date_fin +
+                ", lieu='" + lieu + '\'' +
+                ", theme='" + theme + '\'' +
+                ", type_participation='" + type_participation + '\'' +
+                ", max_participants=" + max_participants +
                 '}';
     }
-
-
 }

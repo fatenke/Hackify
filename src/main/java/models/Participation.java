@@ -28,7 +28,6 @@ public class Participation {
     }
     public Participation(int idHackathon) {
         this.id_hackathon=idHackathon;
-
     }
 
     public int getIdParticipation() {

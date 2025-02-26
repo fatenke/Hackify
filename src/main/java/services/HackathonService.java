@@ -49,7 +49,7 @@ public class HackathonService implements GlobalInterface<Hackathon> {
     @Override
     public void update(Hackathon hackathon) {
 
-        String req = "UPDATE `hackathon` SET `nom_hackathon`=?,`description`=?,`date_debut`=?,`date_fin`=?,`lieu`=?,`theme`=? WHERE `id_hackathon`= ? ";
+        String req = "UPDATE `hackathon` SET `nom_hackathon`=?,`description`=?,`date_debut`=?,`date_fin`=?,`lieu`=?,`theme`=?,`max_participants`='?',`type_participation`='?' WHERE `id_hackathon`= ? ";
 
         try (PreparedStatement statement = connection.prepareStatement(req)) {
             statement.setString(1, hackathon.getNom_hackathon());
@@ -58,8 +58,9 @@ public class HackathonService implements GlobalInterface<Hackathon> {
             statement.setTimestamp(4, java.sql.Timestamp.valueOf(hackathon.getDate_fin()));
             statement.setString(5, hackathon.getLieu());
             statement.setString(6, hackathon.getTheme());
-            /*statement.setString(7, hackathon.getConditions_participation());*/
-            statement.setInt(8, hackathon.getId_hackathon());
+            statement.setInt(7, hackathon.getMax_participants());
+            statement.setString(8, hackathon.getType_participation());
+            statement.setInt(9, hackathon.getId_hackathon());
 
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected > 0) {
@@ -90,8 +91,9 @@ public class HackathonService implements GlobalInterface<Hackathon> {
                         resultSet.getString("theme"),
                         resultSet.getTimestamp("date_debut").toLocalDateTime(),
                         resultSet.getTimestamp("date_fin").toLocalDateTime(),
-                        resultSet.getString("lieu")
-                        /*resultSet.getString("conditions_participation")*/
+                        resultSet.getString("lieu"),
+                        resultSet.getInt("max_participants"),
+                        resultSet.getString("type_participation")
                 );
                 hackathons.add(hackathon);
             }

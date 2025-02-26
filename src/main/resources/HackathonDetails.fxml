@@ -8,7 +8,7 @@
 
 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="789.0" prefWidth="1261.0" style="-fx-background-color: #1e0425;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.HackathonDetails">
     <VBox minWidth="200">
-        <fx:include source="NavBar.fxml"/>
+        <fx:include source="NavBar.fxml" />
     </VBox>
 <VBox alignment="CENTER" layoutX="617.0" layoutY="14.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="678.0" prefWidth="629.0">
     <Label fx:id="labelNom" text="Nom du Hackathon:" />
@@ -19,8 +19,8 @@
     <Label fx:id="labelDescription" text="Description du Hackathon:" />
     <HBox alignment="CENTER" prefHeight="0.0" prefWidth="200.0">
         <children>
-            <Button mnemonicParsing="false" style="-fx-background-color: #f775d6;" text="Individuelle" />
-            <Button mnemonicParsing="false" style="-fx-background-color: #f775d6;" text="En équipe" />
+            <Button mnemonicParsing="false" onAction="#ParticiperIndiv" style="-fx-background-color: #f775d6;" text="Individuelle" />
+            <Button mnemonicParsing="false" onAction="#participerEnEquipe" style="-fx-background-color: #f775d6;" text="En équipe" />
         </children>
     </HBox>
 

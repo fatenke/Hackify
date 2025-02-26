@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
 
 
-public class AjouterParticipation {
+public class AfficherParticipation {
     @FXML
     public void start(Stage primaryStage) {
         // Titre de la fenêtre
