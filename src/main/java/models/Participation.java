@@ -10,7 +10,9 @@ public class Participation {
     private boolean estEquipe;
     private String statut;
 
+    public Participation(){
 
+    }
     public Participation( int idHackathon, int idParticipant , LocalDateTime dateInscription, String statut) {
         this.id_hackathon = idHackathon;
         this.idParticipant = idParticipant;

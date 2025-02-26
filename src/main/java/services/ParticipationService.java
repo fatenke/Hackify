@@ -103,4 +103,14 @@ public class ParticipationService implements GlobalInterface<Participation> {
 
 
     }
+    public Participation getParticipationByHackathon(int id_hackathon){
+        Participation participation = new Participation();
+        List<Participation> participations = getAll();
+        for(Participation p :participations){
+            if(p.getIdHackathon()==id_hackathon){
+                participation=p;
+            }
+        }
+        return participation;
+    }
 }

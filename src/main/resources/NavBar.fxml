@@ -26,9 +26,18 @@
                     </Label>
                 </children>
             </HBox>
-            <Button fx:id="btAfficherHackathon" mnemonicParsing="false" onAction="#AfficherHackathon" prefHeight="55.0" prefWidth="363.0" style="-fx-text-fill: white; -fx-background-color: #1b3347; -fx-background-radius: 15px;" text="Liste des hackathon" />
-            <Button fx:id="btAjouterHackathon" mnemonicParsing="false" onAction="#AjouterHackathon" prefHeight="55.0" prefWidth="363.0" style="-fx-text-fill: white; -fx-background-color: #1b3347; -fx-background-radius: 15px;" text="Ajouter un hackathon" />
-         <Button fx:id="btHistoriqueParticipation" mnemonicParsing="false" onAction="#AfficherParticipation" prefHeight="55.0" prefWidth="363.0" style="-fx-text-fill: white; -fx-background-color: #1b3347; -fx-background-radius: 15px;" text="Historique de Participation" />
+            <Button fx:id="btAfficherHackathon" mnemonicParsing="false" onAction="#AfficherHackathon" prefHeight="55.0" prefWidth="363.0" style="-fx-text-fill: white; -fx-background-color: #1b3347; -fx-background-radius: 15px;" text="Liste des hackathon">
+            <font>
+               <Font size="18.0" />
+            </font></Button>
+            <Button fx:id="btAjouterHackathon" mnemonicParsing="false" onAction="#AjouterHackathon" prefHeight="55.0" prefWidth="363.0" style="-fx-text-fill: white; -fx-background-color: #1b3347; -fx-background-radius: 15px;" text="Ajouter un hackathon">
+            <font>
+               <Font size="18.0" />
+            </font></Button>
+         <Button fx:id="btHistoriqueParticipation" mnemonicParsing="false" onAction="#AfficherParticipation" prefHeight="55.0" prefWidth="363.0" style="-fx-text-fill: white; -fx-background-color: #1b3347; -fx-background-radius: 15px;" text="Historique de Participation">
+            <font>
+               <Font size="18.0" />
+            </font></Button>
         </children>
     </VBox>
 

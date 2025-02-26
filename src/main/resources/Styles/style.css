@@ -76,6 +76,7 @@
 .grid-pane {
     -fx-border-color: #ddd;
     -fx-border-width: 1px;
+        -fx-background-color: #D291BC;
     -fx-padding: 10;
     -fx-spacing: 10;
 }
@@ -91,6 +92,7 @@
 
 /* Style des lignes du GridPane */
 .grid-pane .row {
+    -fx-background-color: #D291BC;
     -fx-border-color: #eee;
     -fx-border-width: 0 0 1px 0;
 }
@@ -103,6 +105,7 @@
     -fx-padding: 10;
     -fx-border-radius: 5px;
     -fx-cursor: hand;
+     -fx-background-color: #3498DB;
 }
 
 /* Change la couleur du bouton au survol */
