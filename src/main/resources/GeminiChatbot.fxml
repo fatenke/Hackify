@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.GeminiApiController">
+    <VBox spacing="10" alignment="TOP_CENTER">
+        <Label text="Ask Gemini API" style="-fx-font-size: 18px;"/>
+        <TextField fx:id="questionField" promptText="Type your question here..."/>
+        <Button fx:id="sendButton" text="Send" onAction="#handleSendRequest"/>
+        <TextArea fx:id="responseArea" editable="false" wrapText="true" prefHeight="400"/>
+    </VBox>
+</AnchorPane>

@@ -41,12 +41,23 @@ public class TestFX extends Application {
 
     private void loadTabs() {
         try {
-            // Load only the content inside each tab
+            // Load existing tabs
             Parent ajouterEvaluation = FXMLLoader.load(getClass().getResource("/AjouterEvaluation.fxml"));
             Parent afficherEvaluation = FXMLLoader.load(getClass().getResource("/AfficherEvaluation.fxml"));
             Parent ajouterVote = FXMLLoader.load(getClass().getResource("/AjouterVote.fxml"));
             Parent afficherVote = FXMLLoader.load(getClass().getResource("/AfficherVote.fxml"));
             Parent complexEvaluationAnalysis = FXMLLoader.load(getClass().getResource("/ComplexEvaluationAnalysis.fxml"));
+
+            Parent chatbotView = FXMLLoader.load(getClass().getResource("/GeminiChatbot.fxml"));
+
+
+
+// Add this inside loadTabs()
+
+
+
+            // Load Chatbot tab
+
 
             // Create Tabs
             Tab tab1 = new Tab("Ajouter Evaluation", ajouterEvaluation);
@@ -54,6 +65,7 @@ public class TestFX extends Application {
             Tab tab3 = new Tab("Ajouter Vote", ajouterVote);
             Tab tab4 = new Tab("Afficher Vote", afficherVote);
             Tab tab5 = new Tab("Complex Evaluation Analysis", complexEvaluationAnalysis);
+            Tab tab6 = new Tab("Chatbot", chatbotView);
 
             // Make tabs permanent
             tab1.setClosable(false);
@@ -61,9 +73,10 @@ public class TestFX extends Application {
             tab3.setClosable(false);
             tab4.setClosable(false);
             tab5.setClosable(false);
+            tab6.setClosable(false);
 
             // Add all tabs
-            tabPane.getTabs().setAll(tab1, tab2, tab3, tab4, tab5);
+            tabPane.getTabs().setAll(tab1, tab2, tab3, tab4, tab5,tab6);
         } catch (IOException e) {
             e.printStackTrace();
         }
