@@ -1,41 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="498.0" prefWidth="625.0" style="-fx-background-color: #800080;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AfficherEvaluation">
-    <children>
-        <ImageView fx:id="imageView" fitHeight="100.0" fitWidth="100.0" layoutX="480.0" layoutY="10.0">
-            <image>
-                <Image url="@ss.png" />
-            </image>
-        </ImageView>
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AfficherEvaluation" prefHeight="498.0" prefWidth="825.0">
+    <!-- Left Navigation Bar -->
+    <left>
+        <fx:include source="NavBar.fxml"/>
+    </left>
 
-        <!-- Search field and button -->
-        <TextField fx:id="searchField" layoutX="11.0" layoutY="60.0" prefWidth="200.0" promptText="Taper l'identifiant du projet" />
-        <Button fx:id="searchButton" layoutX="220.0" layoutY="60.0" onAction="#searchByProjectId" text="Rechercher" style="-fx-background-color: #4fa3f7; -fx-text-fill: #FFFFFF;"/>
+    <!-- Center Content (Main Page) -->
+    <center>
+        <AnchorPane prefHeight="498.0" prefWidth="625.0" style="-fx-background-color: #800080;">
+            <children>
+                <ImageView fx:id="imageView" fitHeight="100.0" fitWidth="100.0" layoutX="480.0" layoutY="10.0">
+                    <image>
+                        <Image url="@ss.png" />
+                    </image>
+                </ImageView>
 
-        <!-- ListView with blue stylish design -->
-        <ListView fx:id="listView" layoutX="11.0" layoutY="100.0" prefHeight="298.0" prefWidth="602.0" style="-fx-background-color: #e6f2ff; -fx-border-color: #4fa3f7; -fx-border-width: 2px; -fx-font-size: 14px; -fx-padding: 10px;" />
+                <!-- Search field and button -->
+                <TextField fx:id="searchField" layoutX="11.0" layoutY="60.0" prefWidth="200.0" promptText="Taper l'identifiant du projet" />
+                <Button fx:id="searchButton" layoutX="220.0" layoutY="60.0" onAction="#searchByProjectId" text="Rechercher" style="-fx-background-color: #4fa3f7; -fx-text-fill: #FFFFFF;"/>
 
-        <Button fx:id="generatePdfButton" layoutX="380.0" layoutY="408.0" onAction="#generatePdf" style="-fx-background-color: #4fa3f7; -fx-text-fill: #FFFFFF;" text="Generate PDF" />
-        <Button layoutX="506.0" layoutY="408.0" onAction="#backToAjouterEvaluation" style="-fx-background-color: #4fa3f7; -fx-text-fill: #FFFFFF;" text="Back" />
-        <Button fx:id="btnGoToAnalyse" layoutX="382.0" layoutY="452.0" onAction="#goToAnalyse" style="-fx-background-color: #4fa3f7; -fx-text-fill: #FFFFFF;" text="Analyse des évaluation">
-            <font>
-                <Font size="15.0" />
-            </font>
-        </Button>
+                <!-- ListView with blue stylish design -->
+                <ListView fx:id="listView" layoutX="11.0" layoutY="100.0" prefHeight="298.0" prefWidth="602.0" style="-fx-background-color: #e6f2ff; -fx-border-color: #4fa3f7; -fx-border-width: 2px; -fx-font-size: 14px; -fx-padding: 10px;" />
 
-        <Text fill="WHITE" layoutX="75.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Liste des évaluations">
-            <font>
-                <Font size="25.0" />
-            </font>
-        </Text>
-    </children>
-</AnchorPane>
+                <Button fx:id="generatePdfButton" layoutX="380.0" layoutY="408.0" onAction="#generatePdf" style="-fx-background-color: #4fa3f7; -fx-text-fill: #FFFFFF;" text="Generate PDF" />
+
+
+                <Text fill="WHITE" layoutX="75.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Liste des évaluations">
+                    <font>
+                        <Font size="25.0" />
+                    </font>
+                </Text>
+            </children>
+        </AnchorPane>
+    </center>
+</BorderPane>

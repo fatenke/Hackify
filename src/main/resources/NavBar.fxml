@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.NavBar" spacing="10" alignment="center" style="-fx-background-color: #333; -fx-padding: 20;">
+    <Button text="Ajouter Evaluation" fx:id="btAjouterEvaluation" onAction="#AjouterEvaluation" style="-fx-font-size: 14px; -fx-background-color: #4fa3f7; -fx-text-fill: white; -fx-padding: 10px 20px;"/>
+    <Button text="Afficher Evaluation" fx:id="btAfficherEvaluation" onAction="#AfficherEvaluation" style="-fx-font-size: 14px; -fx-background-color: #4fa3f7; -fx-text-fill: white; -fx-padding: 10px 20px;"/>
+    <Button text="Ajouter Vote" fx:id="btAjouterVote" onAction="#AjouterVote" style="-fx-font-size: 14px; -fx-background-color: #4fa3f7; -fx-text-fill: white; -fx-padding: 10px 20px;"/>
+    <Button text="Afficher Vote" fx:id="btAfficherVote" onAction="#AfficherVote" style="-fx-font-size: 14px; -fx-background-color: #4fa3f7; -fx-text-fill: white; -fx-padding: 10px 20px;"/>
+    <Button text="Chatbot" fx:id="btChatbot" onAction="#Chatbot" style="-fx-font-size: 14px; -fx-background-color: #4fa3f7; -fx-text-fill: white; -fx-padding: 10px 20px;"/>
+    <Button text="Analyse" fx:id="btAnalyse" onAction="#Analyse" style="-fx-font-size: 14px; -fx-background-color: #4fa3f7; -fx-text-fill: white; -fx-padding: 10px 20px;"/>
+</VBox>
