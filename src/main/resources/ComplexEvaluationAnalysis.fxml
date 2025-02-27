@@ -3,15 +3,21 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="gui.ComplexEvaluationAnalysis">
-    <VBox spacing="10" alignment="CENTER">
-        <Label text="Analyse des evaluations" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-        <ListView fx:id="analysisListView" prefHeight="200" prefWidth="400"/>
-        <Label fx:id="averageTechLabel" text="Moyenne des notes techniques:"/>
-        <Label fx:id="averageInnovLabel" text="Moyenne des notes d'innovation:"/>
-        <Label fx:id="highestTechProjectLabel" text="Identifiant du Projet avec la plus haute note technique:"/>
-        <Label fx:id="highestInnovProjectLabel" text="Identifiant du Projet avec la plus haute note d'innovation:"/>
-        <Button layoutX="506.0" layoutY="408.0" onAction="#backToAfficherEvaluation" style="-fx-background-color: #4fa3f7; -fx-text-fill: #FFFFFF; -fx-font-size: 14px;" text="Back" />
+<AnchorPane prefHeight="600" prefWidth="800" style="-fx-background-color: #800080;" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ComplexEvaluationAnalysis">
+    <VBox spacing="10" alignment="CENTER" style="-fx-padding: 20;">
+        <Label text="Analyse des Evaluations" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #FFFFFF;"/>
+        <ListView fx:id="analysisListView" prefHeight="200" prefWidth="600" style="-fx-background-color: #e6f2ff; -fx-border-color: #4fa3f7; -fx-border-width: 2px; -fx-font-size: 14px; -fx-padding: 10px;"/>
+        <Label fx:id="averageTechLabel" text="Moyenne des notes techniques:" style="-fx-text-fill: #FFFFFF;"/>
+        <Label fx:id="averageInnovLabel" text="Moyenne des notes d'innovation:" style="-fx-text-fill: #FFFFFF;"/>
+        <Label fx:id="highestTechProjectLabel" text="Projet avec la plus haute note technique:" style="-fx-text-fill: #FFFFFF;"/>
+        <Label fx:id="highestInnovProjectLabel" text="Projet avec la plus haute note d'innovation:" style="-fx-text-fill: #FFFFFF;"/>
+
+        <!-- Leaderboard Section -->
+        <Label text="Top 3 projets avec les meilleures notes combinées:" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #FFFF00;"/>
+        <ListView fx:id="leaderboardListView" prefHeight="150" prefWidth="600" style="-fx-background-color: #fff3cd; -fx-border-color: #ffc107; -fx-border-width: 2px; -fx-font-size: 14px; -fx-padding: 10px;"/>
+
+        <Button layoutX="506.0" layoutY="408.0" onAction="#backToAfficherEvaluation"
+                style="-fx-background-color: #4fa3f7; -fx-text-fill: #FFFFFF; -fx-font-size: 14px; -fx-padding: 10px 20px;"
+                text="Back" />
     </VBox>
 </AnchorPane>
