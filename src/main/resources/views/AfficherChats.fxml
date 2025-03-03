@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controllers.AfficherChatsController">
+
+    <!-- Top: Header Section with Chat Title and Return Button -->
+    <top>
+        <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-background-color: #e26ecc; -fx-padding: 15;">
+            <Label fx:id="chatTitle" text="Chat Title"
+                   style="-fx-font-size: 24; -fx-text-fill: white; -fx-font-weight: bold;"/>
+            <Button fx:id="returnButton" text="Return" onAction="#handleReturn"
+                    style="-fx-background-color: #34727e; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 8 15 8 15; -fx-cursor: hand;"/>
+        </HBox>
+    </top>
+
+    <!-- Left: Sidebar with Existing Chats -->
+    <left>
+        <VBox spacing="10" prefWidth="200" style="-fx-background-color: #34727e; -fx-padding: 10;">
+            <Label text="Existing Chats"
+                   style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: white;"/>
+            <ListView fx:id="chatsListView"
+                      style="-fx-background-color: white; -fx-border-color: #82e9f1;"/>
+        </VBox>
+    </left>
+
+    <!-- Center: Chat Conversation and Message Input -->
+    <center>
+        <VBox spacing="10" style="-fx-padding: 10; -fx-background-color: white;">
+            <!-- Chat messages list -->
+            <ListView fx:id="messagesListView" VBox.vgrow="ALWAYS"
+                      style="-fx-background-color: white; -fx-border-color: #82e9f1;"/>
+
+            <!-- Message input and send button -->
+            <HBox spacing="10" alignment="CENTER">
+                <TextField fx:id="messageField" promptText="Type your message here..."
+                           HBox.hgrow="ALWAYS"
+                           style="-fx-padding: 8; -fx-border-color: #82e9f1;"/>
+                <Button fx:id="sendButton" text="Send" onAction="#handleSendMessage"
+                        style="-fx-background-color: #34727e; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 8 15 8 15; -fx-cursor: hand;"/>
+            </HBox>
+        </VBox>
+    </center>
+
+</BorderPane>

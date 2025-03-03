@@ -118,5 +118,28 @@ public class MessageService implements GlobalInterface<Message> {
         return null;
     }
 
+    public List<Message> getMessagesByChatId(int chatId) {
+        List<Message> messages = new ArrayList<>();
+        String sql = "SELECT * FROM message WHERE chat_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, chatId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                messages.add(new Message(
+                        rs.getInt("id"),
+                        rs.getInt("chat_id"),
+                        rs.getString("contenu"),
+                        Message.MessageType.valueOf(rs.getString("type")),
+                        rs.getTimestamp("post_time"),
+                        rs.getInt("posted_by")
+                ));
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération des messages : " + e.getMessage());
+        }
+        return messages;
+    }
+
+
 }
 

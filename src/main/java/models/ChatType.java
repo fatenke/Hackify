@@ -1,8 +1,8 @@
 package models;
-
 public enum ChatType {
-    ANNONCE,
+    ANNOUNCEMENT,
     QUESTION,
     FEEDBACK,
-    CUSTOM;
+    COACH,
+    CUSTOM
 }

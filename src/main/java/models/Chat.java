@@ -11,6 +11,8 @@ public class Chat {
     private Timestamp dateCreation;
 
 
+
+
     public Chat(){}
     public Chat(int id, int communauteId, String nom, ChatType type, Timestamp dateCreation) {
         this.id = id;

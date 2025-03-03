@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="Controllers.CommunityCardController"
+      prefHeight="150.0" prefWidth="200.0"
+      spacing="10"
+      style="
+        -fx-background-color: #f9f9f9;
+        -fx-border-color: #82e9f1;
+        -fx-border-radius: 5px;
+        -fx-background-radius: 5px;
+        -fx-padding: 10;
+        -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.2), 4, 0, 0, 2);
+      ">
+
+    <HBox alignment="CENTER" spacing="10">
+        <Label fx:id="communityName" text="Community Name"
+               style="-fx-font-weight: bold; -fx-font-size: 16; -fx-text-fill: #1e0425;"/>
+        <Button fx:id="seeChatsButton" text="See Chats" onAction="#handleSeeChats"
+                style="-fx-background-color: #34727e; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 5 10 5 10;"/>
+    </HBox>
+
+    <Label fx:id="communityDescription" text="Community Description" wrapText="true"
+           maxWidth="180"
+           style="-fx-text-fill: #666;"/>
+</VBox>
