@@ -150,7 +150,26 @@ public class ChatService implements GlobalInterface<Chat> {
             return chats;
         }
 
+    public Chat getChatById(int chatId) {
+        String sql = "SELECT * FROM chat WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, chatId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new Chat(
+                        rs.getInt("id"),
+                        rs.getInt("communaute_id"),
+                        rs.getString("nom"),
+                        ChatType.valueOf(rs.getString("type")),
+                        rs.getTimestamp("date_creation")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
+}
 
 
 

@@ -11,40 +11,39 @@
 <BorderPane xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Controllers.AfficherChatsController">
 
-    <!-- Top: Header Section with Chat Title and Return Button -->
+    <!-- Top: Header Section -->
     <top>
-        <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-background-color: #e26ecc; -fx-padding: 15;">
+        <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-background-color: #8A2BE2; -fx-padding: 15;">
             <Label fx:id="chatTitle" text="Chat Title"
                    style="-fx-font-size: 24; -fx-text-fill: white; -fx-font-weight: bold;"/>
             <Button fx:id="returnButton" text="Return" onAction="#handleReturn"
-                    style="-fx-background-color: #34727e; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 8 15 8 15; -fx-cursor: hand;"/>
+                    style="-fx-background-color: #4A148C; -fx-text-fill: white; -fx-background-radius: 15; -fx-padding: 8 20; -fx-cursor: hand;"/>
         </HBox>
     </top>
 
-    <!-- Left: Sidebar with Existing Chats -->
+    <!-- Left: Sidebar -->
     <left>
-        <VBox spacing="10" prefWidth="200" style="-fx-background-color: #34727e; -fx-padding: 10;">
+        <VBox spacing="10" prefWidth="220" style="-fx-background-color: #4A148C; -fx-padding: 15;">
             <Label text="Existing Chats"
                    style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: white;"/>
             <ListView fx:id="chatsListView"
-                      style="-fx-background-color: white; -fx-border-color: #82e9f1;"/>
+                      style="-fx-background-color: white; -fx-border-color: #B39DDB; -fx-border-radius: 10;"/>
         </VBox>
     </left>
 
-    <!-- Center: Chat Conversation and Message Input -->
+    <!-- Center: Chat Messages -->
     <center>
-        <VBox spacing="10" style="-fx-padding: 10; -fx-background-color: white;">
-            <!-- Chat messages list -->
+        <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: #F5F5F5;">
             <ListView fx:id="messagesListView" VBox.vgrow="ALWAYS"
-                      style="-fx-background-color: white; -fx-border-color: #82e9f1;"/>
+                      style="-fx-background-color: white; -fx-border-color: #B39DDB; -fx-border-radius: 10; -fx-padding: 10;"/>
 
-            <!-- Message input and send button -->
+            <!-- Message Input Box -->
             <HBox spacing="10" alignment="CENTER">
-                <TextField fx:id="messageField" promptText="Type your message here..."
+                <TextField fx:id="messageField" promptText="Type your message..."
                            HBox.hgrow="ALWAYS"
-                           style="-fx-padding: 8; -fx-border-color: #82e9f1;"/>
+                           style="-fx-padding: 12; -fx-border-color: #B39DDB; -fx-border-radius: 20;"/>
                 <Button fx:id="sendButton" text="Send" onAction="#handleSendMessage"
-                        style="-fx-background-color: #34727e; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 8 15 8 15; -fx-cursor: hand;"/>
+                        style="-fx-background-color: #8A2BE2; -fx-text-fill: white; -fx-background-radius: 20; -fx-padding: 8 20; -fx-cursor: hand;"/>
             </HBox>
         </VBox>
     </center>

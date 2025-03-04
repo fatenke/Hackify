@@ -4,5 +4,6 @@ public enum ChatType {
     QUESTION,
     FEEDBACK,
     COACH,
-    CUSTOM
+    CUSTOM,
+    BOT_SUPPORT
 }

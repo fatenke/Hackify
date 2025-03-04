@@ -11,6 +11,7 @@ import models.Chat;
 import models.Message;
 import models.Message.MessageType;
 import services.ChatService;
+import services.GeminiService;
 import services.MessageService;
 import util.MyConnection;
 
@@ -41,6 +42,7 @@ public class AfficherChatsController {
 
     private ChatService chatService;
     private MessageService messageService;
+    private GeminiService geminiService;
 
     // The community ID passed from the previous view
     private int currentCommunityId;
@@ -56,9 +58,10 @@ public class AfficherChatsController {
     public void initialize() {
         chatService = new ChatService();
         messageService = new MessageService(MyConnection.getInstance().getCnx());
-        // Set custom cell factory for messages ListView.
+        geminiService = new GeminiService("AIzaSyAdtU0BkTPvbpbKhK1J6AGNaSwaywhByZc");
         messagesListView.setCellFactory(lv -> new MessageCell());
     }
+
 
     private void loadChats() {
         chatsListView.getItems().clear();
@@ -96,14 +99,21 @@ public class AfficherChatsController {
 
     @FXML
     private void handleSendMessage() {
-        String content = messageField.getText();
-        if (content == null || content.trim().isEmpty() || selectedChat == null) {
-            return;
-        }
-        // For demonstration, we set posted_by to 1 (or change it to 6 if needed)
-        Message newMessage = new Message(selectedChat.getId(), content, MessageType.QUESTION,
-                new Timestamp(System.currentTimeMillis()), 6);
+        String content = messageField.getText().trim();
+        if (content.isEmpty() || selectedChat == null) return;
+
+        // Create and save user message
+        Message newMessage = new Message(
+                selectedChat.getId(),
+                content,
+                MessageType.QUESTION,
+                new Timestamp(System.currentTimeMillis()),
+                6 // Current user ID
+        );
+
         messageService.add(newMessage);
+
+        // Clear field and refresh messages
         messageField.clear();
         loadMessagesForChat(selectedChat.getId());
     }
@@ -133,16 +143,46 @@ public class AfficherChatsController {
         private Button cancelButton = new Button("Cancel");
         private HBox buttonBox = new HBox(5);
         private HBox editBox = new HBox(5);
+        private Message currentMessage;
+
 
         public MessageCell() {
             hbox.getChildren().addAll(messageLabel, buttonBox);
             buttonBox.setSpacing(5);
             editBox.getChildren().addAll(editTextField, saveButton, cancelButton);
-            // Style buttons if needed.
+
             editButton.setStyle("-fx-background-color: #82e9f1; -fx-text-fill: #1e0425;");
             deleteButton.setStyle("-fx-background-color: #e26ecc; -fx-text-fill: white;");
             saveButton.setStyle("-fx-background-color: #34727e; -fx-text-fill: white;");
             cancelButton.setStyle("-fx-background-color: #ccc; -fx-text-fill: black;");
+
+            // Handle Delete
+            deleteButton.setOnAction(e -> {
+                if (currentMessage != null) {
+                    messageService.delete(currentMessage); // Pass the full Message object
+                    getListView().getItems().remove(currentMessage);
+                }
+            });
+
+            // Handle Edit
+            editButton.setOnAction(e -> {
+                editTextField.setText(currentMessage.getContenu());
+                hbox.getChildren().setAll(editBox);
+            });
+
+            saveButton.setOnAction(e -> {
+                String newContent = editTextField.getText().trim();
+                if (!newContent.isEmpty()) {
+                    currentMessage.setContenu(newContent);
+                    messageService.update(currentMessage);
+                    messageLabel.setText("User " + currentMessage.getPostedBy() + ": " + newContent);
+                    hbox.getChildren().setAll(messageLabel, buttonBox);
+                }
+            });
+
+            cancelButton.setOnAction(e -> {
+                hbox.getChildren().setAll(messageLabel, buttonBox);
+            });
         }
 
         @Override
@@ -152,40 +192,18 @@ public class AfficherChatsController {
                 setText(null);
                 setGraphic(null);
             } else {
-                messageLabel.setText("User " + item.getPostedBy() + ": " + item.getContenu());
+                currentMessage = item;
+                String sender = (item.getPostedBy() == -1) ? "Bot" : "User " + item.getPostedBy();
+                messageLabel.setText(sender + ": " + item.getContenu());
+
                 buttonBox.getChildren().clear();
-                // Only allow editing and deletion if posted_by equals 6.
-                if (item.getPostedBy() == 6) {
-                    editButton.setOnAction(e -> {
-                        // Switch to edit mode.
-                        editTextField.setText(item.getContenu());
-                        setGraphic(editBox);
-                    });
-                    deleteButton.setOnAction(e -> {
-                        messageService.delete(item);
-                        loadMessagesForChat(selectedChat.getId());
-                    });
+                if (item.getType() == MessageType.QUESTION && item.getPostedBy() == 6) {
                     buttonBox.getChildren().addAll(editButton, deleteButton);
                 }
-                // If not editing, show the normal HBox.
-                if (getGraphic() != hbox) {
-                    setGraphic(hbox);
-                }
 
-                // Configure save and cancel actions.
-                saveButton.setOnAction(e -> {
-                    String newContent = editTextField.getText();
-                    if (newContent != null && !newContent.trim().isEmpty()) {
-                        item.setContenu(newContent);
-                        messageService.update(item);
-                        setGraphic(hbox);
-                        loadMessagesForChat(selectedChat.getId());
-                    }
-                });
-                cancelButton.setOnAction(e -> {
-                    setGraphic(hbox);
-                });
+                setGraphic(hbox);
             }
         }
+
     }
 }

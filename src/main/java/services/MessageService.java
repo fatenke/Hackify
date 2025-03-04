@@ -1,6 +1,8 @@
 package services;
 
 import Interfaces.GlobalInterface;
+import models.Chat;
+import models.ChatType;
 import models.Communaute;
 import models.Message;
 
@@ -10,27 +12,67 @@ import java.util.List;
 
 public class MessageService implements GlobalInterface<Message> {
     private Connection conn;
-
+    private ChatService chatService = new ChatService();
+    private static final int BOT_USER_ID = 50;
     public MessageService(Connection conn) {
         this.conn = conn;
     }
 
     @Override
     public void add(Message message) {
+        if (message.getPostedBy() == -1) {
+            message.setPostedBy(BOT_USER_ID); // Assign bot messages to the correct bot user ID
+        }
+
         String sql = "INSERT INTO message (chat_id, posted_by, contenu, type, post_time) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, message.getChatId());
             stmt.setInt(2, message.getPostedBy());
             stmt.setString(3, message.getContenu());
-            stmt.setString(4, message.getType().name()); // Store ENUM as String
-            stmt.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
+            stmt.setString(4, message.getType().name());
+            stmt.setTimestamp(5, message.getPostTime());
             stmt.executeUpdate();
-            System.out.println("Message ajouté avec succès !");
-        } catch (SQLException e) {
-            System.out.println("Erreur lors de l'ajout du message : " + e.getMessage());
-        }
-    }
 
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    message.setId(rs.getInt(1));
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error saving message: " + e.getMessage());
+            return;
+        }
+
+        // Check if this is a bot chat and generate a response
+        Chat chat = chatService.getChatById(message.getChatId());
+        if (chat != null && chat.getType() == ChatType.BOT_SUPPORT && message.getPostedBy() != BOT_USER_ID) {
+            try {
+                GeminiService geminiService = new GeminiService(System.getenv("GEMINI_API_KEY"));
+                String botResponse = geminiService.getResponse(message.getContenu());
+
+                Message botMessage = new Message(
+                        message.getChatId(),
+                        botResponse,
+                        Message.MessageType.REPONSE,
+                        new Timestamp(System.currentTimeMillis()),
+                        BOT_USER_ID
+                );
+
+                this.add(botMessage); // Save bot response
+            } catch (Exception e) {
+                System.err.println("Gemini error: " + e.getMessage());
+                Message errorMessage = new Message(
+                        message.getChatId(),
+                        "Could not generate response",
+                        Message.MessageType.REPONSE,
+                        new Timestamp(System.currentTimeMillis()),
+                        BOT_USER_ID
+                );
+                this.add(errorMessage);
+            }
+        }
+
+    }
     @Override
     public void update(Message message) {
         String sql = "UPDATE message SET contenu = ?, type = ? WHERE id = ?";

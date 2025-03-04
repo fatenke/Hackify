@@ -31,10 +31,25 @@
             <artifactId>javafx-controls</artifactId>
             <version>23.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
 
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.14</version>
+        </dependency>
 
     </dependencies>
-
+    <repositories>
+        <repository>
+            <id>google-maven-repository</id>
+            <url>https://maven.google.com</url>
+        </repository>
+    </repositories>
     <build>
         <plugins>
             <plugin>
@@ -50,6 +65,15 @@
                             <arg>javafx.controls,javafx.fxml</arg>
                         </launcherArgs>
                     </launcher>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>services.GeminiService</mainClass>
                 </configuration>
             </plugin>
 
