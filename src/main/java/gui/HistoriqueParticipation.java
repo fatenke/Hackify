@@ -45,10 +45,12 @@ public class HistoriqueParticipation {
 
             // Ajouter le bouton d'annulation
             Button cancelButton = new Button("Annuler");
+            cancelButton.getStyleClass().add("btn-action");
             cancelButton.setOnAction(e -> handleCancelParticipation(participation));
 
             Button detaillsButton = new Button("voir detaills hackathon");
-            detaillsButton.setOnAction(e -> handleCancelParticipation(participation));
+            detaillsButton.getStyleClass().add("btn-action");
+            detaillsButton.setOnAction(e -> detaillsHackathon(hackathon));
 
 
             // Ajouter les éléments dans les cellules du GridPane
@@ -77,6 +79,9 @@ public class HistoriqueParticipation {
                 }
             });
         }
+    }
+    public void detaillsHackathon(Hackathon hackathon){
+
     }
 
 }

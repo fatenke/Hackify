@@ -17,6 +17,7 @@ import services.HackathonService;
 import services.ParticipationService;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import javafx.geometry.Insets;
@@ -41,6 +42,7 @@ public class AfficherHachathon {
         loadHackathons();
     }
     public void loadHackathons(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm");
         List<Hackathon> hackathons = hackathonService.getAll();
         int columns = 3;
         int row = 0, col = 0;
@@ -71,8 +73,10 @@ public class AfficherHachathon {
             nom.setFont(new Font("Arial", 16));
             nom.setStyle("-fx-font-weight: bold; -fx-text-fill: #333;");
 
-            Label date = new Label("📅 " + h.getDate_debut().toString());
-            date.setStyle("-fx-text-fill: #555;");
+            Label date1 = new Label("📅 " + h.getDate_debut().format(formatter));
+            date1.setStyle("-fx-text-fill: #555;");
+            Label date2 = new Label("📅 " + h.getDate_fin().format(formatter));
+            date2.setStyle("-fx-text-fill: #555;");
 
             Label lieu = new Label("📍 " + h.getLieu());
             lieu.setStyle("-fx-text-fill: #777;");
@@ -85,10 +89,10 @@ public class AfficherHachathon {
                 Button participateButton = new Button("Participate");
                 participateButton.getStyleClass().add("btn-action");
                 participateButton.setOnAction(event -> participerHackathon(h));
-                textContainer.getChildren().addAll(nom, date, lieu, hbox, participateButton);
+                textContainer.getChildren().addAll(nom, date1,date2, lieu, hbox, participateButton);
             }
             else {
-                textContainer.getChildren().addAll(nom, date, lieu, hbox);
+                textContainer.getChildren().addAll(nom, date1,date2, lieu, hbox);
                 participationService.refuserParticipationsEnAttente(h.getId_hackathon());
             }
             Button showButton = new Button("Voir Participants");

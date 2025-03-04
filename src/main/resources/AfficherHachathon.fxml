@@ -34,7 +34,7 @@
             <font>
                <Font size="18.0" />
             </font></Text>
-      <GridPane fx:id="gp_hackathon" layoutX="62.0" layoutY="26.0" prefHeight="628.0" prefWidth="1137.0" style="-fx-padding: 15px; -fx-hgap: 30px; -fx-vgap: 10px;">
+      <GridPane fx:id="gp_hackathon" layoutX="62.0" layoutY="26.0" prefHeight="638.0" prefWidth="1078.0" style="-fx-padding: 15px; -fx-hgap: 30px; -fx-vgap: 30px;">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

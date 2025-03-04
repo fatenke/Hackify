@@ -51,6 +51,11 @@ public class Participation {
     }
 
 
+    public void setStatut(String statut) {
+        this.statut = statut;
+    }
+
+
     @Override
     public String toString() {
         return "Participation{" +
