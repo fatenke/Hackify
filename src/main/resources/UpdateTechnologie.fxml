@@ -50,8 +50,9 @@
                     <ComboBox fx:id="compatibiliteCombo" prefWidth="250.0">
                         <items>
                             <FXCollections fx:factory="observableArrayList">
-                                <String fx:value="Oui" />
-                                <String fx:value="Non" />
+                                <String fx:value="Windows" />
+                                <String fx:value="Linux" />
+                                <String fx:value="macOS" />
                             </FXCollections>
                         </items>
                     </ComboBox>

@@ -1,28 +1,26 @@
 package gui;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.event.ActionEvent;
-import services.TechnologieService;
-import models.Technologie;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.control.Label;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import models.Technologie;
+import services.TechnologieService;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AjouterTechnologie {
     private final TechnologieService technologieService = new TechnologieService();
-
-    @FXML
-    private Button b6;
 
     @FXML
     private TextField t1;
@@ -43,38 +41,65 @@ public class AjouterTechnologie {
     private ImageView imageView;
 
     @FXML
-    private ScrollPane scrollPaneTech;
+    private GridPane gridTech; // Removed scrollPaneTech since it’s not directly used
 
     @FXML
-    private GridPane gridTech;
+    private TextField searchFieldTech;
+
+    @FXML
+    private Button searchButtonTech;
 
     public void initialize() {
-        t3.getItems().addAll("Haute", "Moyenne", "Faible");
-        t4.getItems().addAll("Oui", "Non");
+        // Populate ComboBoxes with options
+       // t3.getItems().addAll("Haute", "Moyenne", "Faible");
+       // t4.getItems().addAll("Windows", "Linux", "macOS");
 
         try {
             String imagePath = "/java-logo.png";
-            Image image = new Image(getClass().getResource(imagePath).toExternalForm());
-            imageView.setImage(image);
-            System.out.println("Image loaded successfully from: " + imagePath);
-        } catch (Exception e) {
-            System.err.println("Image not found: " + e.getMessage());
-            try {
-                Image fallbackImage = new Image(getClass().getResource("/images/java_logo.png").toExternalForm());
-                imageView.setImage(fallbackImage);
-                System.out.println("Fallback image loaded successfully from: /images/java_logo.png");
-            } catch (Exception fallbackE) {
-                System.err.println("Fallback image not found: " + fallbackE.getMessage());
-                imageView.setVisible(false);
-                System.err.println("ImageView hidden due to missing images.");
+            // Check if resource exists before creating Image
+            if (getClass().getResource(imagePath) != null) {
+                Image image = new Image(getClass().getResource(imagePath).toExternalForm());
+                imageView.setImage(image);
+                System.out.println("Image loaded successfully from: " + imagePath);
+            } else {
+                System.err.println("Image not found at: " + imagePath);
+                try {
+                    String fallbackPath = "/images/java_logo.png";
+                    if (getClass().getResource(fallbackPath) != null) {
+                        Image fallbackImage = new Image(getClass().getResource(fallbackPath).toExternalForm());
+                        imageView.setImage(fallbackImage);
+                        System.out.println("Fallback image loaded successfully from: " + fallbackPath);
+                    } else {
+                        System.err.println("Fallback image not found at: " + fallbackPath);
+                        imageView.setVisible(false);
+                        System.err.println("ImageView hidden due to missing images.");
+                    }
+                } catch (Exception fallbackE) {
+                    System.err.println("Fallback image error: " + fallbackE.getMessage());
+                    imageView.setVisible(false);
+                    System.err.println("ImageView hidden due to missing images.");
+                }
             }
+        } catch (Exception e) {
+            System.err.println("Image loading error: " + e.getMessage());
+            imageView.setVisible(false);
+            System.err.println("ImageView hidden due to error.");
         }
 
-        displayTechnologies();
+        // Set up search functionality
+        if (searchFieldTech != null) {
+            searchFieldTech.textProperty().addListener((obs, oldValue, newValue) -> filterTechnologies(newValue));
+        }
+        if (searchButtonTech != null) {
+            searchButtonTech.setOnAction(event -> filterTechnologies(searchFieldTech.getText().trim()));
+        }
+
+        // Initial display of all technologies
+        Platform.runLater(() -> displayTechnologies(technologieService.getAll()));
     }
 
     @FXML
-    void ajouterAction(ActionEvent event) {
+    void ajouterAction() { // Removed ActionEvent parameter since it’s not used
         String nom_tech = t1.getText().trim();
         String type_tech = t2.getText().trim();
         String complexite = t3.getValue();
@@ -108,50 +133,102 @@ public class AjouterTechnologie {
             technologieService.add(t);
             showAlert("Succès", "Technologie ajoutée avec succès!");
             clearFields();
-            displayTechnologies();
+            refreshTechnologies();
         } catch (RuntimeException e) {
             showAlert("Erreur", "Erreur lors de l'ajout de la technologie : " + e.getMessage());
         }
     }
 
-    private void displayTechnologies() {
+    private void displayTechnologies(List<Technologie> technologies) {
         gridTech.getChildren().clear();
+
+        int col = 0;
+        int row = 0;
+
+        for (Technologie tech : technologies) {
+            // Create a white VBox card for the technology
+            VBox techCard = new VBox(10); // Spacing for better layout
+            techCard.getStyleClass().add("project-card"); // Apply the white card style from CSS
+
+            // Technology name label (black text)
+            Label nomLabel = createLabel("Nom: " + (tech.getNom_tech() != null ? tech.getNom_tech() : ""), 14, true);
+
+            // Technology type label (black text)
+            Label typeLabel = createLabel("Type: " + (tech.getType_tech() != null ? tech.getType_tech() : ""), 12, false);
+
+            // Technology complexity label (black text)
+            Label complexiteLabel = createLabel("Complexité: " + (tech.getComplexite() != null ? tech.getComplexite() : ""), 12, false);
+
+            // Technology documentary label (black text, wrapped)
+            Label documentaireLabel = createDocumentaireLabel("Documentaire: " + (tech.getDocumentaire() != null ? tech.getDocumentaire() : "..."));
+
+            // Technology compatibility label (black text)
+            Label compatibiliteLabel = createLabel("Compatibilité: " + (tech.getCompatibilite() != null ? tech.getCompatibilite() : ""), 12, false);
+
+            // Buttons (Update, Delete, Listen) in an HBox with pink styling
+            HBox buttonBox = new HBox(10);
+            buttonBox.setAlignment(javafx.geometry.Pos.CENTER); // Center-align buttons
+
+            Button updateButton = new Button("Update");
+            updateButton.getStyleClass().add("action-button"); // Pink button style from CSS
+            updateButton.setTooltip(new javafx.scene.control.Tooltip("Update this technology"));
+            updateButton.setOnAction(e -> handleUpdate(tech));
+
+            Button deleteButton = new Button("Delete");
+            deleteButton.getStyleClass().add("action-button"); // Pink button style from CSS
+            deleteButton.setTooltip(new javafx.scene.control.Tooltip("Delete this technology"));
+            deleteButton.setOnAction(e -> handleDelete(tech));
+
+            Button listenButton = new Button("Listen");
+            listenButton.getStyleClass().add("action-button"); // Pink button style from CSS
+            listenButton.setTooltip(new javafx.scene.control.Tooltip("Listen to technology details"));
+            listenButton.setOnAction(e -> handleListen(tech));
+
+            buttonBox.getChildren().addAll(updateButton, deleteButton, listenButton);
+
+            // Add all attributes to the technology card
+            techCard.getChildren().addAll(nomLabel, typeLabel, complexiteLabel, documentaireLabel, compatibiliteLabel, buttonBox);
+
+            // Add the technology card to the GridPane
+            gridTech.add(techCard, col, row);
+
+            col++;
+            if (col == 3) {
+                col = 0;
+                row++;
+            }
+        }
+        // Ensure the GridPane is centered
+        gridTech.setAlignment(javafx.geometry.Pos.CENTER);
+    }
+
+    private void displayTechnologies() {
         try {
             List<Technologie> technologies = technologieService.getAll();
-            int row = 0;
-            int col = 0;
-
-            for (Technologie tech : technologies) {
-                VBox techBox = new VBox(5);
-                techBox.getChildren().add(new Label("Nom: " + tech.getNom_tech()));
-                techBox.getChildren().add(new Label("Type: " + tech.getType_tech()));
-                techBox.getChildren().add(new Label("Complexité: " + tech.getComplexite()));
-                techBox.getChildren().add(new Label("Documentaire: " + tech.getDocumentaire()));
-                techBox.getChildren().add(new Label("Compatibilité: " + tech.getCompatibilite()));
-
-                Button updateButton = new Button("Update");
-                updateButton.getStyleClass().add("update-button");
-                updateButton.setOnAction(e -> handleUpdate(tech));
-
-                Button deleteButton = new Button("Delete");
-                deleteButton.getStyleClass().add("delete-button");
-                deleteButton.setOnAction(e -> handleDelete(tech));
-
-                Button listenButton = new Button("Listen");
-                listenButton.getStyleClass().add("listen-button");
-                listenButton.setOnAction(e -> handleListen(tech));
-
-                techBox.getChildren().addAll(updateButton, deleteButton, listenButton);
-                gridTech.add(techBox, col, row);
-
-                col++;
-                if (col == 3) {
-                    col = 0;
-                    row++;
-                }
-            }
+            displayTechnologies(technologies);
         } catch (RuntimeException e) {
             showAlert("Erreur", "Erreur lors de l'affichage des technologies : " + e.getMessage());
+        }
+    }
+
+    private void filterTechnologies(String searchText) {
+        if (searchText == null || searchText.trim().isEmpty()) {
+            displayTechnologies();
+            return;
+        }
+
+        try {
+            List<Technologie> allTechnologies = technologieService.getAll();
+            List<Technologie> filteredTechnologies = allTechnologies.stream()
+                    .filter(tech -> (tech.getNom_tech() != null && tech.getNom_tech().toLowerCase().contains(searchText.toLowerCase())) ||
+                            (tech.getType_tech() != null && tech.getType_tech().toLowerCase().contains(searchText.toLowerCase())) ||
+                            (tech.getComplexite() != null && tech.getComplexite().toLowerCase().contains(searchText.toLowerCase())) ||
+                            (tech.getDocumentaire() != null && tech.getDocumentaire().toLowerCase().contains(searchText.toLowerCase())) ||
+                            (tech.getCompatibilite() != null && tech.getCompatibilite().toLowerCase().contains(searchText.toLowerCase())))
+                    .collect(Collectors.toList());
+            displayTechnologies(filteredTechnologies);
+        } catch (RuntimeException e) {
+            showAlert("Erreur", "Erreur lors de la recherche : " + e.getMessage());
         }
     }
 
@@ -166,9 +243,10 @@ public class AjouterTechnologie {
             Stage stage = new Stage();
             stage.setTitle("Update Technology");
             stage.setScene(new Scene(root, 400, 400));
-            stage.showAndWait(); // Block until dialog is closed
+            stage.showAndWait();
+            refreshTechnologies();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Failed to load UpdateTechnologie.fxml: " + e.getMessage());
             showAlert("Erreur", "Failed to load UpdateTechnologie.fxml: " + e.getMessage());
         }
     }
@@ -181,24 +259,64 @@ public class AjouterTechnologie {
         try {
             technologieService.delete(tech);
             showAlert("Succès", "Technologie supprimée avec succès!");
-            displayTechnologies();
+            refreshTechnologies();
         } catch (RuntimeException e) {
             showAlert("Erreur", "Erreur lors de la suppression : " + e.getMessage());
         }
     }
 
     private void handleListen(Technologie tech) {
-        String textToSpeak = "Nom: " + tech.getNom_tech() +
-                ", Type: " + tech.getType_tech() +
-                ", Complexité: " + tech.getComplexite() +
-                ", Documentaire: " + tech.getDocumentaire() +
-                ", Compatibilité: " + tech.getCompatibilite();
+        String textToSpeak = "Nom: " + (tech.getNom_tech() != null ? tech.getNom_tech() : "") +
+                ", Type: " + (tech.getType_tech() != null ? tech.getType_tech() : "") +
+                ", Complexité: " + (tech.getComplexite() != null ? tech.getComplexite() : "") +
+                ", Documentaire: " + (tech.getDocumentaire() != null ? tech.getDocumentaire() : "") +
+                ", Compatibilité: " + (tech.getCompatibilite() != null ? tech.getCompatibilite() : "");
 
         try {
-            showAlert("Fonctionnalité en cours", "Le texte sera lu : " + textToSpeak);
-            System.out.println("Speaking: " + textToSpeak);
-        } catch (Exception e) {
-            showAlert("Erreur", "Erreur lors de la lecture du texte : " + e.getMessage());
+            // Use the same TTS implementation as AfficherProjet
+            String pythonExecutable = "python"; // Try "python3" if Python 3.x is needed
+            String pythonScriptPath = "C:\\Users\\Mega-Pc\\Desktop\\pi\\Projet\\python\\textToSpeech.py"; // Adjust this path based on your project structure
+
+            java.io.File scriptFile = new java.io.File(pythonScriptPath);
+            if (!scriptFile.exists()) {
+                System.out.println("Python script not found at: " + pythonScriptPath);
+                showAlert("TTS Error", "Python script not found at: " + pythonScriptPath);
+                return;
+            }
+
+            // Test if Python executable is available
+            try {
+                ProcessBuilder testPb = new ProcessBuilder(pythonExecutable, "--version");
+                testPb.redirectErrorStream(true);
+                Process testProcess = testPb.start();
+                testProcess.waitFor();
+            } catch (IOException | InterruptedException e) {
+                System.out.println("Python executable not found: " + pythonExecutable);
+                showAlert("TTS Error", "Python executable not found or not in PATH. Please install Python or specify the full path.");
+                return;
+            }
+
+            ProcessBuilder pb = new ProcessBuilder(pythonExecutable, pythonScriptPath, textToSpeak);
+            pb.redirectErrorStream(true);
+            pb.directory(scriptFile.getParentFile());
+            Process process = pb.start();
+
+            java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println("Python output: " + line);
+            }
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                System.out.println("Python script exited with error code: " + exitCode);
+                showAlert("TTS Error", "Python script failed with exit code: " + exitCode);
+            } else {
+                System.out.println("Text-to-speech completed successfully.");
+                showAlert("Succès", "Texte lu avec succès!");
+            }
+        } catch (IOException | InterruptedException e) {
+            System.out.println("Error executing TTS script: " + e.getMessage());
+            showAlert("TTS Error", "An error occurred while running the TTS script: " + e.getMessage());
         }
     }
 
@@ -216,5 +334,27 @@ public class AjouterTechnologie {
         t3.setValue(null);
         t4.setValue(null);
         t5.clear();
+    }
+
+    // Helper method to create labels with common styling
+    private Label createLabel(String text, int fontSize, boolean isLarge) {
+        Label label = new Label(text);
+        label.setStyle("-fx-font-size: " + fontSize + "px; -fx-text-fill: black;");
+        label.setTooltip(new Tooltip(text));
+        if (!isLarge) {
+            label.getStyleClass().add("small");
+        }
+        return label;
+    }
+
+    // Helper method to create documentary label with wrapping
+    private Label createDocumentaireLabel(String text) {
+        Label label = new Label(text);
+        label.setStyle("-fx-font-size: 12px; -fx-text-fill: black;");
+        label.setWrapText(true);
+        label.setMaxWidth(250.0);
+        label.setTooltip(new Tooltip(text));
+        label.getStyleClass().add("small");
+        return label;
     }
 }

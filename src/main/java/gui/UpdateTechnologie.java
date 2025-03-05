@@ -39,7 +39,8 @@ public class UpdateTechnologie {
             complexiteCombo.getItems().addAll("Haute", "Moyenne", "Faible");
         }
         if (compatibiliteCombo != null && compatibiliteCombo.getItems().isEmpty()) {
-            compatibiliteCombo.getItems().addAll("Oui", "Non");
+            compatibiliteCombo.getItems().addAll("Windows", "Linux" ,"macOS");
+
         }
 
         saveButton.setOnAction(e -> saveUpdate());

@@ -45,16 +45,16 @@ public class AjouterProjet {
     @FXML
     private Button listenRessource;
 
-    @FXML
-    void initialize() {
+   // @FXML
+   // void initialize() {
         // Initialize ComboBox options to match the FXML items (adjust as needed)
-        if (a2 != null) {
-            a2.getItems().addAll("En cours", "En pause", "Terminé"); // Match FXML options
-        }
-        if (a3 != null) {
-            a3.getItems().addAll("Haute", "Moyenne", "Faible"); // Match FXML options
-        }
-    }
+     //   if (a2 != null) {
+       //     a2.getItems().addAll("En cours", "En pause", "Terminé"); // Match FXML options
+        //}
+        //if (a3 != null) {
+          //  a3.getItems().addAll("Haute", "Moyenne", "Faible"); // Match FXML options
+        // }
+    // }
 
     @FXML
     void ajouterAction(ActionEvent event) {

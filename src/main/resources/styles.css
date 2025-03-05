@@ -1,109 +1,95 @@
 .root {
-    -fx-background-color: linear-gradient(to bottom right, #1E90FF, #FF69B4); /* Blue to Pink gradient, matching the image */
+    -fx-background-color: #1e0425; /* Dark purple background, matching the image */
     -fx-padding: 20px; /* Add padding for a cleaner look */
 }
 
-/* Style for the GridPane containers (technologies/projects) */
-.grid-pane {
-    -fx-background-color: white; /* White background for each technology box */
-    -fx-border-color: #d3d3d3; /* Light gray border */
+/* Style for the VBox containers (main content and search bar) */
+.vbox {
+    -fx-spacing: 30px; /* Spacing between elements inside VBox */
+    -fx-padding: 20px; /* Padding inside the VBox */
+}
+
+/* Style for the TabPane */
+.tab-pane .tab-header-background {
+    -fx-background-color: #1e0425; /* Dark purple background for tab header */
+}
+
+.tab-pane .tab {
+    -fx-background-color: white; /* White background for inactive tabs */
+    -fx-text-fill: #82e9f1; /* Cyan text for tabs, matching your request */
+    -fx-font-size: 14px; /* Readable font size for tabs */
+    -fx-padding: 8px 16px; /* Padding for tab buttons */
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: white; /* White background for selected tab */
+    -fx-text-fill: #82e9f1; /* Cyan text for selected tab */
+    -fx-font-weight: bold; /* Optional: make selected tab text bold for emphasis */
+}
+
+/* Style for the search bar container */
+.hbox.search-bar {
+    -fx-background-color: #286371; /* Teal background for search bar */
+    -fx-background-radius: 15px; /* Rounded corners for search bar */
+    -fx-padding: 15px; /* Padding inside search bar */
+}
+
+/* Style for labels */
+.label {
+    -fx-font-size: 18px; /* Larger font size for "Projets" or tab labels */
+    -fx-text-fill: #82e9f1; /* Cyan text for labels, matching the image */
+    -fx-wrap-text: true; /* Allow text to wrap if too long */
+}
+
+/* Style for text fields (search bar) */
+.text-field {
+    -fx-background-color: white; /* White background for text fields */
+    -fx-border-color: #82e9f1; /* Cyan border, matching the image */
     -fx-border-width: 1px;
     -fx-border-radius: 5px; /* Rounded corners */
-    -fx-padding: 10px; /* Padding inside each technology box */
     -fx-background-radius: 5px; /* Rounded corners for background */
-    -fx-hgap: 10px; /* Horizontal gap between columns */
-    -fx-vgap: 10px; /* Vertical gap between rows */
-}
-
-/* Style for the VBox inside each technology box */
-.vbox {
-    -fx-alignment: center; /* Center-align content vertically */
-    -fx-spacing: 5px; /* Spacing between labels and buttons */
-    -fx-padding: 5px; /* Padding inside the VBox for better spacing */
-}
-
-/* Style for labels inside the technology boxes */
-.label {
+    -fx-padding: 8px; /* More padding for a spacious feel */
     -fx-font-size: 14px; /* Readable font size */
-    -fx-text-fill: #333333; /* Dark gray text for readability */
-    -fx-wrap-text: true; /* Allow text to wrap if too long */
-    -fx-max-width: 200px; /* Limit label width to prevent overflow */
 }
 
-/* Style for action buttons (general style, but overridden for specific types) */
+/* Style for GridPane (technology cards) */
+.grid-pane {
+    -fx-hgap: 30px; /* Horizontal gap between columns */
+    -fx-vgap: 30px; /* Vertical gap between rows */
+    -fx-padding: 15px; /* Padding around the grid */
+}
+
+/* Style for project/technology cards (individual cells in GridPane) */
+.project-card {
+    -fx-background-color: white; /* White background for cards */
+    -fx-background-radius: 15px; /* Rounded corners for cards, matching the image */
+    -fx-padding: 15px; /* Padding inside each card */
+    -fx-alignment: center; /* Center-align content */
+    -fx-spacing: 5px; /* Reduced spacing between elements inside cards to match the image */
+}
+
+/* Style for labels inside project/technology cards */
+.project-card .label {
+    -fx-font-size: 14px; /* Font size for name, 14px as in the image */
+    -fx-text-fill: black; /* Black text for labels, matching the image */
+}
+
+/* Style for smaller labels (type, complexity, documentary, compatibility) inside project/technology cards */
+.project-card .label.small {
+    -fx-font-size: 12px; /* Smaller font for other attributes, matching the image */
+    -fx-text-fill: black; /* Black text for labels, matching the image */
+}
+
+/* Style for buttons in cards (Update, Delete, Listen) – keep pink styling */
 .action-button {
-    -fx-padding: 8px 16px; /* More padding for larger, touch-friendly buttons */
-    -fx-background-color: #D3D3D3; /* Light gray, matching the image */
-    -fx-text-fill: #333333; /* Dark gray text for readability */
-    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-background-color: #FF69B4; /* Pink background for buttons, matching the image exactly */
+    -fx-text-fill: white; /* White text for buttons, matching the image */
+    -fx-border-radius: 5px; /* Rounded corners, matching the image */
     -fx-background-radius: 5px; /* Rounded corners for background */
-    -fx-font-size: 14px; /* Readable font size */
+    -fx-padding: 6px 12px; /* Adjusted padding to match button size in the image */
+    -fx-font-size: 12px; /* Smaller font size to match the image */
 }
 
 .action-button:hover {
-    -fx-background-color: #C0C0C0; /* Slightly darker gray on hover */
-}
-
-/* Style for Update buttons (blue, matching the image) */
-.button.update-button {
-    -fx-background-color: #2196F3; /* Bright blue for Update */
-    -fx-text-fill: white;
-    -fx-border-radius: 5px;
-    -fx-background-radius: 5px;
-    -fx-padding: 8px 16px;
-    -fx-font-size: 14px;
-}
-
-.button.update-button:hover {
-    -fx-background-color: #1976D2; /* Darker blue on hover */
-}
-
-/* Style for Delete buttons (red, matching the image) */
-.button.delete-button {
-    -fx-background-color: #f44336; /* Red for Delete */
-    -fx-text-fill: white;
-    -fx-border-radius: 5px;
-    -fx-background-radius: 5px;
-    -fx-padding: 8px 16px;
-    -fx-font-size: 14px;
-}
-
-.button.delete-button:hover {
-    -fx-background-color: #da190b; /* Darker red on hover */
-}
-
-/* Style for Listen buttons (green, matching the image) */
-.button.listen-button {
-    -fx-background-color: #4CAF50; /* Green for Listen */
-    -fx-text-fill: white;
-    -fx-border-radius: 5px;
-    -fx-background-radius: 5px;
-    -fx-padding: 8px 16px;
-    -fx-font-size: 14px;
-}
-
-.button.listen-button:hover {
-    -fx-background-color: #45a049; /* Darker green on hover */
-}
-
-/* Style for text fields (if used elsewhere, but not in this FXML) */
-.text-field {
-    -fx-background-color: white;
-    -fx-border-color: #d3d3d3; /* Light gray border */
-    -fx-border-width: 1px;
-    -fx-border-radius: 5px; /* Rounded corners */
-    -fx-background-radius: 5px; /* Rounded corners for background */
-    -fx-padding: 8px; /* More padding for a spacious feel */
-    -fx-font-size: 14px; /* Readable font size */
-}
-
-/* Style for combo boxes (if used elsewhere, but not in this FXML) */
-.combo-box {
-    -fx-background-color: white;
-    -fx-border-color: #d3d3d3; /* Light gray border */
-    -fx-border-width: 1px;
-    -fx-border-radius: 5px; /* Rounded corners */
-    -fx-background-radius: 5px; /* Rounded corners for background */
-    -fx-padding: 8px; /* More padding for a spacious feel */
-    -fx-font-size: 14px; /* Readable font size */
+    -fx-background-color: #FF1493; /* Slightly darker pink on hover, matching the image */
 }

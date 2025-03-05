@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -24,7 +25,10 @@ public class AfficherProjet {
     private GridPane g1;
 
     @FXML
-    private TextField searchField; // Ensure this is in your FXML if you added it
+    private TextField searchField;
+
+    @FXML
+    private Button searchButton;
 
     @FXML
     private Button cancelaffichage;
@@ -32,12 +36,18 @@ public class AfficherProjet {
     @FXML
     void initialize() {
         if (searchField != null) {
+            // Real-time filtering as the user types
             searchField.textProperty().addListener((obs, oldValue, newValue) -> {
                 filterProjects(newValue);
-
             });
         }
 
+        // Manual search button action
+        if (searchButton != null) {
+            searchButton.setOnAction(e -> filterProjects(searchField.getText().trim()));
+        }
+
+        // Initial display of all projects
         Platform.runLater(() -> displayProjects(projetService.getAll()));
     }
 
@@ -57,50 +67,70 @@ public class AfficherProjet {
         int row = 0;
 
         for (Projet p : projets) {
-            VBox projectBox = new VBox(5);
-            projectBox.getStyleClass().add("grid-pane");
+            // Create a white VBox card for the project
+            VBox projectCard = new VBox(10); // Spacing for better layout
+            projectCard.getStyleClass().add("project-card"); // Apply the white card style from CSS
 
-            // Project attributes with tooltips
-            Label nameLabel = new Label("Name: " + (p.getNom() != null ? p.getNom() : ""));
+            // Project name label (black text)
+            Label nameLabel = new Label("Nom: " + (p.getNom() != null ? p.getNom() : ""));
+            nameLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: black;"); // Black text, 14px font
             nameLabel.setTooltip(new javafx.scene.control.Tooltip("Project Name: " + (p.getNom() != null ? p.getNom() : "")));
 
-            Label statusLabel = new Label("Status: " + (p.getStatut() != null ? p.getStatut() : ""));
+            // Project status label (black text)
+            Label statusLabel = new Label("Statut: " + (p.getStatut() != null ? p.getStatut() : ""));
+            statusLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: black;"); // Black text, 12px font
             statusLabel.setTooltip(new javafx.scene.control.Tooltip("Project Status: " + (p.getStatut() != null ? p.getStatut() : "")));
 
-            Label priorityLabel = new Label("Priority: " + (p.getPriorite() != null ? p.getPriorite() : ""));
+            // Project priority label (black text)
+            Label priorityLabel = new Label("Priorité: " + (p.getPriorite() != null ? p.getPriorite() : ""));
+            priorityLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: black;"); // Black text, 12px font
             priorityLabel.setTooltip(new javafx.scene.control.Tooltip("Project Priority: " + (p.getPriorite() != null ? p.getPriorite() : "")));
 
+            // Project description label (black text, wrapped)
             Label descLabel = new Label("Description: " + (p.getDescription() != null ? p.getDescription() : "..."));
+            descLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: black;"); // Black text, 12px font
+            descLabel.setWrapText(true); // Allow text wrapping for description
+            descLabel.setMaxWidth(250.0); // Limit width to fit within the card
             descLabel.setTooltip(new javafx.scene.control.Tooltip("Project Description: " + (p.getDescription() != null ? p.getDescription() : "...")));
-            descLabel.setWrapText(true);
 
-            Label ressourceLabel = new Label("Ressource: " + (p.getRessource() != null ? p.getRessource() : "..."));
-            ressourceLabel.setTooltip(new javafx.scene.control.Tooltip("Project Ressource: " + (p.getRessource() != null ? p.getRessource() : "...")));
+            // Project resource label (black text)
+            Label resourceLabel = new Label("Ressource: " + (p.getRessource() != null ? p.getRessource() : "..."));
+            resourceLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: black;"); // Black text, 12px font
+            resourceLabel.setTooltip(new javafx.scene.control.Tooltip("Project Resource: " + (p.getRessource() != null ? p.getRessource() : "...")));
 
-            // HBox for Update and Delete buttons
-            HBox buttonBox = new HBox(5);
+            // Project date label (black text, simulating date as in Image 2)
+            String dateStr = "2025-03-" + (row * 3 + col + 5) + " 10:00:00"; // Placeholder date format, adjust as needed
+            Label dateLabel = new Label(dateStr);
+            dateLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: black;"); // Black text, 12px font
+            dateLabel.getStyleClass().add("date-label"); // Apply date-specific styling
+            dateLabel.setTooltip(new javafx.scene.control.Tooltip("Project Date: " + dateStr));
+
+            // Buttons (Update, Delete, Listen) in an HBox with pink styling
+            HBox buttonBox = new HBox(10);
+            buttonBox.setAlignment(javafx.geometry.Pos.CENTER); // Center-align buttons
+
             Button updateButton = new Button("Update");
-            updateButton.getStyleClass().add("update-button");
+            updateButton.getStyleClass().add("action-button"); // Pink button style from CSS (unchanged)
             updateButton.setTooltip(new javafx.scene.control.Tooltip("Update this project"));
             updateButton.setOnAction(e -> handleUpdate(p));
 
             Button deleteButton = new Button("Delete");
-            deleteButton.getStyleClass().add("delete-button");
+            deleteButton.getStyleClass().add("action-button"); // Pink button style from CSS (unchanged)
             deleteButton.setTooltip(new javafx.scene.control.Tooltip("Delete this project"));
             deleteButton.setOnAction(e -> handleDelete(p));
 
-            buttonBox.getChildren().addAll(updateButton, deleteButton);
+            Button listenButton = new Button("Listen");
+            listenButton.getStyleClass().add("action-button"); // Pink button style from CSS (unchanged)
+            listenButton.setTooltip(new javafx.scene.control.Tooltip("Listen to project details"));
+            listenButton.setOnAction(e -> handleTTS(p)); // Ensure TTS functionality works
 
-            // Add TTS button
-            Button ttsButton = new Button("Listen");
-            ttsButton.getStyleClass().add("tts-button"); // Optional: Add a CSS class for styling
-            ttsButton.setTooltip(new javafx.scene.control.Tooltip("Listen to project details"));
-            ttsButton.setOnAction(e -> handleTTS(p)); // Call TTS function
+            buttonBox.getChildren().addAll(updateButton, deleteButton, listenButton);
 
-            // Add all components to the VBox
-            projectBox.getChildren().addAll(nameLabel, statusLabel, priorityLabel, descLabel, ressourceLabel, buttonBox, ttsButton);
+            // Add all attributes to the project card
+            projectCard.getChildren().addAll(nameLabel, statusLabel, priorityLabel, descLabel, resourceLabel, dateLabel, buttonBox);
 
-            g1.add(projectBox, col, row);
+            // Add the project card to the GridPane
+            g1.add(projectCard, col, row);
 
             col++;
             if (col == 3) {
@@ -111,6 +141,11 @@ public class AfficherProjet {
     }
 
     private void filterProjects(String searchText) {
+        if (searchText == null || searchText.trim().isEmpty()) {
+            displayProjects(projetService.getAll()); // Show all projects if search is empty
+            return;
+        }
+
         List<Projet> allProjects = projetService.getAll();
         List<Projet> filteredProjects = new java.util.ArrayList<>();
 
@@ -139,7 +174,7 @@ public class AfficherProjet {
 
             Stage stage = new Stage();
             stage.setTitle("Update Project");
-            stage.setScene(new javafx.scene.Scene(root, 400, 400));
+            stage.setScene(new Scene(root, 400, 400));
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -157,26 +192,74 @@ public class AfficherProjet {
     }
 
     private void handleTTS(Projet p) {
-        // Prepare the text to speak (combine project details)
         String textToSpeak = "Project Details: Name - " + (p.getNom() != null ? p.getNom() : "") +
                 ", Status - " + (p.getStatut() != null ? p.getStatut() : "") +
                 ", Priority - " + (p.getPriorite() != null ? p.getPriorite() : "") +
                 ", Description - " + (p.getDescription() != null ? p.getDescription() : "") +
                 ", Resource - " + (p.getRessource() != null ? p.getRessource() : "");
 
-        // Call Python script for TTS
         try {
-            // Specify the path to your Python script (adjust the path as needed)
-            String pythonScriptPath = "C:\\Users\\Mega-Pc\\Desktop\\pi\\Projet\\python\\textToSpeech.py";
-            // Use ProcessBuilder to execute the Python script, passing the text as an argument
-            ProcessBuilder pb = new ProcessBuilder("python", pythonScriptPath, textToSpeak);
+            // Verify if Python is in PATH or use full path to Python executable
+            String pythonExecutable = "python"; // Try "python3" if Python 3.x is needed
+            // Alternatively, use full path: String pythonExecutable = "C:\\Python39\\python.exe";
+
+            // Use a relative or absolute path to the Python script
+            String pythonScriptPath = "C:\\Users\\Mega-Pc\\Desktop\\pi\\Projet\\python\\textToSpeech.py"; // Adjust this path based on your project structure
+            // Or use an absolute path: String pythonScriptPath = "C:\\Users\\Mega-Pc\\Desktop\\pi\\Projet\\python\\textToSpeech.py";
+
+            // Check if the script file exists
+            java.io.File scriptFile = new java.io.File(pythonScriptPath);
+            if (!scriptFile.exists()) {
+                System.out.println("Python script not found at: " + pythonScriptPath);
+                showErrorAlert("TTS Error", "Python script not found at: " + pythonScriptPath);
+                return;
+            }
+
+            // Test if Python executable is available
+            try {
+                ProcessBuilder testPb = new ProcessBuilder(pythonExecutable, "--version");
+                testPb.redirectErrorStream(true);
+                Process testProcess = testPb.start();
+                testProcess.waitFor();
+            } catch (IOException | InterruptedException e) {
+                System.out.println("Python executable not found: " + pythonExecutable);
+                showErrorAlert("TTS Error", "Python executable not found or not in PATH. Please install Python or specify the full path.");
+                return;
+            }
+
+            // Create ProcessBuilder with the Python script and text to speak
+            ProcessBuilder pb = new ProcessBuilder(pythonExecutable, pythonScriptPath, textToSpeak);
             pb.redirectErrorStream(true); // Combine stdout and stderr
-            Process pProcess = pb.start();
-            // Optionally, read the output or wait for the process to complete
-            pProcess.waitFor();
+            pb.directory(scriptFile.getParentFile()); // Set working directory to script location
+
+            // Start the process and wait for it to complete
+            Process process = pb.start();
+            java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println("Python output: " + line); // Log Python script output
+            }
+            int exitCode = process.waitFor();
+            if (exitCode != 0) {
+                System.out.println("Python script exited with error code: " + exitCode);
+                showErrorAlert("TTS Error", "Python script failed with exit code: " + exitCode);
+            } else {
+                System.out.println("Text-to-speech completed successfully.");
+            }
         } catch (IOException | InterruptedException e) {
             System.out.println("Error executing TTS script: " + e.getMessage());
             e.printStackTrace();
+            showErrorAlert("TTS Error", "An error occurred while running the TTS script: " + e.getMessage());
         }
+    }
+
+    private void showErrorAlert(String title, String content) {
+        Platform.runLater(() -> {
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            alert.setTitle(title);
+            alert.setHeaderText(null);
+            alert.setContentText(content);
+            alert.showAndWait();
+        });
     }
 }

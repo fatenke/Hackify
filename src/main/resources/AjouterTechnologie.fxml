@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -10,77 +12,104 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <AnchorPane prefHeight="636.0" prefWidth="859.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AjouterTechnologie">
     <children>
-        <TabPane layoutX="7.0" layoutY="13.0" prefHeight="641.0" prefWidth="876.0" tabClosingPolicy="UNAVAILABLE">
+        <TabPane layoutX="7.0" layoutY="13.0" prefHeight="598.0" prefWidth="804.0" tabClosingPolicy="UNAVAILABLE">
             <tabs>
-                <Tab text=" Ajouter technologie">
+                <Tab text="Ajouter technologie">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="638.0" prefWidth="889.0">
                             <children>
                                 <Label layoutX="40.0" layoutY="56.0" prefHeight="18.0" prefWidth="64.0" text="Nom :">
                                     <font>
                                         <Font size="15.0" />
-                                    </font></Label>
+                                    </font>
+                                </Label>
                                 <TextField fx:id="t1" layoutX="176.0" layoutY="52.0" prefHeight="26.0" prefWidth="242.0" />
                                 <TextField fx:id="t2" layoutX="175.0" layoutY="108.0" prefHeight="26.0" prefWidth="243.0" />
                                 <TextField fx:id="t5" layoutX="176.0" layoutY="283.0" prefHeight="26.0" prefWidth="247.0" />
-                                <Label layoutX="40.0" layoutY="110.0" text="type :">
+                                <Label layoutX="40.0" layoutY="110.0" text="Type :">
                                     <font>
                                         <Font size="15.0" />
                                     </font>
                                 </Label>
-                                <Label layoutX="34.0" layoutY="170.0" text="complexite :">
+                                <Label layoutX="34.0" layoutY="170.0" text="Complexité :">
                                     <font>
                                         <Font size="15.0" />
                                     </font>
                                 </Label>
-                                <Label layoutX="35.0" layoutY="287.0" text="documentaire :">
+                                <Label layoutX="35.0" layoutY="287.0" text="Documentaire :">
                                     <font>
                                         <Font size="15.0" />
                                     </font>
                                 </Label>
-                                <Label layoutX="37.0" layoutY="231.0" text="compatibilite :">
+                                <Label layoutX="37.0" layoutY="231.0" text="Compatibilité :">
                                     <font>
                                         <Font size="15.0" />
                                     </font>
                                 </Label>
                                 <Button fx:id="b6" layoutX="465.0" layoutY="372.0" mnemonicParsing="false" onAction="#ajouterAction" prefHeight="32.0" prefWidth="158.0" text="Ajouter" />
-                                <ComboBox fx:id="t4" layoutX="175.0" layoutY="227.0" prefWidth="150.0" />
-                                <ComboBox fx:id="t3" layoutX="175.0" layoutY="175.0" prefWidth="150.0" />
+                                <ComboBox fx:id="t4" layoutX="175.0" layoutY="227.0" prefWidth="150.0" promptText="Windows">
+                                    <items>
+                                        <FXCollections fx:factory="observableArrayList">
+                                            <String fx:value="Windows" />
+                                            <String fx:value="Linux" />
+                                            <String fx:value="macOS" />
+                                        </FXCollections>
+                                    </items>
+                                </ComboBox>
+                                <ComboBox fx:id="t3" layoutX="175.0" layoutY="175.0" prefWidth="150.0" promptText="Haute">
+                                    <items>
+                                        <FXCollections fx:factory="observableArrayList">
+                                            <String fx:value="Haute" />
+                                            <String fx:value="Moyenne" />
+                                            <String fx:value="Faible" />
+                                        </FXCollections>
+                                    </items>
+                                </ComboBox>
 
                                 <ImageView fx:id="imageView" fitHeight="156.0" fitWidth="164.0" layoutX="525.0" layoutY="-8.0">
                                     <image>
-                                        <Image url="/java-logo.png"/>
+                                        <Image url="/java-logo.png" />
                                     </image>
                                 </ImageView>
                             </children>
                         </AnchorPane>
                     </content>
                 </Tab>
-                <Tab text="Afficher technologire">
+                <Tab text="Afficher technologie">
                     <content>
-                        <AnchorPane prefHeight="538.0" prefWidth="808.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+                        <AnchorPane prefHeight="644.0" prefWidth="898.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
                             <children>
-                                <ScrollPane fx:id="scrollPaneTech" fitToWidth="true" hbarPolicy="AS_NEEDED" layoutX="2.0" layoutY="2.0" prefHeight="534.0" prefWidth="804.0" vbarPolicy="ALWAYS">
+                                <!-- Search Bar and Button -->
+                                <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="40.0" prefWidth="788.0" spacing="10.0">
+                                    <children>
+                                        <TextField fx:id="searchFieldTech" prefWidth="600.0" promptText="Rechercher par nom, type, complexité, documentaire ou compatibilité..." />
+                                        <Button fx:id="searchButtonTech" prefWidth="150.0" styleClass="action-button" text="Rechercher" />
+                                    </children>
+                                </HBox>
+
+                                <ScrollPane fx:id="scrollPaneTech" fitToWidth="true" hbarPolicy="AS_NEEDED" layoutX="20.0" layoutY="60.0" prefHeight="570.0" prefWidth="858.0" vbarPolicy="ALWAYS">
                                     <content>
-                                        <GridPane fx:id="gridTech" prefHeight="520.0" prefWidth="800.0">
+                                        <GridPane fx:id="gridTech" alignment="CENTER" hgap="30.0" prefHeight="560.0" prefWidth="838.0" vgap="30.0">
                                             <columnConstraints>
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="250.0" /> <!-- Column for first technology -->
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="250.0" /> <!-- Column for second technology -->
-                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="250.0" /> <!-- Column for third technology -->
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="333.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="333.0" />
+                                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="333.0" />
                                             </columnConstraints>
                                             <rowConstraints>
-                                                <RowConstraints maxHeight="200.0" minHeight="30.0" prefHeight="170.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="200.0" minHeight="30.0" prefHeight="170.0" vgrow="SOMETIMES" />
-                                                <RowConstraints maxHeight="200.0" minHeight="30.0" prefHeight="170.0" vgrow="SOMETIMES" />
+                                                <RowConstraints maxHeight="255.19998779296876" minHeight="10.0" prefHeight="255.19998779296876" vgrow="SOMETIMES" />
+                                                <RowConstraints maxHeight="267.20000610351565" minHeight="10.0" prefHeight="251.2000122070313" vgrow="SOMETIMES" />
                                             </rowConstraints>
-                                            <!-- You can dynamically add Labels, Buttons, or other nodes here in your controller to display technology data -->
+                                            <padding>
+                                                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                            </padding>
                                         </GridPane>
                                     </content>
                                 </ScrollPane>
