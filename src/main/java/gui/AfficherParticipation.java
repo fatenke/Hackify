@@ -41,20 +41,18 @@ public class AfficherParticipation {
         List<Participation> participations = ps.getParticipationByHackathon(hackathon.getId_hackathon());
         int row = 2; // commencer à la ligne 2 (la ligne 1 est pour les titres)
         for (Participation participation : participations) {
-            Hackathon hackathon= hs.getHackathonById(participation.getIdHackathon());
             Text name = new Text(hackathon.getNom_hackathon());
             Text statusText = new Text(participation.getStatut());
             statusText.getStyleClass().add("text");
             participationGrid.add(name, 0, row);
             participationGrid.add(statusText, 2, row);
-            if(Objects.equals(participation.getStatut(), "en attente")){
+            if(Objects.equals(participation.getStatut(), "En attente")){
                 Button validerButton = new Button("Valider");
                 validerButton.getStyleClass().add("btn-action");
                 validerButton.setOnAction(e -> handleValiderParticipation(participation));
                 Button refuserButton = new Button("Refuser");
                 refuserButton.getStyleClass().add("btn-action");
                 HBox buttonsBox=new HBox(validerButton,refuserButton);
-                buttonsBox.getChildren().addAll();
                 participationGrid.add(buttonsBox, 3, row);
                 /*participationGrid.add(refuserButton, 3, row);*/
             }
@@ -70,6 +68,22 @@ public class AfficherParticipation {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             participationService.validerParticipation(participation);
             System.out.println("Participation validée");
+            participationGrid.getChildren().clear();
+            loadVoirParticipant();
+        } else {
+            System.out.println("Participation en attente");
+        }
+
+    }
+    public void handleRefuserParticipation(Participation participation){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation de Reject");
+        alert.setHeaderText(null);
+        alert.setContentText("Voulez-vous vraiment refuser la participation " );
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            participationService.refuserParticipation(participation);
+            System.out.println("Participation refusée");
             participationGrid.getChildren().clear();
             loadVoirParticipant();
         } else {

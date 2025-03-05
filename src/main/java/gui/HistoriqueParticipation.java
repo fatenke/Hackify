@@ -43,10 +43,7 @@ public class HistoriqueParticipation {
             Button detaillsButton = new Button("voir detaills hackathon");
             detaillsButton.getStyleClass().add("btn-action");
             detaillsButton.setOnAction(e -> detaillsHackathon(hackathon));
-
-
             // Ajouter les éléments dans les cellules du GridPane
-           /* participationGrid.add(hackathonText, 0, row);*/
             participationGrid.add(name, 0, row);
             participationGrid.add(statusText, 2, row);
             participationGrid.add(cancelButton, 3, row);
