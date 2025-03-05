@@ -37,7 +37,7 @@
             <version>1.6.2</version>
         </dependency>
 
-        <!-- Implémentation de JavaMail (SMTP, POP, IMAP) -->
+
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
@@ -46,7 +46,6 @@
 
 
     </dependencies>
-
 
     <build>
         <plugins>

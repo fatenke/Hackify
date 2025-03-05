@@ -15,7 +15,6 @@ import java.util.List;
 
 import static services.MailService.sendPlainTextEmail;
 
-/*import static services.MailService.envoyerEmail;*/
 
 public class ParticipationService implements GlobalInterface<Participation> {
     private final Connection connection;
@@ -82,9 +81,6 @@ public class ParticipationService implements GlobalInterface<Participation> {
         sendPlainTextEmail(participantEmail, subject, content);
     }
 
-
-
-
     @Override
     public void add(Participation participation) {
         String req = "INSERT INTO `participation`(`id_hackathon`, `id_participant`) VALUES (?,?)";
@@ -109,7 +105,6 @@ public class ParticipationService implements GlobalInterface<Participation> {
     @Override
     public void update(Participation participation) {
         String req = "UPDATE `participation` SET `statut`=? WHERE `id_participation`= ? ";
-
         try (PreparedStatement statement = connection.prepareStatement(req)) {
             statement.setString(1, participation.getStatut());
             statement.setInt(2, participation.getIdParticipation());
@@ -159,7 +154,6 @@ public class ParticipationService implements GlobalInterface<Participation> {
 
         try (PreparedStatement statement = connection.prepareStatement(req)) {
             statement.setInt(1, participation.getIdParticipation());
-
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("Participation supprimé avec succès !");
@@ -172,15 +166,29 @@ public class ParticipationService implements GlobalInterface<Participation> {
 
 
     }
-    public Participation getParticipationByHackathon(int id_hackathon){
-        Participation participation = new Participation();
-        List<Participation> participations = getAll();
-        for(Participation p :participations){
-            if(p.getIdHackathon()==id_hackathon){
-                participation=p;
+    public List<Participation> getParticipationByHackathon(int id_hackathon){
+        List<Participation> participations = new ArrayList<>();
+        String query = "SELECT * FROM `participation` WHERE `id_hackathon` = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, id_hackathon);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Participation participation = new Participation(
+                        resultSet.getInt("id_participation"),
+                        resultSet.getInt("id_hackathon"),
+                        resultSet.getInt("id_participant"),
+                        resultSet.getTimestamp("date_inscription").toLocalDateTime(),
+                        resultSet.getString("statut")
+                );
+                participations.add(participation);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return participation;
+
+        return participations;
     }
 
     public int getNebrParticipantPerHackathon(int id_hackathon){
@@ -209,14 +217,18 @@ public class ParticipationService implements GlobalInterface<Participation> {
             System.out.println("Erreur lors de la mise à jour des participations : " + ex.getMessage());
         }
     }
+    //integration
+    public void getParticipantById(int id_participant){
+
+
+    }
 
     //organisatuer
     public boolean validerParticipation(Participation participation) {
         if (participation.getStatut().equals("En attente")) {
             participation.setStatut("Validé");
             update(participation);
-            sendParticipationAcceptanceEmail(participation,"");
-
+            sendParticipationAcceptanceEmail(participation,"kerroufaten729@gmail.com");
             return true;
         }
         return false;

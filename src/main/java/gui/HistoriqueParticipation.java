@@ -17,14 +17,6 @@ public class HistoriqueParticipation {
     HackathonService hs = new HackathonService();
     @FXML
     private GridPane participationGrid;
-    @FXML
-    private Button goToHomePage;
-
-
-
-    /*public HistoriqueParticipationController() {
-        this.hackathonService = new HackathonService(); // Ou injecter un service existant
-    }*/
 
     @FXML
     public void initialize() {

@@ -180,6 +180,8 @@ public class AfficherHachathon {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherParticipation.fxml"));
             Parent root = loader.load();
+            AfficherParticipation voirParticipants = loader.getController();
+            voirParticipants.setHackathon(hackathon);
             Stage stage = (Stage) gp_hackathon.getScene().getWindow();
             stage.getScene().setRoot(root);
         } catch (IOException e) {
