@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Insets?>
+
+<VBox fx:id="walletPage" spacing="10" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.WalletPage">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+    <children>
+        <!-- Balance Label -->
+        <Label fx:id="balanceLabel" text="Balance: 0 Points" styleClass="wallet-label" />
+
+        <!-- Add Points Button -->
+        <Button fx:id="addPointsButton" styleClass="wallet-icon-button">
+            <graphic>
+                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@img/plus.png" /> <!-- Ensure plus.png is in the correct directory -->
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
+
+        <!-- Deduct Points Button -->
+        <Button fx:id="deductPointsButton" styleClass="wallet-icon-button">
+            <graphic>
+                <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@img/minus.png" /> <!-- Ensure minus.png is in the correct directory -->
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
+
+        <!-- Last Transaction Label -->
+        <Label fx:id="lastTransactionLabel" text="Last Transaction: None" styleClass="wallet-label" />
+    </children>
+</VBox>

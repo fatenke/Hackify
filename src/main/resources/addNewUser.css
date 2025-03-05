@@ -5,7 +5,7 @@
 .go-back-course-btn{
     -fx-font-family: "Jost Medium";
     -fx-font-size: 16;
-    -fx-background-color: #469D89;
+    -fx-background-color: #FF007F;
     -fx-text-fill: #D5FFDC;
     -fx-background-radius: 8px;
 }
@@ -15,7 +15,7 @@
 .choose-img_btn{
     -fx-font-family: "Jost Medium";
     -fx-font-size: 20;
-    -fx-background-color: #1D6611;
+    -fx-background-color: #FF007F;
     -fx-text-fill: #D5FFDC;
     -fx-background-radius: 8px;
 }
@@ -55,10 +55,10 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 4, 0);
 }
 .add-course-input:focused, .description-input:focused{
-    -fx-border-color: #1D6611;
+    -fx-border-color: #FF007F;
 }
 .add-course-input:hover, .description-input:hover{
-    -fx-border-color: #1D6611;
+    -fx-border-color: #FF007F;
 }
 .label-form{
     -fx-font-family: "Jost Medium";

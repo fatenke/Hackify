@@ -13,7 +13,7 @@
             <Image url="@img/pdp.png" />
          </image>
       </ImageView>
-      <Label fx:id="welcomeLabel" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="-2.0" layoutY="76.0" prefHeight="94.0" prefWidth="802.0" stylesheets="@stylesheet.css" textAlignment="CENTER" textFill="#3594e7" underline="true">
+      <Label fx:id="welcomeLabel" alignment="TOP_CENTER" contentDisplay="CENTER" layoutX="-2.0" layoutY="76.0" prefHeight="94.0" prefWidth="802.0" stylesheets="@stylesheet.css" textAlignment="CENTER" textFill="#FF007F" underline="true">
          <font>
             <Font name="Berlin Sans FB" size="36.0" />
          </font></Label>

@@ -1,6 +1,5 @@
 package controllers;
 
-
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
@@ -10,7 +9,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -21,10 +19,8 @@ import services.UserService;
 
 import java.io.IOException;
 import java.net.URL;
-import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.util.Optional;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -51,6 +47,7 @@ public class ForgetPassword implements Initializable {
     private UserService userService = new UserService();
 
     private String correctVerificationCode; // Store the correct verification code here
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         verificationCodeField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -62,10 +59,7 @@ public class ForgetPassword implements Initializable {
                 String limitedText = verificationCodeField.getText().substring(0, 6);
                 verificationCodeField.setText(limitedText);
             }
-
         });
-
-
     }
 
     @FXML
@@ -153,22 +147,21 @@ public class ForgetPassword implements Initializable {
     }
 
     @FXML
-    private void verifyCode( KeyEvent event) {
+    private void verifyCode(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
-
             String enteredVerificationCode = verificationCodeField.getText();
             // Check if the verification code field is empty
             if (enteredVerificationCode.isEmpty()) {
                 // Show a warning message to fill the verification code
                 showAlert("Attention", null, "Veuillez saisir le code de vérification.");
             } else {
-                // Call the verifyCode method to proceed with verification
-                verifyCode();
+                // Call the verifyCodeLogic method to proceed with verification
+                verifyCodeLogic();
             }
         }
     }
 
-    private void verifyCode() {
+    private void verifyCodeLogic() {
         String enteredVerificationCode = verificationCodeField.getText();
         // Validate entered verification code
         if (enteredVerificationCode.equals(correctVerificationCode)) {
@@ -218,6 +211,10 @@ public class ForgetPassword implements Initializable {
         }
     }
 
+    @FXML
+    private void changePasswordAction(ActionEvent event) {
+        // Logic for the DONE button
+    }
 
     @FXML
     private void close_app(MouseEvent event) {
@@ -272,8 +269,7 @@ public class ForgetPassword implements Initializable {
                 "<div class='container'>" +
                 "<div class='header'><h2>Password Reset Verification</h2></div>" +
                 "<div class='content'>" +
-                "<h3>Dear "+user.getNom()+" :"+"</h3>" +
-
+                "<h3>Dear " + user.getNom() + " :" + "</h3>" +
                 "<p>You have requested to reset your password. Please use the following verification code to proceed:</p>" +
                 "<div class='verification-code'>" + code + "</div>" +
                 "<p>If you did not request a password reset, please ignore this message.</p>" +

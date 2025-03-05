@@ -1,118 +1,81 @@
 /* Main container */
 .container {
-    -fx-background-color: #ffffff; /* White background */
+    -fx-background-color: #1E0525; /* Light gray background for main content */
 }
 
-/* Left menu container */
+/* Left menu container (sidebar) */
 .left-menu-container {
-    -fx-background-color: #FF007F; /* Pink background */
-    -fx-border-radius: 24;
-    -fx-background-radius: 24;
-    -fx-border-color: #000000;
+    -fx-background-color: #286371; /* Teal/blue background for sidebar */
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-border-color: transparent;
 }
 
-/* Buttons */
-.monbouton {
-    -fx-background-color: #5f27cd; /* Purple for buttons */
-    -fx-border-radius: 24;
-    -fx-background-radius: 24;
-    -fx-border-color: #000000;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 4, 0);
-}
-
-.monbouton:hover {
-    -fx-opacity: 0.6;
-}
-
-/* Profile image container */
-.img-profile-container {
-    -fx-arc-height: 32;
-    -fx-arc-width: 32;
-}
-
-/* User details container */
-.user-details-container {
-    -fx-background-color: rgba(255, 255, 255, 0.56); /* Semi-transparent white */
-    -fx-background-radius: 24;
-    -fx-border-radius: 24;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 4, 0);
-}
-
-/* Menu buttons */
+/* Buttons in the sidebar */
 .menu-btn {
-    -fx-background-color: rgba(255, 255, 255, 0.56); /* Semi-transparent white */
-    -fx-border-radius: 24;
-    -fx-background-radius: 24;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 4, 0);
-    -fx-font-size: 20;
+    -fx-background-color: #1b3347; /* Dark blue background for buttons */
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-font-size: 18;
     -fx-font-weight: bold;
-    -fx-text-fill: #000000; /* Black text */
+    -fx-text-fill: white; /* White text */
     -fx-cursor: hand;
-    -fx-border-width: 2px 2px 2px 2px;
-    -fx-border-style: solid;
-    -fx-border-color: #5f27cd; /* Bright blue border */
+    -fx-border-width: 0;
+    -fx-padding: 10 20 10 20;
+    -fx-alignment: center-left;
 }
 
 .menu-btn:hover {
-    -fx-opacity: 0.6;
+    -fx-background-color: #2a2a3d; /* Slightly lighter dark background on hover */
+    -fx-text-fill: #ffffff; /* White text on hover */
 }
 
-/* Global text */
-.global-text {
-    -fx-font-size: 28;
-    -fx-fill: #000000; /* Black text */
+/* Profile image container */
+.user-details-container {
+    -fx-background-color: #1b3347; /* Dark blue background */
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 0);
 }
 
-/* Search bar */
-.search-bar {
-    -fx-background-color: #D9D9D9; /* Light gray background */
-    -fx-border-width: 0 0 1 0;
-    -fx-border-color: #000000;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 4, 0);
-}
-
-.search-input {
-    -fx-background-color: transparent;
-    -fx-font-family: "Jost Light";
-    -fx-font-size: 16;
-    -fx-text-fill: #000000; /* Black text */
-}
-
-/* Setting buttons */
-.setting-btn {
-    -fx-background-color: transparent;
-    -fx-cursor: hand;
-}
-
-.setting-btn:hover {
-    -fx-opacity: 0.6;
-}
-
-/* Page title */
-.title-page {
-    -fx-font-size: 24;
-    -fx-text-fill: #000000; /* Black text */
-}
-
-/* Add button */
-.ajout-btn {
-    -fx-background-color: #5f27cd; /* Bright blue */
-    -fx-border-radius: 24;
-    -fx-background-radius: 24;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 4, 0);
-    -fx-font-size: 16;
+/* Welcome back label */
+#okba {
+    -fx-text-fill: #ffffff; /* Teal/blue text */
+    -fx-font-size: 36;
     -fx-font-weight: bold;
-    -fx-text-fill: #ffffff; /* White text */
+    -fx-font-family: "Roboto";
+}
+
+/* Icons and images */
+ImageView {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 0);
+}
+
+/* Close and reduce icons */
+#reduceIcon, #closeIcon {
     -fx-cursor: hand;
 }
 
-.ajout-btn:hover {
-    -fx-opacity: 0.6;
+#reduceIcon:hover, #closeIcon:hover {
+    -fx-opacity: 0.8;
 }
 
+/* Dashboard title */
+Text {
+    -fx-fill: #ffff; /* Dark text */
+    -fx-font-size: 24;
+    -fx-font-weight: bold;
+    -fx-font-family: "Roboto";
+}
+
+/* Main content pane */
+#paneshow {
+    -fx-background-color:  #1E0525; /* White background */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+}
 /* Scroll pane */
 .scroll-pane {
-    -fx-background-color: #ffffff; /* White background */
+    -fx-background-color: #D291BC; /* White background */
 }
 
 .scroll-pane .scroll-bar:vertical {
@@ -122,7 +85,7 @@
 }
 
 .scroll-pane .scroll-bar:vertical .thumb {
-    -fx-background-color: #6D6D6D;; /* Bright blue scroll thumb */
+    -fx-background-color: #D291BC;; /* Bright blue scroll thumb */
 }
 
 .scroll-pane .scroll-bar:vertical .thumb:hover {
@@ -132,155 +95,4 @@
 .scroll-pane .scroll-bar:vertical .increment-button,
 .scroll-pane .scroll-bar:vertical .decrement-button {
     -fx-background-color: transparent;
-}
-
-/* List container */
-.list-container {
-    -fx-background-color: #ffffff; /* White background */
-}
-
-/* Item container */
-.item-container {
-    -fx-background-radius: 24;
-    -fx-border-radius: 24;
-    -fx-background-color: #5f27cd; /* Bright blue */
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 4, 0);
-}
-
-/* Supplier name */
-.nom-prenom-fournisseur {
-    -fx-font-family: "Jost Medium";
-    -fx-font-size: 20;
-    -fx-fill: #000000; /* Black text */
-}
-
-/* ID text */
-.id-text {
-    -fx-font-family: "Jost Medium";
-    -fx-font-size: 16;
-    -fx-opacity: 0.6;
-    -fx-text-fill: #000000; /* Black text */
-}
-
-/* Other data */
-.other-data {
-    -fx-font-family: "Jost";
-    -fx-font-size: 16;
-    -fx-text-fill: #000000; /* Black text */
-}
-
-/* Icon item */
-.icon-item {
-    -fx-opacity: 0.6;
-}
-
-/* Delete button */
-.delete-btn {
-    -fx-background-color: #ff6b6b; /* Red for delete button */
-    -fx-border-radius: 12;
-    -fx-background-radius: 12;
-    -fx-font-size: 16;
-    -fx-font-weight: bold;
-    -fx-text-fill: #ffffff; /* White text */
-    -fx-cursor: hand;
-}
-
-.delete-btn:hover {
-    -fx-opacity: 0.6;
-}
-
-/* Edit button */
-.edit-btn {
-    -fx-background-color: #5f27cd; /* Purple */
-    -fx-border-radius: 12;
-    -fx-background-radius: 12;
-    -fx-font-size: 16;
-    -fx-font-weight: bold;
-    -fx-text-fill: #ffffff; /* White text */
-    -fx-cursor: hand;
-}
-
-.edit-btn:hover {
-    -fx-opacity: 0.6;
-}
-
-/* Add form container */
-.ajoutFContainer {
-    -fx-background-color: #ffffff; /* White background */
-}
-
-/* Form title */
-.title-form {
-    -fx-font-family: "Jost Medium";
-    -fx-font-size: 24;
-    -fx-fill: #000000; /* Black text */
-}
-
-/* Form labels */
-.formulaire-label {
-    -fx-font-family: "Jost Medium";
-    -fx-font-size: 24;
-    -fx-fill: #000000; /* Black text */
-}
-
-/* Form inputs */
-.formulaire-input {
-    -fx-background-color: #fff; /* White background */
-    -fx-border-radius: 6px;
-    -fx-border-color: #999; /* Gray border */
-    -fx-background-radius: 6px;
-    -fx-prompt-text-fill: #999; /* Gray placeholder text */
-    -fx-font-family: "Jost Medium";
-    -fx-font-weight: 600;
-    -fx-font-size: 16px;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 4, 0);
-}
-
-/* Combo box */
-.combo-box .arrow-button {
-    -fx-background-color: transparent;
-    -fx-padding: 2px;
-}
-
-.combo-box .arrow-button .arrow {
-    -fx-background-color: #5f27cd; /* Purple arrow */
-    -fx-background-insets: 0;
-}
-
-.combo-box:hover .arrow-button .arrow {
-    -fx-background-color: #5f27cd; /* Purple arrow on hover */
-}
-
-.combo-box .list-cell {
-    -fx-background-color: #ffffff; /* White background */
-    -fx-padding: 4px;
-    -fx-font-size: 14px;
-}
-
-.combo-box .list-cell:hover {
-    -fx-background-color: #d4edda; /* Light green hover */
-}
-
-/* Error label */
-.error-label {
-    -fx-font-size: 16;
-    -fx-font-weight: bold;
-    -fx-text-fill: #ff6b6b; /* Red text for errors */
-}
-
-/* VBox */
-.vbox {
-    -fx-background-color: #FF007F; /* Pink background */
-}
-
-/* Show button */
-.show {
-    -fx-background-color: #5f27cd; /* Purple */
-    -fx-border-color: #383737; /* Dark gray border */
-    -fx-border-radius: 45;
-    -fx-background-radius: 45;
-    -fx-font-size: 16;
-    -fx-font-weight: bold;
-    -fx-text-fill: #ffffff; /* White text */
-    -fx-cursor: hand;
 }

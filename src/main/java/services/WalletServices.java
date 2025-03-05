@@ -67,4 +67,21 @@ public class WalletServices implements IService<wallet> {
         }
         return wallets;
     }
+    public wallet getWalletByUserId(int userId) throws SQLException {
+        String query = "SELECT * FROM wallet WHERE user_id = ?";
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setInt(1, userId);
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            return new wallet(
+                    rs.getInt("id"),
+                    rs.getInt("user_id"),
+                    rs.getFloat("balance"),
+                    rs.getString("lastTransaction")
+            );
+        }
+        return null;
+    }
+
 }

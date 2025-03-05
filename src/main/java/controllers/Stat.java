@@ -68,7 +68,7 @@ public class Stat implements Initializable {
         } catch (SQLException ex) {
         }
 
-        piechart2.setTitle("*Statistiques des Roles *");
+        piechart2.setTitle("Statistiques des Roles ");
         piechart2.setLegendSide(Side.LEFT);
         piechart2.setData(data2);
 

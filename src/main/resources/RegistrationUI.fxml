@@ -59,8 +59,8 @@
             </font>
         </JFXPasswordField>
         <JFXComboBox fx:id="roleCB" focusColor="#4A00E0" labelFloat="true" layoutX="50.0" layoutY="440.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Role *" unFocusColor="#4A00E0" />
-        <JFXButton fx:id="choosefileBT" layoutX="50.0" layoutY="647.0" onAction="#chooseFile" prefHeight="30.0" prefWidth="300.0" ripplerFill="#00946f" styleClass="ChooseFileBtn" text="Choose File" textFill="#00946f" />
-        <JFXButton buttonType="RAISED" layoutX="262.0" layoutY="686.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#AddUser" prefHeight="40.0" prefWidth="124.0" ripplerFill="#6aefce" styleClass="loginBtn" stylesheets="@stylesheet.css" text="Register">
+        <JFXButton fx:id="choosefileBT" layoutX="50.0" layoutY="647.0" onAction="#chooseFile" prefHeight="30.0" prefWidth="300.0" ripplerFill="#4A00E0" styleClass="ChooseFileBtn" text="Choose File" textFill="#4A00E0" />
+        <JFXButton buttonType="RAISED" layoutX="262.0" layoutY="686.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#AddUser" prefHeight="40.0" prefWidth="124.0" ripplerFill="#4A00E0" styleClass="loginBtn" stylesheets="@stylesheet.css" text="Register">
             <font>
                 <Font name="System Bold" size="14.0" />
             </font>

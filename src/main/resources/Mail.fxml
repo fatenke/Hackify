@@ -13,7 +13,7 @@
 
 <AnchorPane prefHeight="706.0" prefWidth="1037.0" styleClass="container" stylesheets="@styleEye.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Mailing">
 <children>
-    <Text fill="#2f8783" layoutX="41.0" layoutY="166.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Recipient's Email:" wrappingWidth="189.321044921875">
+    <Text fill="#4A00E0" layoutX="41.0" layoutY="166.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Recipient's Email:" wrappingWidth="189.321044921875">
          <font>
             <Font name="Ebrima Bold" size="18.0" />
          </font></Text>
@@ -25,7 +25,7 @@
                </color>
             </InnerShadow>
          </effect></TextField>
-    <Text fill="#2f8783" layoutX="41.0" layoutY="243.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Subject:" wrappingWidth="189.321044921875">
+    <Text fill="#4A00E0" layoutX="41.0" layoutY="243.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Subject:" wrappingWidth="189.321044921875">
          <font>
             <Font name="Ebrima Bold" size="18.0" />
          </font></Text>
@@ -37,7 +37,7 @@
                </color>
             </InnerShadow>
          </effect></TextField>
-    <Text fill="#2f8783" layoutX="39.0" layoutY="344.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Message Body:">
+    <Text fill="#4A00E0" layoutX="39.0" layoutY="344.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Message Body:">
          <font>
             <Font name="System Bold" size="18.0" />
          </font></Text>
@@ -69,7 +69,7 @@
             <Image url="@img/mil.png" />
          </image>
       </ImageView>
-      <Text fill="#2f8783" layoutX="11.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="            REPORT  :" wrappingWidth="182.92105102539062">
+      <Text fill="#4A00E0" layoutX="11.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="            REPORT  :" wrappingWidth="182.92105102539062">
          <font>
             <Font name="Candara Bold" size="32.0" />
          </font>

@@ -8,6 +8,12 @@ public class wallet {
 
     // Default constructor
     public wallet() {}
+    public wallet(int walletId,int userId, float balance, String lastTransaction) {
+        this.walletId = walletId;
+        this.userId = userId;
+        this.balance = balance;
+        this.lastTransaction = lastTransaction;
+    }
 
     // Constructor with userId and balance
     public wallet(int userId, float balance) {
