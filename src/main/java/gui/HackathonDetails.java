@@ -3,14 +3,16 @@ package gui;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import models.Hackathon;
 import models.Participation;
 import services.ParticipationService;
 
+import java.time.format.DateTimeFormatter;
+
 public class HackathonDetails {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm");
     ParticipationService participationService=new ParticipationService();
     @FXML
     private Label labelDescription;
@@ -27,16 +29,18 @@ public class HackathonDetails {
     @FXML
     private Label labelNom;
 
-
+    @FXML
+    private Label labelTheme;
 
     private Hackathon hackathon;
     public void setHackathon(Hackathon hackathon) {
         this.hackathon = hackathon;
         labelNom.setText(hackathon.getNom_hackathon());
         labelDescription.setText(hackathon.getDescription());
-        labelDateDebut.setText(hackathon.getDate_debut().toString());
-        labelDateFin.setText(hackathon.getDate_fin().toString());
+        labelDateDebut.setText(hackathon.getDate_debut().format(formatter));
+        labelDateFin.setText(hackathon.getDate_fin().format(formatter));
         labelLieu.setText(hackathon.getLieu());
+        labelTheme.setText(hackathon.getTheme());
     }
 
     @FXML

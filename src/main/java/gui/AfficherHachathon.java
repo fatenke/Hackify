@@ -20,16 +20,10 @@ import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.text.Font;
-import java.util.List;
 
 public class AfficherHachathon {
     private final HackathonService hackathonService= new HackathonService();
@@ -49,9 +43,7 @@ public class AfficherHachathon {
         for (Hackathon h : hackathons) {
             StackPane stack = new StackPane();
             stack.getStyleClass().add("hackathon-card");
-
             stack.setPadding(new Insets(0));
-
             Rectangle frontFace = new Rectangle(330, 230);
             frontFace.setFill(Color.WHITE);
             frontFace.setStroke(Color.LIGHTGRAY);
@@ -106,7 +98,6 @@ public class AfficherHachathon {
             stack.getChildren().addAll(frontFace, textContainer);
             StackPane.setMargin(frontFace, new Insets(-10, -12, 0, 0));
 
-            // Ajout à la grille
             gp_hackathon.add(stack, col, row);
             col++;
             if (col == columns) {

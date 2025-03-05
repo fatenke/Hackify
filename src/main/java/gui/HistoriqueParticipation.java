@@ -1,19 +1,26 @@
 package gui;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import models.Hackathon;
 import models.Participation;
 import services.HackathonService;
 import services.ParticipationService;
 
+import java.io.IOException;
+import java.time.format.DateTimeFormatter;
+
 
 public class HistoriqueParticipation {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm");
     ParticipationService ps =new ParticipationService();
     HackathonService hs = new HackathonService();
     @FXML
@@ -54,7 +61,8 @@ public class HistoriqueParticipation {
             participationGrid.add(actionText, 4, 1);
 
             Text name = new Text(hackathon.getNom_hackathon());
-
+            Text dateD = new Text(hackathon.getDate_debut().format(formatter));
+            Text datef = new Text(hackathon.getDate_fin().format(formatter));
             Text status = new Text(participation.getStatut());
             status.getStyleClass().add("text");
 
@@ -69,9 +77,10 @@ public class HistoriqueParticipation {
             hbox.setSpacing(10);
 
             participationGrid.add(name, 0, row);
+            participationGrid.add(dateD, 1, row);
+            participationGrid.add(datef, 2, row);
             participationGrid.add(status, 3, row);
             participationGrid.add(hbox, 4, row);
-
 
             row++;
         }
@@ -94,6 +103,17 @@ public class HistoriqueParticipation {
         }
     }
     public void detaillsHackathon(Hackathon hackathon){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/HackathonDetails.fxml"));
+            Parent newContent = loader.load();
+            HackathonDetails controller = loader.getController();
+            controller.setHackathon(hackathon);
+            Stage stage = (Stage) participationGrid.getScene().getWindow();
+            stage.getScene().setRoot(newContent);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
