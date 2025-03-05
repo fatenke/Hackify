@@ -5,6 +5,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import models.Hackathon;
 import models.Participation;
@@ -25,17 +26,38 @@ public class HistoriqueParticipation {
 
     public void loadHistorique() {
         var participations = ps.getAll();
-        int row = 2; // commencer à la ligne 2 (la ligne 1 est pour les titres)
+        int row = 2;
         for (Participation participation : participations) {
             Hackathon hackathon= hs.getHackathonById(participation.getIdHackathon());
-            // Ajouter les détails de chaque participation
-            /*Text hackathonText = new Text(participation.getHackathon());*/
+            Text hackathonText = new Text("Hackathon");
+            hackathonText.setStyle("-fx-font-weight: bold;");
+            hackathonText.setWrappingWidth(140.26641082763672);
+
+            Text dateDText = new Text("Date début");
+            dateDText.setStyle("-fx-font-weight: bold;");
+            dateDText.setWrappingWidth(93.66681098937988);
+            Text dateFText = new Text("Date fin");
+            dateFText.setStyle("-fx-font-weight: bold;");
+            dateFText.setWrappingWidth(93.66681098937988);
+
+            Text statusText = new Text("Status");
+            statusText.setStyle("-fx-font-weight: bold;");
+            statusText.setWrappingWidth(75.06249618530273);
+
+            Text actionText = new Text("Action");
+            actionText.setStyle("-fx-font-weight: bold;");
+            actionText.setWrappingWidth(138.47308349609375);
+            participationGrid.add(hackathonText, 0, 1);
+            participationGrid.add(dateDText, 1, 1);
+            participationGrid.add(dateFText, 2, 1);
+            participationGrid.add(statusText, 3, 1);
+            participationGrid.add(actionText, 4, 1);
+
             Text name = new Text(hackathon.getNom_hackathon());
 
-            Text statusText = new Text(participation.getStatut());
-            statusText.getStyleClass().add("text");
+            Text status = new Text(participation.getStatut());
+            status.getStyleClass().add("text");
 
-            // Ajouter le bouton d'annulation
             Button cancelButton = new Button("Annuler");
             cancelButton.getStyleClass().add("btn-action");
             cancelButton.setOnAction(e -> handleCancelParticipation(participation));
@@ -43,11 +65,13 @@ public class HistoriqueParticipation {
             Button detaillsButton = new Button("voir detaills hackathon");
             detaillsButton.getStyleClass().add("btn-action");
             detaillsButton.setOnAction(e -> detaillsHackathon(hackathon));
-            // Ajouter les éléments dans les cellules du GridPane
+            HBox hbox =new HBox(cancelButton,detaillsButton);
+            hbox.setSpacing(10);
+
             participationGrid.add(name, 0, row);
-            participationGrid.add(statusText, 2, row);
-            participationGrid.add(cancelButton, 3, row);
-            participationGrid.add(detaillsButton, 4, row);
+            participationGrid.add(status, 3, row);
+            participationGrid.add(hbox, 4, row);
+
 
             row++;
         }

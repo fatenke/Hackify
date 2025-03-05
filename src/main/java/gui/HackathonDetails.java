@@ -27,8 +27,7 @@ public class HackathonDetails {
     @FXML
     private Label labelNom;
 
-    @FXML
-    private Label labelTheme;
+
 
     private Hackathon hackathon;
     public void setHackathon(Hackathon hackathon) {
@@ -58,10 +57,7 @@ public class HackathonDetails {
 
     }
 
-    @FXML
-    void participerEnEquipe(ActionEvent event) {
 
-    }
 
 
 }

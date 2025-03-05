@@ -1,29 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
+<?import java.net.URL?>
 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="789.0" prefWidth="1261.0" style="-fx-background-color: #1e0425;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.HackathonDetails">
     <VBox minWidth="200">
         <fx:include source="NavBar.fxml" />
     </VBox>
-<VBox alignment="CENTER" layoutX="617.0" layoutY="14.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="678.0" prefWidth="629.0">
-    <Label fx:id="labelNom" text="Nom du Hackathon:" />
-    <Label fx:id="labelDateDebut" text="Date du Hackathon:" />
-    <Label fx:id="labelDateFin" style="-fx-text-fill: white;" text="Date fin du Hackathon:" />
-    <Label fx:id="labelLieu" text="Lieu du Hackathon:" />
-    <Label fx:id="labelTheme" text="theme du Hackathon:" />
-    <Label fx:id="labelDescription" text="Description du Hackathon:" />
-    <HBox alignment="CENTER" prefHeight="0.0" prefWidth="200.0">
-        <children>
-            <Button mnemonicParsing="false" onAction="#ParticiperIndiv" style="-fx-background-color: #f775d6;" text="Individuelle" />
-            <Button mnemonicParsing="false" onAction="#participerEnEquipe" style="-fx-background-color: #f775d6;" text="En équipe" />
-        </children>
-    </HBox>
-
-</VBox>
+   <VBox layoutX="422.0" layoutY="6.0" prefHeight="243.0" prefWidth="243.0" />
+   <StackPane alignment="TOP_RIGHT" layoutX="532.0" layoutY="136.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="611.0" style="-fx-background-color: #286371; -fx-background-radius: 15px;">
+      <children>
+      <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="595.0" prefWidth="592.0" style="-fx-background-color: white; -fx-spacing: 20px; -fx-background-radius: 15px; -fx-padding: 60px;">
+          <Label fx:id="labelNom" text="Nom du Hackathon:">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+          <Label fx:id="labelDateDebut" text="Date début du Hackathon:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+          <Label fx:id="labelDateFin" text="Date fin du Hackathon:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+          <Label fx:id="labelLieu" text="Lieu du Hackathon:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label text="Théme de hackathon">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+          <Label fx:id="labelDescription" text="Description du Hackathon:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Button mnemonicParsing="false" onAction="#ParticiperIndiv" prefHeight="43.0" prefWidth="201.0" styleClass="btn-action" text="Participer">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Button>
+            <StackPane.margin>
+               <Insets right="-12.0" top="-12.0" />
+            </StackPane.margin>
+      
+                  </VBox>
+      </children>
+   </StackPane>
+    <stylesheets>
+        <URL value="@/Styles/style.css" />
+    </stylesheets>
 
 </AnchorPane>

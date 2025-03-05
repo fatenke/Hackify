@@ -52,7 +52,6 @@ public class AfficherHachathon {
 
             stack.setPadding(new Insets(0));
 
-            // Face avant du "cube"
             Rectangle frontFace = new Rectangle(330, 230);
             frontFace.setFill(Color.WHITE);
             frontFace.setStroke(Color.LIGHTGRAY);
@@ -63,7 +62,6 @@ public class AfficherHachathon {
             stack.getStyleClass().add("frontFace");
 
 
-            // Conteneur du texte
             VBox textContainer = new VBox(5);
             textContainer.setAlignment(Pos.CENTER);
             textContainer.setPadding(new Insets(10));
@@ -105,7 +103,6 @@ public class AfficherHachathon {
             hbox.getChildren().addAll(updateButton, deleteButton,showButton);
 
 
-            // Superposer les éléments pour créer l'effet 3D
             stack.getChildren().addAll(frontFace, textContainer);
             StackPane.setMargin(frontFace, new Insets(-10, -12, 0, 0));
 
@@ -135,7 +132,6 @@ public class AfficherHachathon {
 
     private void participerHackathon(Hackathon hackathon) {
         try {
-            /*FXMLLoader loader = new FXMLLoader(getClass().getResource("/HackathonDetails.fxml"));*/
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/HackathonDetails.fxml"));
             Parent newContent = loader.load();
             HackathonDetails controller = loader.getController();
@@ -146,18 +142,7 @@ public class AfficherHachathon {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        /*Participation p= new Participation(hackathon.getId_hackathon());
-        participationService.add(p);
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Participation");
-        alert.setHeaderText(null);
-        alert.setContentText("Vous avez participé à : " + hackathon.getNom_hackathon() + " Bonne chance!");
-        DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.setStyle("-fx-background-color: linear-gradient(to right, #1E90FF, #9370DB, #FF69B4); " +
-                "-fx-text-fill: white; " +
-                "-fx-font-size: 14px; " +
-                "-fx-font-family: 'Arial';");
-        alert.showAndWait();*/
+
 
     }
     public void supprimerHackathon(Hackathon hackathon){
