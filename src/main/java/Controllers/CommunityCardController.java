@@ -33,7 +33,8 @@ public class CommunityCardController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/afficherChats.fxml"));
             Parent root = loader.load();
 
-            // Pass the community id to the chat view controller
+            // Pass the community id to th
+            // e chat view controller
             AfficherChatsController controller = loader.getController();
             controller.setCurrentCommunityId(communityId);
 

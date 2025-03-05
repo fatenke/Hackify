@@ -21,7 +21,7 @@ public class Message {
     }
 
     public enum MessageType {
-        QUESTION, REPONSE
+        QUESTION, REPONSE , SUGGESTION
     }
 
     public Message() {}

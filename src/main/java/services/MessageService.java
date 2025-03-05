@@ -1,6 +1,7 @@
 package services;
 
 import Interfaces.GlobalInterface;
+import javafx.scene.control.Alert;
 import models.Chat;
 import models.ChatType;
 import models.Communaute;
@@ -11,28 +12,57 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessageService implements GlobalInterface<Message> {
-    private Connection conn;
-    private ChatService chatService = new ChatService();
-    private static final int BOT_USER_ID = 50;
-    public MessageService(Connection conn) {
+    private  Connection conn;
+    private  BotService botService;
+
+    public MessageService(Connection conn,
+                          ChatService chatService,
+                          GeminiService geminiService) {
         this.conn = conn;
+        this.botService = new BotService(this, chatService, geminiService);
     }
 
     @Override
     public void add(Message message) {
-        if (message.getPostedBy() == -1) {
-            message.setPostedBy(BOT_USER_ID); // Assign bot messages to the correct bot user ID
+        // Initialize ModerationService with the API key from your environment variables
+        ModerationService moderationService = new ModerationService("AIzaSyBD2OhIz6EAxRE9tf4U6ZZ4-G8FBhjjCXY");
+        double toxicityScore = moderationService.getToxicityScore(message.getContenu());
+        double threshold = 0.8; // Set your toxicity threshold here
+
+        // If toxicity score exceeds the threshold, flag and do not save the message.
+        if (toxicityScore >= threshold) {
+            System.out.println("Message flagged as toxic (score: " + toxicityScore + "). Not saving message.");
+            // Display a JavaFX alert to the user:
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Message Blocked");
+            alert.setHeaderText("Inappropriate Content Detected");
+            alert.setContentText("Your message was flagged as inappropriate and has not been sent.");
+            alert.showAndWait();
+            return;
         }
 
+
+        // Save the message to the database.
+        saveMessage(message);
+
+        // If the message is not from the bot (BOT_USER_ID should be defined consistently across your services),
+        // then let the bot handle the user message.
+        if (message.getPostedBy() != BotService.BOT_USER_ID) {
+            botService.handleUserMessage(message);
+        }
+    }
+
+    private void saveMessage(Message message) {
         String sql = "INSERT INTO message (chat_id, posted_by, contenu, type, post_time) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, message.getChatId());
             stmt.setInt(2, message.getPostedBy());
             stmt.setString(3, message.getContenu());
-            stmt.setString(4, message.getType().name());
+            stmt.setString(4, message.getType().name()); // Convert enum to String
             stmt.setTimestamp(5, message.getPostTime());
             stmt.executeUpdate();
 
+            // Retrieve the generated ID and set it in the message
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
                     message.setId(rs.getInt(1));
@@ -40,39 +70,9 @@ public class MessageService implements GlobalInterface<Message> {
             }
         } catch (SQLException e) {
             System.out.println("Error saving message: " + e.getMessage());
-            return;
         }
-
-        // Check if this is a bot chat and generate a response
-        Chat chat = chatService.getChatById(message.getChatId());
-        if (chat != null && chat.getType() == ChatType.BOT_SUPPORT && message.getPostedBy() != BOT_USER_ID) {
-            try {
-                GeminiService geminiService = new GeminiService(System.getenv("GEMINI_API_KEY"));
-                String botResponse = geminiService.getResponse(message.getContenu());
-
-                Message botMessage = new Message(
-                        message.getChatId(),
-                        botResponse,
-                        Message.MessageType.REPONSE,
-                        new Timestamp(System.currentTimeMillis()),
-                        BOT_USER_ID
-                );
-
-                this.add(botMessage); // Save bot response
-            } catch (Exception e) {
-                System.err.println("Gemini error: " + e.getMessage());
-                Message errorMessage = new Message(
-                        message.getChatId(),
-                        "Could not generate response",
-                        Message.MessageType.REPONSE,
-                        new Timestamp(System.currentTimeMillis()),
-                        BOT_USER_ID
-                );
-                this.add(errorMessage);
-            }
-        }
-
     }
+
     @Override
     public void update(Message message) {
         String sql = "UPDATE message SET contenu = ?, type = ? WHERE id = ?";

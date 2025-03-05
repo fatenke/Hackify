@@ -9,9 +9,10 @@
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1"
+            stylesheets="/styles/AfficherChatsStyle.css"
             fx:controller="Controllers.AfficherChatsController">
 
-    <!-- Top: Header Section -->
+    <!-- Top: Header Section (unchanged) -->
     <top>
         <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-background-color: #8A2BE2; -fx-padding: 15;">
             <Label fx:id="chatTitle" text="Chat Title"
@@ -21,7 +22,7 @@
         </HBox>
     </top>
 
-    <!-- Left: Sidebar -->
+    <!-- Left: Sidebar (unchanged) -->
     <left>
         <VBox spacing="10" prefWidth="220" style="-fx-background-color: #4A148C; -fx-padding: 15;">
             <Label text="Existing Chats"
@@ -35,16 +36,22 @@
     <center>
         <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: #F5F5F5;">
             <ListView fx:id="messagesListView" VBox.vgrow="ALWAYS"
-                      style="-fx-background-color: white; -fx-border-color: #B39DDB; -fx-border-radius: 10; -fx-padding: 10;"/>
+                      styleClass="message-list"
+                      style="-fx-border-color: #B39DDB; -fx-border-radius: 10;"/>
 
             <!-- Message Input Box -->
-            <HBox spacing="10" alignment="CENTER">
+            <HBox spacing="10" alignment="CENTER" style="-fx-padding: 10 0 0 0;">
                 <TextField fx:id="messageField" promptText="Type your message..."
-                           HBox.hgrow="ALWAYS"
-                           style="-fx-padding: 12; -fx-border-color: #B39DDB; -fx-border-radius: 20;"/>
+                           styleClass="message-input"
+                           HBox.hgrow="ALWAYS"/>
                 <Button fx:id="sendButton" text="Send" onAction="#handleSendMessage"
-                        style="-fx-background-color: #8A2BE2; -fx-text-fill: white; -fx-background-radius: 20; -fx-padding: 8 20; -fx-cursor: hand;"/>
+                        styleClass="send-button"/>
             </HBox>
+            <!-- Suggestion Box -->
+            <HBox fx:id="suggestionBox" spacing="10" alignment="CENTER"
+                  style="-fx-padding: 5; -fx-background-color: #E0E0E0; -fx-border-radius: 10; -fx-border-color: #B39DDB;">
+            </HBox>
+
         </VBox>
     </center>
 

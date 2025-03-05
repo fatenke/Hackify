@@ -56,7 +56,7 @@ public class Main {
         // chatService.delete(chat1);
 
 
-        MessageService messageService = new MessageService(conn);
+//        MessageService messageService = new MessageService(conn);
 
 
         // Create a new message
@@ -65,8 +65,8 @@ public class Main {
 
 
         // Retrieve and display all messages
-        System.out.println("All Messages:");
-        messageService.getAll().forEach(System.out::println);
+//        System.out.println("All Messages:");
+//        messageService.getAll().forEach(System.out::println);
 
     }
 
