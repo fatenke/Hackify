@@ -1,6 +1,7 @@
 package services;
+import Interfaces.GlobalInterface;
 import models.Projet;
-import util.DBConnection;
+import util.MyConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,18 +11,18 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjetService implements IService<Projet> {
+public class ProjetService implements GlobalInterface<Projet> {
 
-    public final Connection conn;
+    public final Connection cnx;
 
     public ProjetService() {
-        this.conn = DBConnection.getInstance().getConn();
+        this.cnx = MyConnection.getInstance().getCnx();
     }
 
     @Override
     public void add(Projet projet) {
         String SQL = "INSERT INTO `projet`( `nom`, `statut`, `priorite`, `description`, `ressource`) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement pstmt = conn.prepareStatement(SQL)) {
+        try (PreparedStatement pstmt = cnx.prepareStatement(SQL)) {
             pstmt.setString(1, projet.getNom());
             pstmt.setString(2, projet.getStatut());
             pstmt.setString(3, projet.getPriorite());
@@ -37,7 +38,7 @@ public class ProjetService implements IService<Projet> {
     public void update(Projet projet) {
         String SQL = "UPDATE projet SET nom = ?, statut = ?, priorite = ?, description = ?, ressource = ? WHERE id = ?";
 
-        try (PreparedStatement pstmt = conn.prepareStatement(SQL)) {
+        try (PreparedStatement pstmt = cnx.prepareStatement(SQL)) {
             pstmt.setString(1, projet.getNom());
             pstmt.setString(2, projet.getStatut());
             pstmt.setString(3, projet.getPriorite());
@@ -60,7 +61,7 @@ public class ProjetService implements IService<Projet> {
     public void delete(Projet projet) {
         String SQL = "DELETE FROM `projet` WHERE id = ?";
 
-        try (PreparedStatement pstmt = conn.prepareStatement(SQL)) {
+        try (PreparedStatement pstmt = cnx.prepareStatement(SQL)) {
             pstmt.setInt(1, projet.getId_pr());
             int rowsDeleted = pstmt.executeUpdate();
             if (rowsDeleted > 0) {
@@ -80,7 +81,7 @@ public class ProjetService implements IService<Projet> {
         String req = "SELECT * FROM `projet`";
 
         try {
-            Statement stm = conn.createStatement();
+            Statement stm = cnx.createStatement();
             ResultSet rs = stm.executeQuery(req);
 
             while (rs.next()) {

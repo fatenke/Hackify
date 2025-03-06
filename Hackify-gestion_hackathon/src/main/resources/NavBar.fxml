@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="964.0" prefWidth="368.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.NavBar">
+    <VBox alignment="TOP_CENTER" layoutX="-2.0" prefHeight="964.0" prefWidth="371.0" style="-fx-background-color: #286371; -fx-background-radius: 10px; -fx-spacing: 10px;">
+        <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="141.0" prefWidth="283.0" style="-fx-spacing: 10px;">
+                <children>
+                    <ImageView fitHeight="141.0" fitWidth="157.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="@Image/logo.png" />
+                        </image>
+                    </ImageView>
+                    <Label alignment="TOP_CENTER" text="hackify" textFill="WHITE">
+                        <font>
+                            <Font size="36.0" />
+                        </font>
+                    </Label>
+                </children>
+            </HBox>
+            <Button fx:id="btAfficherHackathon" mnemonicParsing="false" onAction="#AfficherHackathon" prefHeight="55.0" prefWidth="363.0" style="-fx-text-fill: white; -fx-background-color: #1b3347; -fx-background-radius: 15px;" text="Liste des hackathon">
+            <font>
+               <Font size="18.0" />
+            </font></Button>
+            <Button fx:id="btAjouterHackathon" mnemonicParsing="false" onAction="#AjouterHackathon" prefHeight="55.0" prefWidth="363.0" style="-fx-text-fill: white; -fx-background-color: #1b3347; -fx-background-radius: 15px;" text="Ajouter un hackathon">
+            <font>
+               <Font size="18.0" />
+            </font></Button>
+         <Button fx:id="btHistoriqueParticipation" mnemonicParsing="false" onAction="#AfficherParticipation" prefHeight="55.0" prefWidth="363.0" style="-fx-text-fill: white; -fx-background-color: #1b3347; -fx-background-radius: 15px;" text="Historique de Participation">
+            <font>
+               <Font size="18.0" />
+            </font></Button>
+        </children>
+    </VBox>
+
+
+</AnchorPane>

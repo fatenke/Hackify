@@ -4,20 +4,22 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
+import javafx.stage.FileChooser;
 import models.Projet;
 import services.ProjetService;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Objects;
 
 public class AjouterProjet {
     private final ProjetService projetService = new ProjetService();
+
+    // Path to the Python script for voice input (relative to project root)
+    private static final String PYTHON_SCRIPT_PATH = "python/speechToText.py"; // Adjust this if necessary
+
+    // Directory for saving uploaded files (user's home directory + app-specific folder)
+    private static final String UPLOAD_DIR = System.getProperty("user.home") + "/hackify/uploads/";
 
     @FXML
     private TextField a1; // For the "nom" field
@@ -45,16 +47,36 @@ public class AjouterProjet {
     @FXML
     private Button listenRessource;
 
-   // @FXML
-   // void initialize() {
-        // Initialize ComboBox options to match the FXML items (adjust as needed)
-     //   if (a2 != null) {
-       //     a2.getItems().addAll("En cours", "En pause", "Terminé"); // Match FXML options
-        //}
-        //if (a3 != null) {
-          //  a3.getItems().addAll("Haute", "Moyenne", "Faible"); // Match FXML options
-        // }
-    // }
+    @FXML
+    private Button uploadFileButton; // Bouton pour uploader un fichier
+
+    @FXML
+    private TextField uploadedFileName; // Pour afficher le nom du fichier uploadé
+
+    @FXML
+    void initialize() {
+        // Initialize ComboBox options to match the FXML items
+        if (a2 != null) {
+            a2.getItems().addAll("En cours", "En pause", "Terminé");
+        }
+        if (a3 != null) {
+            a3.getItems().addAll("Haute", "Moyenne", "Faible");
+        }
+
+        // Configurer le bouton pour uploader un fichier
+        if (uploadFileButton != null) {
+            uploadFileButton.setOnAction(event -> uploadFile());
+        }
+
+        // Add a tooltip to uploadedFileName to show the full file name on hover
+        if (uploadedFileName != null) {
+            Tooltip tooltip = new Tooltip();
+            uploadedFileName.textProperty().addListener((observable, oldValue, newValue) -> {
+                tooltip.setText(newValue);
+                uploadedFileName.setTooltip(tooltip);
+            });
+        }
+    }
 
     @FXML
     void ajouterAction(ActionEvent event) {
@@ -88,6 +110,7 @@ public class AjouterProjet {
             projetService.add(p);
             showAlert("Succès", "Projet ajouté avec succès!");
             clearFields();
+            clearUploadedFile(); // Clear the uploaded file field after successful addition
         } catch (Exception e) {
             showAlert("Erreur", "Une erreur est survenue lors de l'ajout : " + e.getMessage());
         }
@@ -122,6 +145,12 @@ public class AjouterProjet {
         if (a5 != null) a5.clear();
     }
 
+    private void clearUploadedFile() {
+        if (uploadedFileName != null) {
+            uploadedFileName.clear();
+        }
+    }
+
     @FXML
     void handleVoiceInputNom() {
         handleVoiceInput(a1, "Nom");
@@ -149,9 +178,8 @@ public class AjouterProjet {
 
     private void handleVoiceInput(TextField field, String fieldName) {
         try {
-            // Update the path to your Python STT script (replace with your actual path)
-            String pythonScriptPath = "C:\\Users\\Mega-Pc\\Desktop\\pi\\Projet\\python\\speechToText.py"; // Adjust this path
-            ProcessBuilder pb = new ProcessBuilder("python", pythonScriptPath, fieldName);
+            // Use the relative path to the Python script
+            ProcessBuilder pb = new ProcessBuilder("python", PYTHON_SCRIPT_PATH, fieldName);
             pb.redirectErrorStream(true);
             Process p = pb.start();
 
@@ -183,8 +211,8 @@ public class AjouterProjet {
 
     private void handleVoiceInputForCombo(ComboBox<String> combo, String fieldName) {
         try {
-            String pythonScriptPath = "C:\\Users\\Mega-Pc\\Desktop\\pi\\Projet\\python\\speechToText.py"; // Adjust this path
-            ProcessBuilder pb = new ProcessBuilder("python", pythonScriptPath, fieldName);
+            // Use the relative path to the Python script
+            ProcessBuilder pb = new ProcessBuilder("python", PYTHON_SCRIPT_PATH, fieldName);
             pb.redirectErrorStream(true);
             Process p = pb.start();
 
@@ -218,6 +246,66 @@ public class AjouterProjet {
             System.out.println("Error with voice input for " + fieldName + ": " + e.getMessage());
             showAlert("Erreur", "Une erreur est survenue lors de l'entrée vocale pour " + fieldName + ": " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void uploadFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Sélectionner un fichier");
+        // Définir les types de fichiers acceptés (par exemple, PDF, images, documents)
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Tous les fichiers", "*.*"),
+                new FileChooser.ExtensionFilter("Documents PDF", "*.pdf"),
+                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg"),
+                new FileChooser.ExtensionFilter("Documents texte", "*.txt")
+        );
+
+        // Ouvrir la fenêtre de sélection de fichier
+        File selectedFile = fileChooser.showOpenDialog(uploadFileButton.getScene().getWindow());
+        if (selectedFile != null) {
+            // Limiter la taille du fichier à 100 Mo (100 * 1024 * 1024 bytes = 104,857,600 bytes)
+            long maxSize = 100L * 1024 * 1024; // 100 Mo
+            if (selectedFile.length() > maxSize) {
+                showAlert("Erreur", "Le fichier est trop volumineux (max 100 Mo).");
+                clearUploadedFile();
+                return;
+            }
+
+            try {
+                // Chemin de destination pour sauvegarder le fichier (dans le répertoire utilisateur)
+                String destinationPath = UPLOAD_DIR + selectedFile.getName();
+
+                // Créer le répertoire s'il n'existe pas
+                File destDir = new File(UPLOAD_DIR);
+                if (!destDir.exists()) {
+                    destDir.mkdirs();
+                }
+
+                // Copier le fichier sélectionné vers le répertoire de destination
+                copyFile(selectedFile, new File(destinationPath));
+
+                // Afficher le nom du fichier dans le TextField
+                uploadedFileName.setText(selectedFile.getName());
+                showAlert("Succès", "Fichier uploadé avec succès : " + selectedFile.getName());
+            } catch (IOException e) {
+                showAlert("Erreur", "Erreur lors de l'upload du fichier : " + e.getMessage());
+                clearUploadedFile(); // Clear the field if the upload fails
+            }
+        } else {
+            showAlert("Avertissement", "Aucun fichier sélectionné.");
+            clearUploadedFile();
+        }
+    }
+
+    private void copyFile(File source, File dest) throws IOException {
+        try (InputStream is = new FileInputStream(source);
+             OutputStream os = new FileOutputStream(dest)) {
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
         }
     }
 }

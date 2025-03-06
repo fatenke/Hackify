@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.HistoriqueParticipation">
+        <HBox style="-fx-spacing: 20;">
+        <VBox minWidth="200">
+                <fx:include source="NavBar.fxml" />
+        </VBox>
+                <VBox alignment="TOP_CENTER" prefHeight="964.0" prefWidth="915.0" spacing="10" style="-fx-padding: 20px;">
+
+                        <Text fill="WHITE" style="-fx-font-size: 18px; -fx-font-weight: bold;" text="Historique de Participation">
+            <font>
+               <Font size="24.0" />
+            </font></Text>
+
+                        <!-- GridPane pour afficher l'historique des participations -->
+                        <GridPane fx:id="participationGrid" hgap="10" style="-fx-hgap: 20px; vg: 15px; -fx-background-color: white; -fx-padding: 20px;" styleClass="grid-pane" vgap="10">
+                                <!-- Titres des colonnes -->
+                                <Text style="-fx-font-weight: bold;" text="Hackathon" wrappingWidth="140.26641082763672" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                <Text style="-fx-font-weight: bold;" text="Date" wrappingWidth="93.66681098937988" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                                <Text style="-fx-font-weight: bold;" text="Status" wrappingWidth="75.06249618530273" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                                <Text style="-fx-font-weight: bold;" text="Action" wrappingWidth="138.47308349609375" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+            <columnConstraints>
+               <ColumnConstraints />
+               <ColumnConstraints />
+               <ColumnConstraints />
+               <ColumnConstraints />
+            </columnConstraints>
+            <rowConstraints>
+               <RowConstraints />
+            </rowConstraints>
+                        </GridPane>
+                </VBox>
+        </HBox>
+        <stylesheets>
+                <URL value="@/Styles/style.css" />
+        </stylesheets>
+
+
+</AnchorPane>

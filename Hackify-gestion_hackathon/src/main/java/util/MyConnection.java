@@ -10,7 +10,7 @@ public class MyConnection {
     final String USER = "root";
     final String PASS ="";
 
-     Connection cnx;
+    Connection cnx;
     static MyConnection instance;
 
 
@@ -36,6 +36,5 @@ public class MyConnection {
         public Connection getCnx() {
             return cnx;
         }
-
 
 }

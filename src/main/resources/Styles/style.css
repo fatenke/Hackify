@@ -1,0 +1,47 @@
+.root {
+    -fx-background-color: #1e0425;
+}
+
+.title-label {
+    -fx-font-size: 30px;
+    -fx-text-fill: #e26e6c;
+    -fx-font-weight: bold;
+}
+.hackathon-card {
+    -fx-background-radius: 15;
+
+    -fx-border-radius: 10;
+    -fx-background-color:  #286371;
+    -fx-pref-width: 300px;
+    -fx-pref-height: 210px;
+}
+.textContainer{
+    /*-fx-border-color: black;*/
+    -fx-pref-width: 300px;
+        -fx-pref-height: 210px;
+
+}
+.frontFace{
+/*-fx-translate-y: -5px;*/
+}
+
+.btn-action {
+    -fx-background-color: linear-gradient(to right, #f64fc2, #ed9ac2);
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-padding: 5px 10px;
+    -fx-border-radius: 5;
+    -fx-cursor: hand;
+}
+
+.btn-action:hover {
+    -fx-background-color:  #1b3347;
+    -fx-translate-y: -2px;
+}
+
+
+
+.hackathon-card:hover {
+    -fx-translate-y: -5px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 15, 0.3, 5, 5);
+}

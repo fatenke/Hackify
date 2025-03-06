@@ -1,23 +1,24 @@
 package services;
 
+import Interfaces.GlobalInterface;
 import models.Technologie;
-import util.DBConnection;
+import util.MyConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TechnologieService implements IService<Technologie> {
+public class TechnologieService implements GlobalInterface<Technologie> {
 
-    Connection conn;
+    Connection cnx;
 
     public TechnologieService() {
-        this.conn = DBConnection.getInstance().getConn();
+        this.cnx = MyConnection.getInstance().getCnx();
     }
     @Override
     public void add(Technologie technologie) {
         String SQL = "INSERT INTO `technologie` (`nom_tech`, `type_tech`, `complexite`, `documentaire`, `compatibilite`) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement pstmt = conn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement pstmt = cnx.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, technologie.getNom_tech());
             pstmt.setString(2, technologie.getType_tech());
             pstmt.setString(3, technologie.getComplexite());
@@ -38,7 +39,7 @@ public class TechnologieService implements IService<Technologie> {
     @Override
     public void update(Technologie technologie) {
         String SQL = "UPDATE technologie SET nom_tech = ?, type_tech = ?, complexite = ?, documentaire = ?, compatibilite = ? WHERE id_tech = ?";
-        try (PreparedStatement pstmt = conn.prepareStatement(SQL)) {
+        try (PreparedStatement pstmt = cnx.prepareStatement(SQL)) {
             pstmt.setString(1, technologie.getNom_tech());
             pstmt.setString(2, technologie.getType_tech());
             pstmt.setString(3, technologie.getComplexite());
@@ -62,7 +63,7 @@ public class TechnologieService implements IService<Technologie> {
     @Override
     public void delete(Technologie technologie) {
         String SQL = "DELETE FROM technologie WHERE id_tech = ?";
-        try (PreparedStatement pstmt = conn.prepareStatement(SQL)) {
+        try (PreparedStatement pstmt = cnx.prepareStatement(SQL)) {
             pstmt.setInt(1, technologie.getId_tech());
             int rowsDeleted = pstmt.executeUpdate();
             if (rowsDeleted > 0) {
@@ -80,7 +81,7 @@ public class TechnologieService implements IService<Technologie> {
     public List<Technologie> getAll() {
         String req = "SELECT * FROM technologie";
         ArrayList<Technologie> technologies = new ArrayList<>();
-        try (Statement stm = conn.createStatement();
+        try (Statement stm = cnx.createStatement();
              ResultSet rs = stm.executeQuery(req)) {
             while (rs.next()) {
                 Technologie t = new Technologie();

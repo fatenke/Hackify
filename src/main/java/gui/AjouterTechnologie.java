@@ -51,40 +51,10 @@ public class AjouterTechnologie {
 
     public void initialize() {
         // Populate ComboBoxes with options
-       // t3.getItems().addAll("Haute", "Moyenne", "Faible");
-       // t4.getItems().addAll("Windows", "Linux", "macOS");
+        // t3.getItems().addAll("Haute", "Moyenne", "Faible");
+        // t4.getItems().addAll("Windows", "Linux", "macOS");
 
-        try {
-            String imagePath = "/java-logo.png";
-            // Check if resource exists before creating Image
-            if (getClass().getResource(imagePath) != null) {
-                Image image = new Image(getClass().getResource(imagePath).toExternalForm());
-                imageView.setImage(image);
-                System.out.println("Image loaded successfully from: " + imagePath);
-            } else {
-                System.err.println("Image not found at: " + imagePath);
-                try {
-                    String fallbackPath = "/images/java_logo.png";
-                    if (getClass().getResource(fallbackPath) != null) {
-                        Image fallbackImage = new Image(getClass().getResource(fallbackPath).toExternalForm());
-                        imageView.setImage(fallbackImage);
-                        System.out.println("Fallback image loaded successfully from: " + fallbackPath);
-                    } else {
-                        System.err.println("Fallback image not found at: " + fallbackPath);
-                        imageView.setVisible(false);
-                        System.err.println("ImageView hidden due to missing images.");
-                    }
-                } catch (Exception fallbackE) {
-                    System.err.println("Fallback image error: " + fallbackE.getMessage());
-                    imageView.setVisible(false);
-                    System.err.println("ImageView hidden due to missing images.");
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Image loading error: " + e.getMessage());
-            imageView.setVisible(false);
-            System.err.println("ImageView hidden due to error.");
-        }
+
 
         // Set up search functionality
         if (searchFieldTech != null) {

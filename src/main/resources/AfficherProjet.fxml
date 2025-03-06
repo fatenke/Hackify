@@ -11,248 +11,269 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="679.0" prefWidth="1117.0" style="-fx-background-color: #1e0425;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AfficherProjet" stylesheets="@styles.css">
-    <children>
-        <VBox alignment="TOP_CENTER" prefHeight="679.0" prefWidth="1117.0" style="-fx-spacing: 30px; -fx-padding: 20px;">
-            <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="83.0" prefWidth="403.0" style="-fx-background-color: #286371; -fx-padding: 15px; -fx-background-radius: 15px;">
-                <children>
-                    <Label prefHeight="27.0" prefWidth="268.0" text="Trouver un projet" textFill="WHITE">
-                        <font>
-                            <Font size="18.0" />
-                        </font>
-                    </Label>
-                    <TextField fx:id="searchField" promptText="Recherchez un projet..." />
-                </children>
-            </VBox>
-
-            <Label text="Projets" textFill="#82e9f1">
-                <font>
-                    <Font size="18.0" />
-                </font>
-            </Label>
-
-            <GridPane fx:id="g1" prefHeight="538.0" prefWidth="1078.0" style="-fx-padding: 15px; -fx-hgap: 30px; -fx-vgap: 30px;">
-                <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="333.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="333.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="333.0" />
-                </columnConstraints>
-                <rowConstraints>
-                    <RowConstraints maxHeight="255.19998779296876" minHeight="10.0" prefHeight="255.19998779296876" vgrow="SOMETIMES" />
-                    <RowConstraints maxHeight="267.20000610351565" minHeight="10.0" prefHeight="251.2000122070313" vgrow="SOMETIMES" />
-                </rowConstraints>
-                <!-- Project cards grouped in a 3-column, 2-row layout -->
-                <children>
-                    <VBox prefHeight="200.0" prefWidth="300.0" styleClass="project-card" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                        <children>
-                            <Label text="Nom: ali" textFill="black">
-                                <font>
-                                    <Font size="14.0" />
-                                </font>
-                            </Label>
-                            <Label text="Statut: en cours" textFill="black" styleClass="small">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <Label text="Priorité: haute" textFill="black" styleClass="small">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <Label text="Description: java projet and ..." textFill="black" styleClass="small">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <Label text="Ressource:" textFill="black" styleClass="small">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <Label text="2025-03-05 10:00:00" textFill="black" styleClass="date-label">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <HBox spacing="10" alignment="CENTER">
-                                <children>
-                                    <Button text="Update" styleClass="action-button" />
-                                    <Button text="Delete" styleClass="action-button" />
-                                    <Button text="Listen" styleClass="action-button" />
-                                </children>
-                            </HBox>
-                        </children>
-                    </VBox>
-
-                    <VBox prefHeight="200.0" prefWidth="300.0" styleClass="project-card" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                        <children>
-                            <Label text="Nom: mohamed" textFill="black">
-                                <font>
-                                    <Font size="14.0" />
-                                </font>
-                            </Label>
-                            <Label text="Statut: en pause" textFill="black" styleClass="small">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <Label text="Priorité: faible" textFill="black" styleClass="small">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <Label text="Description: math and ..." textFill="black" styleClass="small">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <Label text="Ressource:" textFill="black" styleClass="small">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <Label text="2025-03-06 10:00:00" textFill="black" styleClass="date-label">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <HBox spacing="10" alignment="CENTER">
-                                <children>
-                                    <Button text="Update" styleClass="action-button" />
-                                    <Button text="Delete" styleClass="action-button" />
-                                    <Button text="Listen" styleClass="action-button" />
-                                </children>
-                            </HBox>
-                        </children>
-                    </VBox>
-
-                    <VBox prefHeight="200.0" prefWidth="300.0" styleClass="project-card" GridPane.columnIndex="2" GridPane.rowIndex="0">
-                        <children>
-                            <Label text="Nom: site web" textFill="black">
-                                <font>
-                                    <Font size="14.0" />
-                                </font>
-                            </Label>
-                            <Label text="Statut: en cours" textFill="black" styleClass="small">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <Label text="Priorité: faible" textFill="black" styleClass="small">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <Label text="Description: gggggg" textFill="black" styleClass="small">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <Label text="Ressource:" textFill="black" styleClass="small">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <Label text="2025-03-07 10:00:00" textFill="black" styleClass="date-label">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <HBox spacing="10" alignment="CENTER">
-                                <children>
-                                    <Button text="Update" styleClass="action-button" />
-                                    <Button text="Delete" styleClass="action-button" />
-                                    <Button text="Listen" styleClass="action-button" />
-                                </children>
-                            </HBox>
-                        </children>
-                    </VBox>
-
-                    <VBox prefHeight="200.0" prefWidth="300.0" styleClass="project-card" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                        <children>
-                            <Label text="Nom: aaaa" textFill="black">
-                                <font>
-                                    <Font size="14.0" />
-                                </font>
-                            </Label>
-                            <Label text="Statut: Terminé" textFill="black" styleClass="small">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <Label text="Priorité: Moyenne" textFill="black" styleClass="small">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <Label text="Description: aaaaa" textFill="black" styleClass="small">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <Label text="Ressource: aaaaaa" textFill="black" styleClass="small">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <Label text="2025-03-08 10:00:00" textFill="black" styleClass="date-label">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <HBox spacing="10" alignment="CENTER">
-                                <children>
-                                    <Button text="Update" styleClass="action-button" />
-                                    <Button text="Delete" styleClass="action-button" />
-                                    <Button text="Listen" styleClass="action-button" />
-                                </children>
-                            </HBox>
-                        </children>
-                    </VBox>
-
-                    <VBox prefHeight="200.0" prefWidth="300.0" styleClass="project-card" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                        <children>
-                            <Label text="Nom: rr" textFill="black">
-                                <font>
-                                    <Font size="14.0" />
-                                </font>
-                            </Label>
-                            <Label text="Statut: En cours" textFill="black" styleClass="small">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <Label text="Priorité: Haute" textFill="black" styleClass="small">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <Label text="Description: rrr" textFill="black" styleClass="small">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <Label text="Ressource: rrrr" textFill="black" styleClass="small">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <Label text="2025-03-09 10:00:00" textFill="black" styleClass="date-label">
-                                <font>
-                                    <Font size="12.0" />
-                                </font>
-                            </Label>
-                            <HBox spacing="10" alignment="CENTER">
-                                <children>
-                                    <Button text="Update" styleClass="action-button" />
-                                    <Button text="Delete" styleClass="action-button" />
-                                    <Button text="Listen" styleClass="action-button" />
-                                </children>
-                            </HBox>
-                        </children>
-                    </VBox>
-                </children>
-            </GridPane>
+    <!-- Navbar on the left -->
+    <HBox style="-fx-spacing: 20;" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0">
+        <VBox minWidth="200">
+            <fx:include source="NavBar.fxml" />
         </VBox>
-    </children>
+    </HBox>
+
+    <!-- Main content on the right -->
+    <VBox alignment="TOP_CENTER" prefHeight="679.0" prefWidth="917.0" style="-fx-spacing: 30px; -fx-padding: 20px;" AnchorPane.leftAnchor="400.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0">
+        <!-- Search section -->
+        <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="83.0" prefWidth="403.0" style="-fx-background-color: #286371; -fx-padding: 15px; -fx-background-radius: 15px;">
+            <children>
+                <Label prefHeight="27.0" prefWidth="268.0" text="Trouver un projet" textFill="WHITE">
+                    <font>
+                        <Font size="18.0" />
+                    </font>
+                </Label>
+                <TextField fx:id="searchField" promptText="Recherchez un projet..." />
+            </children>
+        </VBox>
+
+        <!-- Projects label -->
+        <Label text="Projets" textFill="#82e9f1">
+            <font>
+                <Font size="18.0" />
+            </font>
+        </Label>
+
+        <!-- GridPane for project cards -->
+        <GridPane fx:id="g1" prefHeight="400.0" prefWidth="878.0" style="-fx-padding: 15px; -fx-hgap: 30px; -fx-vgap: 30px; ">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="333.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="333.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="333.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints maxHeight="255.19998779296876" minHeight="10.0" prefHeight="255.19998779296876" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="267.20000610351565" minHeight="10.0" prefHeight="251.2000122070313" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <!-- Project cards grouped in a 3-column, 2-row layout -->
+            <children>
+                <!-- Project Card 1 -->
+                <VBox prefHeight="200.0" prefWidth="300.0" styleClass="project-card" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    <children>
+                        <Label text="Hack4Change" textFill="black">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                        <Label text="[ ] Jun 2025 09:00" textFill="black" styleClass="small">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <Label text="[ ] 12 juin 2025 18:00" textFill="black" styleClass="small">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <Label text="▶ Tunis" textFill="black" styleClass="small">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <Label text="Module: Deloitte" textFill="black" styleClass="small">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <HBox spacing="10" alignment="CENTER">
+                            <children>
+                                <Button text="Voir Participants" styleClass="action-button" />
+                                <Button text="Participants" styleClass="action-button" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <!-- Project Card 2 -->
+                <VBox prefHeight="200.0" prefWidth="300.0" styleClass="project-card" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                    <children>
+                        <Label text="Hackathon AI 2025" textFill="black">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                        <Label text="[ ] Jun 2025 09:00" textFill="black" styleClass="small">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <Label text="[ ] 12 juin 2025 18:00" textFill="black" styleClass="small">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <Label text="▶ Tunis" textFill="black" styleClass="small">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <Label text="Module: Deloitte" textFill="black" styleClass="small">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <HBox spacing="10" alignment="CENTER">
+                            <children>
+                                <Button text="Voir Participants" styleClass="action-button" />
+                                <Button text="Participants" styleClass="action-button" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <!-- Project Card 3 -->
+                <VBox prefHeight="200.0" prefWidth="300.0" styleClass="project-card" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                    <children>
+                        <Label text="GreenTech Challenge" textFill="black">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                        <Label text="[ ] 15 juillet 2025 08:30" textFill="black" styleClass="small">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <Label text="[ ] 17 juillet 2025 17:30" textFill="black" styleClass="small">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <Label text="▶ Star" textFill="black" styleClass="small">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <Label text="Module: Deloitte" textFill="black" styleClass="small">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <HBox spacing="10" alignment="CENTER">
+                            <children>
+                                <Button text="Voir Participants" styleClass="action-button" />
+                                <Button text="Participants" styleClass="action-button" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <!-- Project Card 4 -->
+                <VBox prefHeight="200.0" prefWidth="300.0" styleClass="project-card" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                    <children>
+                        <Label text="CyberSecurity Hack" textFill="black">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                        <Label text="[ ] 20 août 2025 10:00" textFill="black" styleClass="small">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <Label text="[ ] 22 août 2025 19:00" textFill="black" styleClass="small">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <Label text="▶ Source" textFill="black" styleClass="small">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <Label text="Module: Deloitte" textFill="black" styleClass="small">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <HBox spacing="10" alignment="CENTER">
+                            <children>
+                                <Button text="Voir Participants" styleClass="action-button" />
+                                <Button text="Participants" styleClass="action-button" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <!-- Project Card 5 -->
+                <VBox prefHeight="200.0" prefWidth="300.0" styleClass="project-card" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <children>
+                        <Label text="HealthTech Hackathon" textFill="black">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                        <Label text="[ ] 05 septembre 2025 09:15" textFill="black" styleClass="small">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <Label text="[ ] 07 septembre 2025 20:00" textFill="black" styleClass="small">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <Label text="▶ Monastir" textFill="black" styleClass="small">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <Label text="Module: Deloitte" textFill="black" styleClass="small">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <HBox spacing="10" alignment="CENTER">
+                            <children>
+                                <Button text="Voir Participants" styleClass="action-button" />
+                                <Button text="Participants" styleClass="action-button" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <!-- Project Card 6 -->
+                <VBox prefHeight="200.0" prefWidth="300.0" styleClass="project-card" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                    <children>
+                        <Label text="Blockchain Challenge" textFill="black">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                        <Label text="[ ] 10 octobre 2025 11:00" textFill="black" styleClass="small">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <Label text="[ ] 12 octobre 2025 18:30" textFill="black" styleClass="small">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <Label text="▶ National" textFill="black" styleClass="small">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <Label text="Module: Deloitte" textFill="black" styleClass="small">
+                            <font>
+                                <Font size="12.0" />
+                            </font>
+                        </Label>
+                        <HBox spacing="10" alignment="CENTER">
+                            <children>
+                                <Button text="Voir Participants" styleClass="action-button" />
+                                <Button text="Participants" styleClass="action-button" />
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </GridPane>
+    </VBox>
 </AnchorPane>
