@@ -32,7 +32,7 @@
            </VBox>
       <Text fill="#82e9f1" strokeType="OUTSIDE" strokeWidth="0.0" text="Hackathons" wrappingWidth="157.20970916748047">
             <font>
-               <Font size="18.0" />
+               <Font size="24.0" />
             </font></Text>
       <GridPane fx:id="gp_hackathon" layoutX="62.0" layoutY="26.0" prefHeight="638.0" prefWidth="1078.0" style="-fx-padding: 15px; -fx-hgap: 30px; -fx-vgap: 30px;">
         <columnConstraints>

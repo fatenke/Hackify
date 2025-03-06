@@ -8,33 +8,32 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="964.0" prefWidth="1182.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AfficherParticipation">
-    <HBox style="-fx-spacing: 20;">
+    <HBox style="-fx-spacing: 30;">
     <VBox minWidth="200">
         <fx:include source="NavBar.fxml" />
     </VBox>
 
-        <VBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="964.0" prefWidth="1172.0" spacing="10" style="-fx-spacing: 15px;">
-            <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 15px;" text="Liste des Participants" />
-         <GridPane fx:id="participationGrid" minHeight="-Infinity" minWidth="-Infinity" prefHeight="228.0" prefWidth="1102.0" style="-fx-padding: 15px; -fx-background-color: white;">
+        <VBox alignment="TOP_CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="964.0" prefWidth="1172.0" spacing="10" style="-fx-spacing: 15px; -fx-padding: 20;">
+            <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 15px;" text="Liste des Participants" textFill="#82e9f1">
+            <font>
+               <Font size="18.0" />
+            </font></Label>
+         <GridPane fx:id="participationGrid" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="228.0" prefWidth="1045.0" style="-fx-padding: 15px; -fx-background-color: white; -fx-background-radius: 15px;">
            <columnConstraints>
-             <ColumnConstraints hgrow="SOMETIMES" maxWidth="268.20001220703125" minWidth="10.0" prefWidth="172.20001220703125" />
-             <ColumnConstraints hgrow="SOMETIMES" maxWidth="373.7999877929688" minWidth="10.0" prefWidth="373.7999877929688" />
-               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+             <ColumnConstraints hgrow="SOMETIMES" maxWidth="268.20001220703125" minWidth="10.0" prefWidth="243.19996337890626" />
+             <ColumnConstraints hgrow="SOMETIMES" maxWidth="400.0000366210937" minWidth="10.0" prefWidth="216.79996948242183" />
+               <ColumnConstraints hgrow="SOMETIMES" maxWidth="412.2000427246094" minWidth="10.0" prefWidth="111.20002441406245" />
+               <ColumnConstraints hgrow="SOMETIMES" maxWidth="441.800048828125" minWidth="10.0" prefWidth="438.5999755859375" />
            </columnConstraints>
            <rowConstraints>
              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
            </rowConstraints>
-            <children>
-               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Nom" />
-               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Email" GridPane.columnIndex="1" />
-               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Statut" GridPane.columnIndex="2" />
-            </children>
+
          </GridPane>
         </VBox>
 

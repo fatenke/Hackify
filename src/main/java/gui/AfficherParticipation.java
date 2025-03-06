@@ -39,22 +39,32 @@ public class AfficherParticipation {
         ParticipationService ps =new ParticipationService();
         HackathonService hs = new HackathonService();
         List<Participation> participations = ps.getParticipationByHackathon(hackathon.getId_hackathon());
-        int row = 2; // commencer à la ligne 2 (la ligne 1 est pour les titres)
+        int row = 1; // commencer à la ligne 2 (la ligne 1 est pour les titres)
         for (Participation participation : participations) {
+            Text nameText = new Text("Nom");
+            Text emailText = new Text("Email");
+            Text statusText = new Text("Statut");
+            Text actionText = new Text("Action");
+            participationGrid.add(nameText, 0, 0);
+            participationGrid.add(emailText, 1, 0);
+            participationGrid.add(statusText, 2, 0);
+            participationGrid.add(actionText, 3, 0);
             Text name = new Text(hackathon.getNom_hackathon());
-            Text statusText = new Text(participation.getStatut());
-            statusText.getStyleClass().add("text");
+            Text email = new Text("user@gmail.com");
+            Text status = new Text(participation.getStatut());
+            status.getStyleClass().add("text");
             participationGrid.add(name, 0, row);
-            participationGrid.add(statusText, 2, row);
+            participationGrid.add(email, 1, row);
+            participationGrid.add(status, 2, row);
             if(Objects.equals(participation.getStatut(), "En attente")){
                 Button validerButton = new Button("Valider");
                 validerButton.getStyleClass().add("btn-action");
                 validerButton.setOnAction(e -> handleValiderParticipation(participation));
                 Button refuserButton = new Button("Refuser");
                 refuserButton.getStyleClass().add("btn-action");
+                refuserButton.setOnAction(e -> handleRefuserParticipation(participation));
                 HBox buttonsBox=new HBox(validerButton,refuserButton);
                 participationGrid.add(buttonsBox, 3, row);
-                /*participationGrid.add(refuserButton, 3, row);*/
             }
             row++;
         }
