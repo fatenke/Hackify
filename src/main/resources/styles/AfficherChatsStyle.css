@@ -1,37 +1,42 @@
-/* Add to src/main/resources/styles.css */
 .root {
-    -fx-background-color: #1e0425;
+    -fx-background-color: #1E0425; /* Dark purple background */
 }
+
 .chat-message {
-    -fx-background-color: #8A2BE2;
+    -fx-background-color: #34727E; /* Teal bubble for user messages */
     -fx-background-radius: 15px;
     -fx-padding: 10px;
     -fx-font-size: 14px;
     -fx-text-fill: white;
     -fx-wrap-text: true;
-    -fx-max-width: 250px;
+    -fx-max-width: 300px; /* More compact width */
+    -fx-effect: dropshadow(gaussian, #82E9F1, 3, 0.3, 0, 1); /* Subtle shadow */
 }
+
 .user-message {
-    -fx-background-color: #8A2BE2;
-    -fx-text-fill: white;
+    -fx-background-color: #E26ECC; /* Pink for user-sent messages */
+    -fx-alignment: CENTER_RIGHT; /* Align to right for user */
 }
 
 .other-user-message {
-    -fx-background-color: #EDEDED;
-    -fx-text-fill: #333333;
+    -fx-background-color: #82E9F1; /* Light cyan for other users */
+    -fx-alignment: CENTER_LEFT; /* Align to left for others */
+    -fx-text-fill: #1E0425; /* Dark text for contrast */
 }
 
 .bot-message {
-    -fx-background-color: #4A148C;
+    -fx-background-color: #34727E; /* Teal for bot */
+    -fx-alignment: CENTER_LEFT; /* Align to left for bot */
     -fx-text-fill: white;
 }
+
 .icon-button {
     -fx-background-color: transparent;
-    -fx-padding: 5px;
+    -fx-padding: 8px;
 }
 
 .icon-button:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-color: rgba(255, 255, 255, 0.2);
     -fx-background-radius: 15px;
 }
 
@@ -40,35 +45,75 @@
 }
 
 .scroll-pane .viewport {
-    -fx-background-color: #F5F5F5;
+    -fx-background-color: #2D1A3A; /* Lighter shade inspired by #1E0425 for message area */
 }
-/* Message List View */
+
 .message-list {
     -fx-background-color: transparent;
 }
 
 .message-list .list-cell {
     -fx-background-color: transparent;
-    -fx-padding: 5px;
+    -fx-padding: 5px; /* Reduced padding for compactness */
 }
 
-/* Message Input Field */
 .message-input {
-    -fx-padding: 12px;
-    -fx-border-color: #B39DDB;
+    -fx-padding: 10px;
+    -fx-border-color: #E26ECC;
     -fx-border-radius: 20px;
     -fx-background-radius: 20px;
+    -fx-background-color: #FFFFFF;
+    -fx-effect: dropshadow(gaussian, #34727E, 5, 0.3, 0, 1);
 }
 
-/* Send Button */
 .send-button {
-    -fx-background-color: #8A2BE2;
-    -fx-text-fill: white;
+    -fx-background-color: #82E9F1;
+    -fx-text-fill: #1E0425;
     -fx-background-radius: 20px;
-    -fx-padding: 8px 20px;
+    -fx-padding: 10 20;
     -fx-cursor: hand;
 }
 
 .send-button:hover {
-    -fx-background-color: #6A1B9A;
+    -fx-background-color: #6AB7C4;
+}
+
+.poll-node {
+    -fx-background-color: #2D1A3A; /* Match message area background */
+    -fx-padding: 15px;
+    -fx-border-radius: 20px;
+    -fx-border-color: #E26ECC;
+    -fx-effect: dropshadow(gaussian, #34727E, 5, 0.3, 0, 1);
+    -fx-text-fill: #82E9F1; /* Light cyan text for contrast */
+}
+
+.poll-option {
+    -fx-font-size: 14px;
+    -fx-text-fill: #82E9F1;
+}
+
+.poll-vote-button {
+    -fx-background-color: #82E9F1;
+    -fx-text-fill: #1E0425;
+    -fx-background-radius: 10px;
+    -fx-padding: 5 15;
+}
+
+.poll-close-button {
+    -fx-background-color: #E26ECC;
+    -fx-text-fill: white;
+    -fx-background-radius: 10px;
+    -fx-padding: 5 15;
+}
+
+.poll-delete-button {
+    -fx-background-color: #34727E;
+    -fx-text-fill: white;
+    -fx-background-radius: 10px;
+    -fx-padding: 5 15;
+}
+
+.poll-closed-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #E26ECC;
 }

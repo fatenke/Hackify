@@ -8,25 +8,41 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="Controllers.CommunityCardController"
-      prefHeight="150.0" prefWidth="200.0"
+      prefHeight="180.0" prefWidth="220.0"
       spacing="10"
       style="
-        -fx-background-color: #f9f9f9;
-        -fx-border-color: #82e9f1;
-        -fx-border-radius: 5px;
-        -fx-background-radius: 5px;
-        -fx-padding: 10;
-        -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.2), 4, 0, 0, 2);
+        -fx-background-color: #e26ecc;
+        -fx-border-color: #210c27;
+        -fx-border-radius: 8px;
+        -fx-background-radius: 8px;
+        -fx-padding: 12;
+        -fx-effect: dropshadow(gaussian, rgb(52,114,126), 8, 0, 0, 2);
       ">
 
-    <HBox alignment="CENTER" spacing="10">
-        <Label fx:id="communityName" text="Community Name"
-               style="-fx-font-weight: bold; -fx-font-size: 16; -fx-text-fill: #1e0425;"/>
-        <Button fx:id="seeChatsButton" text="See Chats" onAction="#handleSeeChats"
-                style="-fx-background-color: #34727e; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 5 10 5 10;"/>
-    </HBox>
+    <Label fx:id="communityName" text="Community Name"
+           style="
+             -fx-font-weight: bold;
+             -fx-font-size: 16;
+             -fx-text-fill: #1A1A2E;
+           "/>
+
+    <Label fx:id="communityDate" text="2025-03-05"
+           style="
+             -fx-font-size: 12;
+             -fx-text-fill: #A9A9A9;
+           "/>
 
     <Label fx:id="communityDescription" text="Community Description" wrapText="true"
-           maxWidth="180"
-           style="-fx-text-fill: #666;"/>
-</VBox>
+           maxWidth="190"
+           style="
+             -fx-text-fill: #1A1A2E;
+             -fx-font-size: 12;
+             -fx-line-spacing: 2;
+           "/>
+
+    <HBox alignment="CENTER" spacing="10">
+
+    <Button fx:id="seeChatsButton" text="See Chats" onAction="#handleSeeChats"
+            style="-fx-background-color: #34727e; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 5 10 5 10;"/>
+    </HBox>
+    </VBox>

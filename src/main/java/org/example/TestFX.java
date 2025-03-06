@@ -18,7 +18,7 @@ public class TestFX extends Application {
             Parent root = loader.load();
 
             // Create the scene
-            Scene scene = new Scene(root);
+            Scene scene = new Scene(root , 1200, 800);
 
             // Set the title of the stage
             primaryStage.setTitle("Hackify - Communautes");

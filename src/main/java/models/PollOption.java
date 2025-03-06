@@ -23,6 +23,9 @@ public class PollOption {
     public PollOption() {
     }
 
+    public PollOption(int id, int pollId, String text, int voteCount) {
+    }
+
     public int getId() {
         return id;
     }

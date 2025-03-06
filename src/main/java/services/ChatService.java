@@ -114,6 +114,7 @@ public class ChatService implements GlobalInterface<Chat> {
                     stmt.setString(3, type.name()); // Enum to string
                     stmt.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
 
+
                     stmt.executeUpdate();
                 }
             }

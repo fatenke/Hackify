@@ -1,6 +1,7 @@
 package models;
 
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +32,9 @@ public class Poll {
         this.options = options;
         this.isClosed = isClosed;
         this.createdAt = createdAt;
+    }
+
+    public Poll(int id, int chatId, String question, Timestamp createdAt, boolean isClosed) {
     }
 
     public int getId() {
@@ -73,8 +77,8 @@ public class Poll {
         isClosed = closed;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public Timestamp getCreatedAt() {
+        return (Timestamp) createdAt;
     }
 
     public void setCreatedAt(Date createdAt) {

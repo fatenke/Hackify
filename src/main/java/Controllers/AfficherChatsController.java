@@ -1,5 +1,6 @@
 package Controllers;
 
+import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -21,10 +22,7 @@ import models.Message;
 import models.Message.MessageType;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeRegular;
 import org.kordamp.ikonli.javafx.FontIcon;
-import services.BotService;
-import services.ChatService;
-import services.GeminiService;
-import services.MessageService;
+import services.*;
 import util.MyConnection;
 
 import java.io.IOException;
@@ -39,7 +37,7 @@ public class AfficherChatsController {
 
     @FXML private Label chatTitle;
     @FXML private ListView<String> chatsListView;
-    @FXML private ListView<Message> messagesListView;
+    @FXML private ListView<Object> messagesListView; // Changed to Object to handle both Messages and Poll nodes
     @FXML private TextField messageField;
     @FXML private Button sendButton;
     @FXML private Button returnButton;
@@ -53,15 +51,16 @@ public class AfficherChatsController {
     @FXML private TextField pollOption1Field;
     @FXML private TextField pollOption2Field;
     @FXML private Button createPollButton;
-    @FXML private Label pollQuestionLabel;
-    @FXML private VBox pollOptionsBox;
-    @FXML private VBox pollDisplayBox;
-    @FXML private Button voteButton;
+    @FXML private Button cancelPollButton;
+    @FXML private VBox pollCreationPopout;
+    @FXML private Button pollIconButton;
 
+    private GeminiService geminiService;
     private ChatService chatService;
     private MessageService messageService;
-    private GeminiService geminiService;
-    private BotService botService;
+    private PollService pollService = new PollService();
+    private PollOptionService pollOptionService = new PollOptionService();
+    private VoteService voteService = new VoteService();
     private int currentUserId = 6; // Should come from session management
     private boolean suggestionTriggered = false;
     private int currentCommunityId;
@@ -86,11 +85,54 @@ public class AfficherChatsController {
         messageService = new MessageService(
                 MyConnection.getInstance().getCnx(),
                 chatService,
-                geminiService
+                geminiService // Assuming GeminiService is not needed for this example
         );
 
-        messagesListView.setCellFactory(lv -> new MessageCell());
-        displaySuggestions();
+        messagesListView.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(Object item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                    setText(null);
+                } else if (item instanceof Message) {
+                    Message message = (Message) item;
+                    String chatName = "Unknown Chat";
+                    Chat chat = chatService.getChatById(message.getChatId());
+                    if (chat != null) {
+                        chatName = chat.getNom();
+                    }
+                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                    String timeFormatted = sdf.format(message.getPostTime());
+                    TextFlow messageFlow = new TextFlow(new Text(message.getContenu()));
+                    VBox vbox = new VBox(5);
+                    Label chatNameLabel = new Label(chatName);
+                    chatNameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 10; -fx-text-fill: gray;");
+                    Label timeLabel = new Label(timeFormatted);
+                    timeLabel.setStyle("-fx-font-size: 10; -fx-text-fill: gray;");
+                    vbox.getChildren().addAll(chatNameLabel, messageFlow, timeLabel);
+                    configureMessageAppearance(vbox, message);
+                    setGraphic(vbox);
+                } else if (item instanceof VBox) {
+                    setGraphic((VBox) item);
+                    System.out.println("Poll node displayed: " + ((VBox) item).getChildren().get(0)); // Debug poll display
+                }
+            }
+
+            private void configureMessageAppearance(VBox vbox, Message message) {
+                vbox.getStyleClass().removeAll("user-message", "other-user-message", "bot-message");
+                if (message.getPostedBy() == -1) {
+                    vbox.getStyleClass().add("bot-message");
+                    vbox.setAlignment(Pos.CENTER_LEFT);
+                } else if (message.getPostedBy() == currentUserId) {
+                    vbox.getStyleClass().add("user-message");
+                    vbox.setAlignment(Pos.CENTER_RIGHT);
+                } else {
+                    vbox.getStyleClass().add("other-user-message");
+                    vbox.setAlignment(Pos.CENTER_LEFT);
+                }
+            }
+        });
 
         searchResultsListView.setCellFactory(lv -> new ListCell<>() {
             @Override
@@ -129,7 +171,7 @@ public class AfficherChatsController {
                     }
                     VBox vbox = new VBox(5);
                     Label chatNameLabel = new Label(chatName);
-                    chatNameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12;");
+                    chatNameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 10; -fx-text-fill: gray;");
                     Label timeLabel = new Label(timeFormatted + " - User: " + item.getPostedBy());
                     timeLabel.setStyle("-fx-font-size: 10; -fx-text-fill: gray;");
                     vbox.getChildren().addAll(chatNameLabel, messageFlow, timeLabel);
@@ -166,7 +208,7 @@ public class AfficherChatsController {
             }
         });
 
-        loadActivePoll(); // Load poll on initialization
+        loadActivePolls(); // Load polls on initialization
     }
 
     @FXML
@@ -205,7 +247,8 @@ public class AfficherChatsController {
 
     private int getMessageIndex(Message selectedMessage) {
         for (int i = 0; i < messagesListView.getItems().size(); i++) {
-            if (messagesListView.getItems().get(i).getId() == selectedMessage.getId()) {
+            if (messagesListView.getItems().get(i) instanceof Message &&
+                    ((Message) messagesListView.getItems().get(i)).getId() == selectedMessage.getId()) {
                 return i;
             }
         }
@@ -225,7 +268,7 @@ public class AfficherChatsController {
                         selectedChat = c;
                         chatTitle.setText(c.getNom());
                         loadMessagesForChat(c.getId());
-                        loadActivePoll(); // Reload poll when chat changes
+                        loadActivePolls(); // Load polls for the selected chat
                         break;
                     }
                 }
@@ -238,10 +281,10 @@ public class AfficherChatsController {
 
     private void loadMessagesForChat(int chatId) {
         List<Message> chatMessages = messageService.getMessagesByChatId(chatId);
-        List<Message> normalMessages = chatMessages.stream()
+        List<Object> items = new ArrayList<>(chatMessages.stream()
                 .filter(m -> m.getType() != MessageType.SUGGESTION)
-                .collect(Collectors.toList());
-        messagesListView.getItems().setAll(normalMessages);
+                .collect(Collectors.toList()));
+        messagesListView.getItems().setAll(items);
         displaySuggestions();
     }
 
@@ -301,136 +344,336 @@ public class AfficherChatsController {
 
     // Poll-related methods
     @FXML
+    private void handleShowPollPopout() {
+        animatePollPopout();
+    }
+
+    private void animatePollPopout() {
+        pollCreationPopout.setOpacity(0);
+        pollCreationPopout.setVisible(true);
+        pollCreationPopout.setManaged(true);
+        FadeTransition ft = new FadeTransition(Duration.millis(300), pollCreationPopout);
+        ft.setFromValue(0);
+        ft.setToValue(1);
+        ft.play();
+    }
+    @FXML
     private void handleCreatePoll() {
         String question = pollQuestionField.getText().trim();
         String option1 = pollOption1Field.getText().trim();
         String option2 = pollOption2Field.getText().trim();
 
         if (question.isEmpty() || option1.isEmpty() || option2.isEmpty() || selectedChat == null) {
-            return; // Basic validation
-        }
-
-        try {
-            Connection conn = MyConnection.getInstance().getCnx();
-            // Insert poll
-            PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO polls (chat_id, question) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, selectedChat.getId());
-            ps.setString(2, question);
-            ps.executeUpdate();
-            ResultSet rs = ps.getGeneratedKeys();
-            int pollId = rs.next() ? rs.getInt(1) : -1;
-
-            // Insert options
-            ps = conn.prepareStatement("INSERT INTO poll_options (poll_id, text) VALUES (?, ?)");
-            ps.setInt(1, pollId);
-            ps.setString(2, option1);
-            ps.executeUpdate();
-            ps.setString(2, option2);
-            ps.executeUpdate();
-
-            // Clear fields and refresh poll display
-            pollQuestionField.clear();
-            pollOption1Field.clear();
-            pollOption2Field.clear();
-            loadActivePoll();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            showAlert("Error", "Failed to create poll: " + e.getMessage());
-        }
-    }
-
-    @FXML
-    private void handleVote() {
-        RadioButton selectedOption = (RadioButton) pollToggleGroup.getSelectedToggle();
-        if (selectedOption == null || selectedChat == null) return;
-
-        int optionId = (int) selectedOption.getUserData();
-
-        try {
-            Connection conn = MyConnection.getInstance().getCnx();
-            int pollId = getCurrentPollId();
-
-            // Check if user already voted
-            PreparedStatement ps = conn.prepareStatement(
-                    "SELECT id FROM votes WHERE poll_id = ? AND user_id = ?");
-            ps.setInt(1, pollId);
-            ps.setInt(2, currentUserId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                showAlert("Info", "You have already voted in this poll.");
-                return;
-            }
-
-            // Record vote
-            ps = conn.prepareStatement("INSERT INTO votes (poll_id, option_id, user_id) VALUES (?, ?, ?)");
-            ps.setInt(1, pollId);
-            ps.setInt(2, optionId);
-            ps.setInt(3, currentUserId);
-            ps.executeUpdate();
-
-            // Update vote count
-            ps = conn.prepareStatement("UPDATE poll_options SET vote_count = vote_count + 1 WHERE id = ?");
-            ps.setInt(1, optionId);
-            ps.executeUpdate();
-
-            loadActivePoll(); // Refresh display
-        } catch (SQLException e) {
-            e.printStackTrace();
-            showAlert("Error", "Failed to record vote: " + e.getMessage());
-        }
-    }
-
-    private void loadActivePoll() {
-        if (selectedChat == null) {
-            pollOptionsBox.getChildren().clear();
-            pollQuestionLabel.setText("");
-            pollDisplayBox.setVisible(false);
+            showAlert("Error", "Please fill all poll fields.");
             return;
         }
 
-        pollOptionsBox.getChildren().clear();
+        Timestamp createdAt = new Timestamp(System.currentTimeMillis());
+        int pollId = pollService.createPoll(selectedChat.getId(), question, createdAt);
+        if (pollId != -1) {
+            int opt1Id = pollOptionService.createOption(pollId, option1);
+            int opt2Id = pollOptionService.createOption(pollId, option2);
+            addPollToChat(pollId, question, option1, opt1Id, option2, opt2Id, createdAt, false);
+        } else {
+            showAlert("Error", "Failed to create poll.");
+        }
+
+        pollQuestionField.clear();
+        pollOption1Field.clear();
+        pollOption2Field.clear();
+        handleCancelPoll();
+        loadMessagesForChat(selectedChat.getId()); // Refresh to show the poll
+    }
+
+    @FXML
+    private void handleCancelPoll() {
+        pollCreationPopout.setVisible(false);
+        pollCreationPopout.setManaged(false);
+        pollQuestionField.clear();
+        pollOption1Field.clear();
+        pollOption2Field.clear();
+    }
+
+    private void handleVote(int pollId) {
+        if (selectedChat == null) {
+            showAlert("Error", "No chat selected.");
+            return;
+        }
+
+        // Debug: Verify pollId
+        System.out.println("Handling vote for poll ID: " + pollId);
+
+        RadioButton selectedOption = (RadioButton) pollToggleGroup.getSelectedToggle();
+        if (selectedOption == null) {
+            showAlert("Error", "Please select an option to vote.");
+            return;
+        }
+
+        int optionId = (int) selectedOption.getUserData();
+        if (voteService.hasUserVoted(pollId, currentUserId)) {
+            showAlert("Info", "You have already voted in this poll.");
+            return;
+        }
+
+        if (pollService.isPollClosed(pollId)) {
+            showAlert("Info", "This poll is closed and cannot accept votes.");
+            return;
+        }
+
+        // Record the vote and update the vote count
+        voteService.recordVote(pollId, optionId, currentUserId);
+        pollOptionService.incrementVoteCount(optionId);
+
+        // Refresh the poll display to show updated vote counts
+        loadActivePolls();
+    }
+
+    private void handleClosePoll(int pollId) {
+        if (selectedChat == null) {
+            showAlert("Error", "No chat selected.");
+            return;
+        }
+
+        // Debug: Verify pollId
+        System.out.println("Handling close for poll ID: " + pollId);
+
+        pollService.closePoll(pollId);
+        loadActivePolls(); // Refresh UI
+    }
+
+    private void handleDeletePoll(int pollId) {
+        if (selectedChat == null) {
+            showAlert("Error", "No chat selected.");
+            return;
+        }
+
+        // Debug: Verify pollId
+        System.out.println("Handling delete for poll ID: " + pollId);
+
+        // Delete the poll from the database
+        pollService.deletePoll(pollId);
+
+        // Refresh the poll display to remove the deleted poll
+        loadActivePolls();
+    }
+
+    private int getPollIdFromNode(VBox pollNode) {
+        if (pollNode != null) {
+            System.out.println("Poll node userData: " + pollNode.getUserData());
+            if (pollNode.getUserData() instanceof Integer) {
+                return (int) pollNode.getUserData();
+            }
+        }
+        return -1;
+    }
+
+    private void loadActivePolls() {
+        if (selectedChat == null) {
+            removeAllPollsFromChat();
+            return;
+        }
+
         try {
             Connection conn = MyConnection.getInstance().getCnx();
             PreparedStatement ps = conn.prepareStatement(
-                    "SELECT p.id, p.question, po.id AS option_id, po.text, po.vote_count " +
-                            "FROM polls p LEFT JOIN poll_options po ON p.id = po.poll_id " +
-                            "WHERE p.chat_id = ? AND p.is_closed = FALSE ORDER BY p.created_at DESC LIMIT 1");
+                    "SELECT p.id AS poll_id, p.question, p.is_closed, p.created_at, po.id AS option_id, po.text, po.vote_count " +
+                            "FROM polls p " +
+                            "LEFT JOIN poll_options po ON p.id = po.poll_id " +
+                            "WHERE p.chat_id = ? AND p.is_closed = FALSE " + // Ensure only active polls
+                            "ORDER BY p.created_at ASC");
             ps.setInt(1, selectedChat.getId());
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                pollQuestionLabel.setText(rs.getString("question"));
-                do {
-                    RadioButton option = new RadioButton(rs.getString("text") + " (" + rs.getInt("vote_count") + " votes)");
-                    option.setToggleGroup(pollToggleGroup);
-                    option.setUserData(rs.getInt("option_id"));
-                    pollOptionsBox.getChildren().add(option);
-                } while (rs.next());
-                pollDisplayBox.setVisible(true);
+
+            System.out.println("Loading polls for chat " + selectedChat.getId() + ": ResultSet has data: " + rs.isBeforeFirst());
+            List<VBox> pollNodes = new ArrayList<>();
+            int currentPollId = -1;
+            String question = null;
+            Timestamp createdAt = null;
+            boolean isClosed = false;
+            List<String> options = new ArrayList<>();
+            List<Integer> optionIds = new ArrayList<>();
+            List<Integer> voteCounts = new ArrayList<>();
+
+            while (rs.next()) {
+                int pollId = rs.getInt("poll_id");
+                if (pollId != currentPollId) {
+                    if (currentPollId != -1 && !options.isEmpty()) {
+                        addPollNode(pollNodes, currentPollId, question, options, optionIds, voteCounts, createdAt, isClosed);
+                    }
+                    currentPollId = pollId;
+                    question = rs.getString("question");
+                    isClosed = rs.getBoolean("is_closed");
+                    createdAt = rs.getTimestamp("created_at");
+                    options.clear();
+                    optionIds.clear();
+                    voteCounts.clear();
+                }
+                String optionText = rs.getString("text");
+                int optionId = rs.getInt("option_id");
+                int voteCount = rs.getInt("vote_count");
+                if (optionText != null) {
+                    options.add(optionText);
+                    optionIds.add(optionId);
+                    voteCounts.add(voteCount);
+                    System.out.println("Poll ID: " + pollId + ", Option: " + optionText + ", Vote Count: " + voteCount);
+                }
+            }
+            if (currentPollId != -1 && !options.isEmpty()) {
+                addPollNode(pollNodes, currentPollId, question, options, optionIds, voteCounts, createdAt, isClosed);
+            }
+
+            if (!pollNodes.isEmpty()) {
+                List<Object> currentItems = new ArrayList<>(messagesListView.getItems());
+                currentItems.removeIf(item -> item instanceof VBox); // Remove old polls
+                currentItems.addAll(pollNodes);
+                messagesListView.getItems().setAll(currentItems);
+                messagesListView.scrollTo(messagesListView.getItems().size() - 1);
+                System.out.println("MessagesListView items after adding polls: " + messagesListView.getItems().stream().map(Object::toString).collect(Collectors.joining(", ")));
             } else {
-                pollDisplayBox.setVisible(false);
+                System.out.println("No active polls found for chat " + selectedChat.getId());
+                removeAllPollsFromChat();
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            showAlert("Error", "Failed to load poll: " + e.getMessage());
+            showAlert("Error", "Failed to load polls: " + e.getMessage());
         }
     }
 
-    private int getCurrentPollId() {
-        try {
-            Connection conn = MyConnection.getInstance().getCnx();
-            PreparedStatement ps = conn.prepareStatement(
-                    "SELECT id FROM polls WHERE chat_id = ? AND is_closed = FALSE ORDER BY created_at DESC LIMIT 1");
-            ps.setInt(1, selectedChat.getId());
-            ResultSet rs = ps.executeQuery();
-            return rs.next() ? rs.getInt("id") : -1;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return -1;
+    private void addPollNode(List<VBox> pollNodes, int pollId, String question, List<String> options, List<Integer> optionIds, List<Integer> voteCounts, Timestamp createdAt, boolean isClosed) {
+        if (options.size() != 2) {
+            System.out.println("Warning: Poll should have exactly 2 options, found " + options.size() + " for poll ID " + pollId);
+            return; // Skip invalid polls (only handle polls with 2 options)
+        }
+
+        VBox pollNode = new VBox(5);
+        pollNode.setStyle("-fx-background-color: #E3F2FD; -fx-padding: 8; -fx-border-radius: 15; -fx-border-color: #BBDEFB;");
+        pollNode.setAlignment(Pos.CENTER_LEFT);
+        pollNode.setUserData(pollId); // Store poll ID for later retrieval
+
+        // Creation time
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        Label timeLabel = new Label("Created at: " + sdf.format(createdAt));
+        timeLabel.setStyle("-fx-font-size: 10; -fx-text-fill: gray;");
+        pollNode.getChildren().add(timeLabel);
+
+        // Poll question
+        Label questionLabel = new Label(question);
+        questionLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12;");
+        pollNode.getChildren().add(questionLabel);
+
+        // Poll options (single card with both options)
+        pollToggleGroup = new ToggleGroup();
+        for (int i = 0; i < options.size(); i++) {
+            RadioButton option = new RadioButton(options.get(i) + " (" + voteCounts.get(i) + " votes)");
+            option.setToggleGroup(pollToggleGroup);
+            option.setUserData(optionIds.get(i)); // Store real option ID
+            pollNode.getChildren().add(option);
+        }
+
+        // Vote button (if not closed)
+        if (!isClosed) {
+            Button voteBtn = new Button("Vote");
+            voteBtn.setStyle("-fx-background-color: #0078ff; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 2 10;");
+            voteBtn.setOnAction(e -> handleVote(pollId)); // Pass pollId directly
+            pollNode.getChildren().add(voteBtn);
+
+            // Close poll button
+            Button closeBtn = new Button("Close Poll");
+            closeBtn.setStyle("-fx-background-color: #FF4500; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 2 10;");
+            closeBtn.setOnAction(e -> handleClosePoll(pollId)); // Pass pollId directly
+            pollNode.getChildren().add(closeBtn);
+        } else {
+            Label closedLabel = new Label("Closed");
+            closedLabel.setStyle("-fx-font-size: 10; -fx-text-fill: red;");
+            pollNode.getChildren().add(closedLabel);
+        }
+
+        // Delete poll button
+        Button deleteBtn = new Button("Delete");
+        deleteBtn.setStyle("-fx-background-color: #FF0000; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 2 10;");
+        deleteBtn.setOnAction(e -> handleDeletePoll(pollId)); // Pass pollId directly
+        pollNode.getChildren().add(deleteBtn);
+
+        pollNodes.add(pollNode);
+    }
+
+    private void addPollToChat(int pollId, String question, String option1, int opt1Id, String option2, int opt2Id, Timestamp createdAt, boolean isClosed) {
+        VBox pollNode = new VBox(5);
+        pollNode.setStyle("-fx-background-color: #E3F2FD; -fx-padding: 8; -fx-border-radius: 15; -fx-border-color: #BBDEFB;");
+        pollNode.setAlignment(Pos.CENTER_LEFT);
+        pollNode.setUserData(pollId); // Store poll ID for later retrieval
+
+        // Creation time
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        Label timeLabel = new Label("Created at: " + sdf.format(createdAt));
+        timeLabel.setStyle("-fx-font-size: 10; -fx-text-fill: gray;");
+        pollNode.getChildren().add(timeLabel);
+
+        // Poll question
+        Label questionLabel = new Label(question);
+        questionLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12;");
+        pollNode.getChildren().add(questionLabel);
+
+        // Poll options (single card with both options)
+        pollToggleGroup = new ToggleGroup();
+        RadioButton opt1 = new RadioButton(option1 + " (" + pollOptionService.getVoteCount(opt1Id) + " votes)");
+        opt1.setToggleGroup(pollToggleGroup);
+        opt1.setUserData(opt1Id); // Store real option ID
+        RadioButton opt2 = new RadioButton(option2 + " (" + pollOptionService.getVoteCount(opt2Id) + " votes)");
+        opt2.setToggleGroup(pollToggleGroup);
+        opt2.setUserData(opt2Id); // Store real option ID
+        pollNode.getChildren().addAll(opt1, opt2);
+
+        // Vote button (if not closed)
+        if (!isClosed) {
+            Button voteBtn = new Button("Vote");
+            voteBtn.setStyle("-fx-background-color: #0078ff; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 2 10;");
+            voteBtn.setOnAction(e -> handleVote(pollId)); // Pass pollId directly
+            pollNode.getChildren().add(voteBtn);
+
+            // Close poll button
+            Button closeBtn = new Button("Close Poll");
+            closeBtn.setStyle("-fx-background-color: #FF4500; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 2 10;");
+            closeBtn.setOnAction(e -> handleClosePoll(pollId)); // Pass pollId directly
+            pollNode.getChildren().add(closeBtn);
+        } else {
+            Label closedLabel = new Label("Closed");
+            closedLabel.setStyle("-fx-font-size: 10; -fx-text-fill: red;");
+            pollNode.getChildren().add(closedLabel);
+        }
+
+        // Delete poll button
+        Button deleteBtn = new Button("Delete");
+        deleteBtn.setStyle("-fx-background-color: #FF0000; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 2 10;");
+        deleteBtn.setOnAction(e -> handleDeletePoll(pollId)); // Pass pollId directly
+        pollNode.getChildren().add(deleteBtn);
+
+        List<Object> currentItems = new ArrayList<>(messagesListView.getItems());
+        currentItems.add(pollNode);
+        messagesListView.getItems().setAll(currentItems);
+        messagesListView.scrollTo(messagesListView.getItems().size() - 1);
+    }
+
+    private void removeAllPollsFromChat() {
+        List<Object> currentItems = new ArrayList<>(messagesListView.getItems());
+        currentItems.removeIf(item -> item instanceof VBox);
+        messagesListView.getItems().setAll(currentItems);
+    }
+
+    private void configureMessageAppearance(VBox vbox, Message message) {
+        vbox.getStyleClass().removeAll("user-message", "other-user-message", "bot-message");
+        if (message.getPostedBy() == -1) {
+            vbox.getStyleClass().add("bot-message");
+            vbox.setAlignment(Pos.CENTER_LEFT);
+        } else if (message.getPostedBy() == currentUserId) {
+            vbox.getStyleClass().add("user-message");
+            vbox.setAlignment(Pos.CENTER_RIGHT);
+        } else {
+            vbox.getStyleClass().add("other-user-message");
+            vbox.setAlignment(Pos.CENTER_LEFT);
         }
     }
 
-    // Helper method to show alerts
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -439,8 +682,8 @@ public class AfficherChatsController {
         alert.showAndWait();
     }
 
-    // Custom ListCell for displaying Message objects with Edit and Delete options for user id 6.
-    private class MessageCell extends ListCell<Message> {
+    // Custom ListCell for displaying Message objects and Poll nodes with Messenger-like styling.
+    private class MessageCell extends ListCell<Object> {
         private HBox container = new HBox(10);
         private Label messageLabel = new Label();
         private Button editButton = new Button();
@@ -450,7 +693,7 @@ public class AfficherChatsController {
         private Button cancelButton = new Button();
         private HBox buttonBox = new HBox(5);
         private HBox editBox = new HBox(5);
-        private Message currentMessage;
+        private Object currentItem;
 
         public MessageCell() {
             FontIcon editIcon = new FontIcon(FontAwesomeRegular.EDIT);
@@ -490,22 +733,27 @@ public class AfficherChatsController {
         }
 
         private void handleDelete() {
-            if (currentMessage != null) {
-                messageService.delete(currentMessage);
-                getListView().getItems().remove(currentMessage);
+            if (currentItem instanceof Message) {
+                Message message = (Message) currentItem;
+                messageService.delete(message);
+                getListView().getItems().remove(currentItem);
             }
         }
 
         private void handleEdit() {
-            editTextField.setText(currentMessage.getContenu());
-            container.getChildren().setAll(editBox);
+            if (currentItem instanceof Message) {
+                Message message = (Message) currentItem;
+                editTextField.setText(message.getContenu());
+                container.getChildren().setAll(editBox);
+            }
         }
 
         private void handleSave() {
             String newContent = editTextField.getText().trim();
-            if (!newContent.isEmpty()) {
-                currentMessage.setContenu(newContent);
-                messageService.update(currentMessage);
+            if (!newContent.isEmpty() && currentItem instanceof Message) {
+                Message message = (Message) currentItem;
+                message.setContenu(newContent);
+                messageService.update(message);
                 messageLabel.setText(newContent);
                 container.getChildren().setAll(messageLabel, buttonBox);
             }
@@ -516,42 +764,47 @@ public class AfficherChatsController {
         }
 
         @Override
-        protected void updateItem(Message item, boolean empty) {
+        protected void updateItem(Object item, boolean empty) {
             super.updateItem(item, empty);
             if (empty || item == null) {
                 setGraphic(null);
-                currentMessage = null;
-            } else {
-                currentMessage = item;
-                configureMessageAppearance(item);
-                configureButtons(item);
+                currentItem = null;
+            } else if (item instanceof Message) {
+                Message message = (Message) item;
+                currentItem = message;
+                messageLabel.setText(message.getContenu());
+                configureMessageAppearance(message); // Updated to work with messageLabel and container
                 setGraphic(container);
+            } else if (item instanceof VBox) {
+                VBox pollNode = (VBox) item;
+                currentItem = pollNode;
+                setGraphic(pollNode);
             }
         }
 
         private void configureMessageAppearance(Message message) {
-            messageLabel.setText(message.getContenu());
+            // Remove existing style classes
             messageLabel.getStyleClass().removeAll("user-message", "other-user-message", "bot-message");
 
-            if (message.getPostedBy() == -1) {
+            // Configure alignment and style based on sender
+            if (message.getPostedBy() == -1) { // Bot message
                 messageLabel.getStyleClass().add("bot-message");
                 container.setAlignment(Pos.CENTER_LEFT);
-                container.getChildren().setAll(messageLabel);
-            } else if (message.getPostedBy() == currentUserId) {
+                container.getChildren().setAll(messageLabel); // No buttons for bot messages
+            } else if (message.getPostedBy() == currentUserId) { // User's own message
                 messageLabel.getStyleClass().add("user-message");
                 container.setAlignment(Pos.CENTER_RIGHT);
-                container.getChildren().setAll(buttonBox, messageLabel);
-            } else {
+                container.getChildren().setAll(messageLabel, buttonBox); // Include edit/delete buttons
+            } else { // Other user's message
                 messageLabel.getStyleClass().add("other-user-message");
                 container.setAlignment(Pos.CENTER_LEFT);
-                container.getChildren().setAll(messageLabel);
+                container.getChildren().setAll(messageLabel); // No buttons for other users' messages
             }
         }
 
         private void configureButtons(Message message) {
             buttonBox.getChildren().clear();
-            if (message.getType() == MessageType.QUESTION &&
-                    message.getPostedBy() == currentUserId) {
+            if (message.getType() == MessageType.QUESTION && message.getPostedBy() == currentUserId) {
                 buttonBox.getChildren().addAll(editButton, deleteButton);
             }
         }
