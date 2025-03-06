@@ -32,7 +32,7 @@
 
 /* Profile image container */
 .user-details-container {
-    -fx-background-color: #1b3347; /* Dark blue background */
+    -fx-background-color: #286371; /* Dark blue background */
     -fx-background-radius: 10;
     -fx-border-radius: 10;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 0);
@@ -95,4 +95,8 @@ Text {
 .scroll-pane .scroll-bar:vertical .increment-button,
 .scroll-pane .scroll-bar:vertical .decrement-button {
     -fx-background-color: transparent;
+}
+
+.vbox {
+    -fx-background-color: #286371;
 }

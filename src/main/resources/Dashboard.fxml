@@ -28,7 +28,7 @@
             <VBox fx:id="feedbackContentContainer" prefHeight="586.0" prefWidth="998.0" spacing="15.0" styleClass="container" stylesheets="@styleEye.css" />
          </content>
       </ScrollPane>
-      <JFXTextField fx:id="searchinput" cacheShape="false" centerShape="false" focugit sColor="#ffff" focusTraversable="false" layoutX="433.0" layoutY="24.0" maxWidth="199.0" minWidth="194.0" onKeyPressed="#handleSearch" prefHeight="42.0" prefWidth="194.0" promptText="Search :" scaleShape="false" styleClass="codelb" stylesheets="@stylesheet.css" unFocusColor="#eeecec">
+      <JFXTextField fx:id="searchinput" cacheShape="false" centerShape="false" focusColor="#ffff" focusTraversable="false" layoutX="433.0" layoutY="24.0" maxWidth="199.0" minWidth="194.0" onKeyPressed="#handleSearch" prefHeight="42.0" prefWidth="194.0" promptText="Search :" scaleShape="false" styleClass="codelb" stylesheets="@stylesheet.css" unFocusColor="#eeecec">
          <font>
             <Font name="Century Gothic" size="19.0" />
          </font>

@@ -88,8 +88,8 @@ public class Dashboard implements Initializable {
                 private final JFXButton blockButton = new JFXButton("Block");
                 private final JFXButton unblockButton = new JFXButton("Unblock");
                 {
-                blockButton.setStyle("-fx-background-color: red; -fx-text-fill: black; -fx-border-radius: 5px; -fx-cursor: hand;");
-                unblockButton.setStyle("-fx-background-color: red; -fx-text-fill: black; -fx-border-radius: 5px; -fx-cursor: hand;");
+                    blockButton.setStyle("-fx-background-color: red; -fx-text-fill: black; -fx-border-radius: 5px; -fx-cursor: hand;");
+                    unblockButton.setStyle("-fx-background-color: red; -fx-text-fill: black; -fx-border-radius: 5px; -fx-cursor: hand;");
 
 
                     blockButton.setOnAction(event -> {
@@ -201,7 +201,7 @@ public class Dashboard implements Initializable {
                 FXMLLoader fxmlLoader = new FXMLLoader();
                 fxmlLoader.setLocation(getClass().getResource("/usersDashboardItem.fxml"));
                 Parent root = fxmlLoader.load();
-               // userDashboardItem itemController = fxmlLoader.getController();
+                // userDashboardItem itemController = fxmlLoader.getController();
                 userDashboardItem itemController = fxmlLoader.getController();
                 itemController.setFeedBackData(u);
                 feedbackContentContainer.getChildren().add(root);
