@@ -117,3 +117,23 @@
     -fx-font-size: 12px;
     -fx-text-fill: #E26ECC;
 }
+
+
+/* Add to existing AfficherChatsStyle.css */
+.reaction-button {
+    -fx-background-color: #E26ECC;
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+    -fx-padding: 2 6;
+    -fx-font-size: 12;
+    -fx-cursor: hand;
+}
+
+.reaction-button:hover {
+    -fx-background-color: #D45EBB;
+}
+
+.reaction-counts {
+    -fx-font-size: 10;
+    -fx-text-fill: gray;
+}

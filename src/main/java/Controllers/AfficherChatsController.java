@@ -20,6 +20,7 @@ import models.Chat;
 import models.ChatType;
 import models.Message;
 import models.Message.MessageType;
+import models.Reaction;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeRegular;
 import org.kordamp.ikonli.javafx.FontIcon;
 import services.*;
@@ -30,6 +31,7 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -37,7 +39,7 @@ public class AfficherChatsController {
 
     @FXML private Label chatTitle;
     @FXML private ListView<String> chatsListView;
-    @FXML private ListView<Object> messagesListView; // Changed to Object to handle both Messages and Poll nodes
+    @FXML private ListView<Object> messagesListView;
     @FXML private TextField messageField;
     @FXML private Button sendButton;
     @FXML private Button returnButton;
@@ -45,8 +47,6 @@ public class AfficherChatsController {
     @FXML private ListView<Message> searchResultsListView;
     @FXML private Label noResultsLabel;
     @FXML private HBox suggestionBox;
-
-    // Poll-related FXML elements
     @FXML private TextField pollQuestionField;
     @FXML private TextField pollOption1Field;
     @FXML private TextField pollOption2Field;
@@ -61,7 +61,8 @@ public class AfficherChatsController {
     private PollService pollService = new PollService();
     private PollOptionService pollOptionService = new PollOptionService();
     private VoteService voteService = new VoteService();
-    private int currentUserId = 6; // Should come from session management
+    private ReactionService reactionService;
+    private int currentUserId = 6;
     private boolean suggestionTriggered = false;
     private int currentCommunityId;
     private Chat selectedChat;
@@ -70,7 +71,7 @@ public class AfficherChatsController {
     private static final String[] SUGGESTIONS = {
             "How to join a hackathon?",
             "Where to find resources?",
-            "where can i find my wallet  ?"
+            "where can i find my wallet ?"
     };
 
     public void setCurrentCommunityId(int id) {
@@ -85,54 +86,11 @@ public class AfficherChatsController {
         messageService = new MessageService(
                 MyConnection.getInstance().getCnx(),
                 chatService,
-                geminiService // Assuming GeminiService is not needed for this example
+                geminiService
         );
+        reactionService = new ReactionService();
 
-        messagesListView.setCellFactory(lv -> new ListCell<>() {
-            @Override
-            protected void updateItem(Object item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setGraphic(null);
-                    setText(null);
-                } else if (item instanceof Message) {
-                    Message message = (Message) item;
-                    String chatName = "Unknown Chat";
-                    Chat chat = chatService.getChatById(message.getChatId());
-                    if (chat != null) {
-                        chatName = chat.getNom();
-                    }
-                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-                    String timeFormatted = sdf.format(message.getPostTime());
-                    TextFlow messageFlow = new TextFlow(new Text(message.getContenu()));
-                    VBox vbox = new VBox(5);
-                    Label chatNameLabel = new Label(chatName);
-                    chatNameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 10; -fx-text-fill: gray;");
-                    Label timeLabel = new Label(timeFormatted);
-                    timeLabel.setStyle("-fx-font-size: 10; -fx-text-fill: gray;");
-                    vbox.getChildren().addAll(chatNameLabel, messageFlow, timeLabel);
-                    configureMessageAppearance(vbox, message);
-                    setGraphic(vbox);
-                } else if (item instanceof VBox) {
-                    setGraphic((VBox) item);
-                    System.out.println("Poll node displayed: " + ((VBox) item).getChildren().get(0)); // Debug poll display
-                }
-            }
-
-            private void configureMessageAppearance(VBox vbox, Message message) {
-                vbox.getStyleClass().removeAll("user-message", "other-user-message", "bot-message");
-                if (message.getPostedBy() == -1) {
-                    vbox.getStyleClass().add("bot-message");
-                    vbox.setAlignment(Pos.CENTER_LEFT);
-                } else if (message.getPostedBy() == currentUserId) {
-                    vbox.getStyleClass().add("user-message");
-                    vbox.setAlignment(Pos.CENTER_RIGHT);
-                } else {
-                    vbox.getStyleClass().add("other-user-message");
-                    vbox.setAlignment(Pos.CENTER_LEFT);
-                }
-            }
-        });
+        messagesListView.setCellFactory(lv -> new MessageCell());
 
         searchResultsListView.setCellFactory(lv -> new ListCell<>() {
             @Override
@@ -208,7 +166,7 @@ public class AfficherChatsController {
             }
         });
 
-        loadActivePolls(); // Load polls on initialization
+        loadActivePolls();
     }
 
     @FXML
@@ -268,7 +226,7 @@ public class AfficherChatsController {
                         selectedChat = c;
                         chatTitle.setText(c.getNom());
                         loadMessagesForChat(c.getId());
-                        loadActivePolls(); // Load polls for the selected chat
+                        loadActivePolls();
                         break;
                     }
                 }
@@ -286,6 +244,7 @@ public class AfficherChatsController {
                 .collect(Collectors.toList()));
         messagesListView.getItems().setAll(items);
         displaySuggestions();
+        loadActivePolls();
     }
 
     private void handleSuggestionClick(String suggestionText) {
@@ -342,7 +301,6 @@ public class AfficherChatsController {
         }
     }
 
-    // Poll-related methods
     @FXML
     private void handleShowPollPopout() {
         animatePollPopout();
@@ -357,6 +315,7 @@ public class AfficherChatsController {
         ft.setToValue(1);
         ft.play();
     }
+
     @FXML
     private void handleCreatePoll() {
         String question = pollQuestionField.getText().trim();
@@ -382,7 +341,7 @@ public class AfficherChatsController {
         pollOption1Field.clear();
         pollOption2Field.clear();
         handleCancelPoll();
-        loadMessagesForChat(selectedChat.getId()); // Refresh to show the poll
+        loadMessagesForChat(selectedChat.getId());
     }
 
     @FXML
@@ -400,7 +359,6 @@ public class AfficherChatsController {
             return;
         }
 
-        // Debug: Verify pollId
         System.out.println("Handling vote for poll ID: " + pollId);
 
         RadioButton selectedOption = (RadioButton) pollToggleGroup.getSelectedToggle();
@@ -420,11 +378,8 @@ public class AfficherChatsController {
             return;
         }
 
-        // Record the vote and update the vote count
         voteService.recordVote(pollId, optionId, currentUserId);
         pollOptionService.incrementVoteCount(optionId);
-
-        // Refresh the poll display to show updated vote counts
         loadActivePolls();
     }
 
@@ -434,11 +389,10 @@ public class AfficherChatsController {
             return;
         }
 
-        // Debug: Verify pollId
         System.out.println("Handling close for poll ID: " + pollId);
 
         pollService.closePoll(pollId);
-        loadActivePolls(); // Refresh UI
+        loadActivePolls();
     }
 
     private void handleDeletePoll(int pollId) {
@@ -447,22 +401,15 @@ public class AfficherChatsController {
             return;
         }
 
-        // Debug: Verify pollId
         System.out.println("Handling delete for poll ID: " + pollId);
 
-        // Delete the poll from the database
         pollService.deletePoll(pollId);
-
-        // Refresh the poll display to remove the deleted poll
         loadActivePolls();
     }
 
     private int getPollIdFromNode(VBox pollNode) {
-        if (pollNode != null) {
-            System.out.println("Poll node userData: " + pollNode.getUserData());
-            if (pollNode.getUserData() instanceof Integer) {
-                return (int) pollNode.getUserData();
-            }
+        if (pollNode != null && pollNode.getUserData() instanceof Integer) {
+            return (int) pollNode.getUserData();
         }
         return -1;
     }
@@ -479,12 +426,11 @@ public class AfficherChatsController {
                     "SELECT p.id AS poll_id, p.question, p.is_closed, p.created_at, po.id AS option_id, po.text, po.vote_count " +
                             "FROM polls p " +
                             "LEFT JOIN poll_options po ON p.id = po.poll_id " +
-                            "WHERE p.chat_id = ? AND p.is_closed = FALSE " + // Ensure only active polls
+                            "WHERE p.chat_id = ? AND p.is_closed = FALSE " +
                             "ORDER BY p.created_at ASC");
             ps.setInt(1, selectedChat.getId());
             ResultSet rs = ps.executeQuery();
 
-            System.out.println("Loading polls for chat " + selectedChat.getId() + ": ResultSet has data: " + rs.isBeforeFirst());
             List<VBox> pollNodes = new ArrayList<>();
             int currentPollId = -1;
             String question = null;
@@ -515,7 +461,6 @@ public class AfficherChatsController {
                     options.add(optionText);
                     optionIds.add(optionId);
                     voteCounts.add(voteCount);
-                    System.out.println("Poll ID: " + pollId + ", Option: " + optionText + ", Vote Count: " + voteCount);
                 }
             }
             if (currentPollId != -1 && !options.isEmpty()) {
@@ -524,13 +469,11 @@ public class AfficherChatsController {
 
             if (!pollNodes.isEmpty()) {
                 List<Object> currentItems = new ArrayList<>(messagesListView.getItems());
-                currentItems.removeIf(item -> item instanceof VBox); // Remove old polls
+                currentItems.removeIf(item -> item instanceof VBox);
                 currentItems.addAll(pollNodes);
                 messagesListView.getItems().setAll(currentItems);
                 messagesListView.scrollTo(messagesListView.getItems().size() - 1);
-                System.out.println("MessagesListView items after adding polls: " + messagesListView.getItems().stream().map(Object::toString).collect(Collectors.joining(", ")));
             } else {
-                System.out.println("No active polls found for chat " + selectedChat.getId());
                 removeAllPollsFromChat();
             }
         } catch (SQLException e) {
@@ -542,45 +485,40 @@ public class AfficherChatsController {
     private void addPollNode(List<VBox> pollNodes, int pollId, String question, List<String> options, List<Integer> optionIds, List<Integer> voteCounts, Timestamp createdAt, boolean isClosed) {
         if (options.size() != 2) {
             System.out.println("Warning: Poll should have exactly 2 options, found " + options.size() + " for poll ID " + pollId);
-            return; // Skip invalid polls (only handle polls with 2 options)
+            return;
         }
 
         VBox pollNode = new VBox(5);
         pollNode.setStyle("-fx-background-color: #E3F2FD; -fx-padding: 8; -fx-border-radius: 15; -fx-border-color: #BBDEFB;");
         pollNode.setAlignment(Pos.CENTER_LEFT);
-        pollNode.setUserData(pollId); // Store poll ID for later retrieval
+        pollNode.setUserData(pollId);
 
-        // Creation time
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         Label timeLabel = new Label("Created at: " + sdf.format(createdAt));
         timeLabel.setStyle("-fx-font-size: 10; -fx-text-fill: gray;");
         pollNode.getChildren().add(timeLabel);
 
-        // Poll question
         Label questionLabel = new Label(question);
         questionLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12;");
         pollNode.getChildren().add(questionLabel);
 
-        // Poll options (single card with both options)
         pollToggleGroup = new ToggleGroup();
         for (int i = 0; i < options.size(); i++) {
             RadioButton option = new RadioButton(options.get(i) + " (" + voteCounts.get(i) + " votes)");
             option.setToggleGroup(pollToggleGroup);
-            option.setUserData(optionIds.get(i)); // Store real option ID
+            option.setUserData(optionIds.get(i));
             pollNode.getChildren().add(option);
         }
 
-        // Vote button (if not closed)
         if (!isClosed) {
             Button voteBtn = new Button("Vote");
             voteBtn.setStyle("-fx-background-color: #0078ff; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 2 10;");
-            voteBtn.setOnAction(e -> handleVote(pollId)); // Pass pollId directly
+            voteBtn.setOnAction(e -> handleVote(pollId));
             pollNode.getChildren().add(voteBtn);
 
-            // Close poll button
             Button closeBtn = new Button("Close Poll");
             closeBtn.setStyle("-fx-background-color: #FF4500; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 2 10;");
-            closeBtn.setOnAction(e -> handleClosePoll(pollId)); // Pass pollId directly
+            closeBtn.setOnAction(e -> handleClosePoll(pollId));
             pollNode.getChildren().add(closeBtn);
         } else {
             Label closedLabel = new Label("Closed");
@@ -588,10 +526,9 @@ public class AfficherChatsController {
             pollNode.getChildren().add(closedLabel);
         }
 
-        // Delete poll button
         Button deleteBtn = new Button("Delete");
         deleteBtn.setStyle("-fx-background-color: #FF0000; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 2 10;");
-        deleteBtn.setOnAction(e -> handleDeletePoll(pollId)); // Pass pollId directly
+        deleteBtn.setOnAction(e -> handleDeletePoll(pollId));
         pollNode.getChildren().add(deleteBtn);
 
         pollNodes.add(pollNode);
@@ -601,40 +538,35 @@ public class AfficherChatsController {
         VBox pollNode = new VBox(5);
         pollNode.setStyle("-fx-background-color: #E3F2FD; -fx-padding: 8; -fx-border-radius: 15; -fx-border-color: #BBDEFB;");
         pollNode.setAlignment(Pos.CENTER_LEFT);
-        pollNode.setUserData(pollId); // Store poll ID for later retrieval
+        pollNode.setUserData(pollId);
 
-        // Creation time
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         Label timeLabel = new Label("Created at: " + sdf.format(createdAt));
         timeLabel.setStyle("-fx-font-size: 10; -fx-text-fill: gray;");
         pollNode.getChildren().add(timeLabel);
 
-        // Poll question
         Label questionLabel = new Label(question);
         questionLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12;");
         pollNode.getChildren().add(questionLabel);
 
-        // Poll options (single card with both options)
         pollToggleGroup = new ToggleGroup();
         RadioButton opt1 = new RadioButton(option1 + " (" + pollOptionService.getVoteCount(opt1Id) + " votes)");
         opt1.setToggleGroup(pollToggleGroup);
-        opt1.setUserData(opt1Id); // Store real option ID
+        opt1.setUserData(opt1Id);
         RadioButton opt2 = new RadioButton(option2 + " (" + pollOptionService.getVoteCount(opt2Id) + " votes)");
         opt2.setToggleGroup(pollToggleGroup);
-        opt2.setUserData(opt2Id); // Store real option ID
+        opt2.setUserData(opt2Id);
         pollNode.getChildren().addAll(opt1, opt2);
 
-        // Vote button (if not closed)
         if (!isClosed) {
             Button voteBtn = new Button("Vote");
             voteBtn.setStyle("-fx-background-color: #0078ff; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 2 10;");
-            voteBtn.setOnAction(e -> handleVote(pollId)); // Pass pollId directly
+            voteBtn.setOnAction(e -> handleVote(pollId));
             pollNode.getChildren().add(voteBtn);
 
-            // Close poll button
             Button closeBtn = new Button("Close Poll");
             closeBtn.setStyle("-fx-background-color: #FF4500; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 2 10;");
-            closeBtn.setOnAction(e -> handleClosePoll(pollId)); // Pass pollId directly
+            closeBtn.setOnAction(e -> handleClosePoll(pollId));
             pollNode.getChildren().add(closeBtn);
         } else {
             Label closedLabel = new Label("Closed");
@@ -642,10 +574,9 @@ public class AfficherChatsController {
             pollNode.getChildren().add(closedLabel);
         }
 
-        // Delete poll button
         Button deleteBtn = new Button("Delete");
         deleteBtn.setStyle("-fx-background-color: #FF0000; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 2 10;");
-        deleteBtn.setOnAction(e -> handleDeletePoll(pollId)); // Pass pollId directly
+        deleteBtn.setOnAction(e -> handleDeletePoll(pollId));
         pollNode.getChildren().add(deleteBtn);
 
         List<Object> currentItems = new ArrayList<>(messagesListView.getItems());
@@ -660,20 +591,6 @@ public class AfficherChatsController {
         messagesListView.getItems().setAll(currentItems);
     }
 
-    private void configureMessageAppearance(VBox vbox, Message message) {
-        vbox.getStyleClass().removeAll("user-message", "other-user-message", "bot-message");
-        if (message.getPostedBy() == -1) {
-            vbox.getStyleClass().add("bot-message");
-            vbox.setAlignment(Pos.CENTER_LEFT);
-        } else if (message.getPostedBy() == currentUserId) {
-            vbox.getStyleClass().add("user-message");
-            vbox.setAlignment(Pos.CENTER_RIGHT);
-        } else {
-            vbox.getStyleClass().add("other-user-message");
-            vbox.setAlignment(Pos.CENTER_LEFT);
-        }
-    }
-
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -682,9 +599,8 @@ public class AfficherChatsController {
         alert.showAndWait();
     }
 
-    // Custom ListCell for displaying Message objects and Poll nodes with Messenger-like styling.
     private class MessageCell extends ListCell<Object> {
-        private HBox container = new HBox(10);
+        private VBox messageVBox = new VBox(5);
         private Label messageLabel = new Label();
         private Button editButton = new Button();
         private Button deleteButton = new Button();
@@ -693,6 +609,8 @@ public class AfficherChatsController {
         private Button cancelButton = new Button();
         private HBox buttonBox = new HBox(5);
         private HBox editBox = new HBox(5);
+        private HBox reactionBox = new HBox(5);
+        private Label reactionCountsLabel = new Label();
         private Object currentItem;
 
         public MessageCell() {
@@ -712,9 +630,17 @@ public class AfficherChatsController {
             saveButton.setGraphic(saveIcon);
             cancelButton.setGraphic(cancelIcon);
 
-            container.setAlignment(Pos.CENTER_RIGHT);
+            String[] emojis = {"👍", "❤️", "😂", "😮", "👏"};
+            for (String emoji : emojis) {
+                Button reactionButton = new Button(emoji);
+                reactionButton.setStyle("-fx-background-color: #E26ECC; -fx-text-fill: white; -fx-background-radius: 10; -fx-padding: 2 6; -fx-font-size: 12; -fx-cursor: hand;");
+                reactionButton.setOnAction(e -> handleReaction(emoji));
+                reactionBox.getChildren().add(reactionButton);
+            }
+
             messageLabel.getStyleClass().add("chat-message");
             editTextField.getStyleClass().add("edit-field");
+            reactionCountsLabel.setStyle("-fx-font-size: 10; -fx-text-fill: gray;");
 
             Stream.of(editButton, deleteButton, saveButton, cancelButton).forEach(btn -> {
                 btn.getStyleClass().add("icon-button");
@@ -724,12 +650,45 @@ public class AfficherChatsController {
             buttonBox.getChildren().addAll(editButton, deleteButton);
             editBox.getChildren().addAll(editTextField, saveButton, cancelButton);
             editBox.setSpacing(5);
-            container.getChildren().addAll(messageLabel, buttonBox);
+        }
 
-            deleteButton.setOnAction(e -> handleDelete());
-            editButton.setOnAction(e -> handleEdit());
-            saveButton.setOnAction(e -> handleSave());
-            cancelButton.setOnAction(e -> handleCancel());
+        private void handleReaction(String emoji) {
+            if (!(currentItem instanceof Message)) return;
+            Message message = (Message) currentItem;
+
+            try {
+                // Check if user already reacted with this emoji
+                boolean hasReacted = reactionService.getAll().stream()
+                        .anyMatch(r -> r.getMessageId() == message.getId() &&
+                                r.getUserId() == currentUserId &&
+                                r.getEmoji().equals(emoji));
+
+                if (hasReacted) {
+                    // Remove reaction
+                    Reaction reaction = reactionService.getAll().stream()
+                            .filter(r -> r.getMessageId() == message.getId() &&
+                                    r.getUserId() == currentUserId &&
+                                    r.getEmoji().equals(emoji))
+                            .findFirst()
+                            .orElse(null);
+                    if (reaction != null) {
+                        reactionService.delete(reaction);
+                    }
+                } else {
+                    // Add reaction
+                    Reaction reaction = new Reaction(
+                            currentUserId,
+                            message.getId(),
+                            emoji,
+                            new Timestamp(System.currentTimeMillis())
+                    );
+                    reactionService.add(reaction);
+                }
+                // Refresh messages to update counts
+                loadMessagesForChat(selectedChat.getId());
+            } catch (Exception e) {
+                showAlert("Error", "Failed to process reaction: " + e.getMessage());
+            }
         }
 
         private void handleDelete() {
@@ -744,7 +703,7 @@ public class AfficherChatsController {
             if (currentItem instanceof Message) {
                 Message message = (Message) currentItem;
                 editTextField.setText(message.getContenu());
-                container.getChildren().setAll(editBox);
+                messageVBox.getChildren().setAll(editBox);
             }
         }
 
@@ -755,12 +714,12 @@ public class AfficherChatsController {
                 message.setContenu(newContent);
                 messageService.update(message);
                 messageLabel.setText(newContent);
-                container.getChildren().setAll(messageLabel, buttonBox);
+                loadMessagesForChat(selectedChat.getId());
             }
         }
 
         private void handleCancel() {
-            container.getChildren().setAll(messageLabel, buttonBox);
+            loadMessagesForChat(selectedChat.getId());
         }
 
         @Override
@@ -773,8 +732,51 @@ public class AfficherChatsController {
                 Message message = (Message) item;
                 currentItem = message;
                 messageLabel.setText(message.getContenu());
-                configureMessageAppearance(message); // Updated to work with messageLabel and container
-                setGraphic(container);
+
+                // Get reaction counts
+                Map<String, Long> reactionCounts = reactionService.getReactionCounts(message.getId());
+                StringBuilder countsText = new StringBuilder();
+                reactionCounts.forEach((emoji, count) -> {
+                    if (count > 0) {
+                        countsText.append(emoji).append(" ").append(count).append(" ");
+                    }
+                });
+                reactionCountsLabel.setText(countsText.toString());
+
+                // Configure message appearance
+                configureMessageAppearance(message);
+
+                // Build message display
+                messageVBox.getChildren().clear();
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                String timeFormatted = sdf.format(message.getPostTime());
+                Label chatNameLabel = new Label("User " + message.getPostedBy());
+                chatNameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 10; -fx-text-fill: gray;");
+                Label timeLabel = new Label(timeFormatted);
+                timeLabel.setStyle("-fx-font-size: 10; -fx-text-fill: gray;");
+
+                if (message.getPostedBy() == -1) {
+                    // Bot message: no reactions or edit/delete
+                    messageVBox.getChildren().addAll(
+                            chatNameLabel,
+                            new TextFlow(new Text(message.getContenu())),
+                            timeLabel
+                    );
+                } else {
+                    // Non-bot message: include reactions
+                    messageVBox.getChildren().addAll(
+                            chatNameLabel,
+                            new TextFlow(new Text(message.getContenu())),
+                            timeLabel,
+                            reactionBox,
+                            reactionCountsLabel
+                    );
+                    if (message.getPostedBy() == currentUserId) {
+                        messageVBox.getChildren().add(buttonBox);
+                    }
+                }
+
+                setGraphic(messageVBox);
             } else if (item instanceof VBox) {
                 VBox pollNode = (VBox) item;
                 currentItem = pollNode;
@@ -783,29 +785,14 @@ public class AfficherChatsController {
         }
 
         private void configureMessageAppearance(Message message) {
-            // Remove existing style classes
             messageLabel.getStyleClass().removeAll("user-message", "other-user-message", "bot-message");
-
-            // Configure alignment and style based on sender
-            if (message.getPostedBy() == -1) { // Bot message
+            messageVBox.setAlignment(message.getPostedBy() == currentUserId ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
+            if (message.getPostedBy() == -1) {
                 messageLabel.getStyleClass().add("bot-message");
-                container.setAlignment(Pos.CENTER_LEFT);
-                container.getChildren().setAll(messageLabel); // No buttons for bot messages
-            } else if (message.getPostedBy() == currentUserId) { // User's own message
+            } else if (message.getPostedBy() == currentUserId) {
                 messageLabel.getStyleClass().add("user-message");
-                container.setAlignment(Pos.CENTER_RIGHT);
-                container.getChildren().setAll(messageLabel, buttonBox); // Include edit/delete buttons
-            } else { // Other user's message
+            } else {
                 messageLabel.getStyleClass().add("other-user-message");
-                container.setAlignment(Pos.CENTER_LEFT);
-                container.getChildren().setAll(messageLabel); // No buttons for other users' messages
-            }
-        }
-
-        private void configureButtons(Message message) {
-            buttonBox.getChildren().clear();
-            if (message.getType() == MessageType.QUESTION && message.getPostedBy() == currentUserId) {
-                buttonBox.getChildren().addAll(editButton, deleteButton);
             }
         }
     }
