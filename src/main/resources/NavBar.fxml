@@ -9,6 +9,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Circle?>
 <AnchorPane prefHeight="964.0" prefWidth="368.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.NavBar">
     <VBox alignment="TOP_CENTER" layoutX="-2.0" prefHeight="964.0" prefWidth="371.0" style="-fx-background-color: #286371; -fx-background-radius: 10px; -fx-spacing: 10px;">
         <children>
@@ -40,6 +43,7 @@
             </font></Button>
         </children>
     </VBox>
+
 
 
 </AnchorPane>

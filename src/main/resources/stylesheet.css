@@ -1,0 +1,74 @@
+.parent {
+    -fx-background-color: white;
+}
+
+/* Sidebar - Neon Gradient */
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #4A00E0, #8E2DE2, #FF007F);
+}
+
+/* Buttons */
+.forgetBtn {
+    -fx-text-fill: #6D6D6D;
+    -fx-font-weight: bold;
+}
+.forgetBtn:hover {
+    -fx-text-fill: #FF007F;
+}
+
+/* Login Button - Futuristic Neon */
+.loginBtn {
+    -fx-background-color: linear-gradient(to right, #8E2DE2, #4A00E0, #FF007F);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(142, 45, 226, 0.7), 10, 0, 0, 2);
+}
+.loginBtn:hover {
+    -fx-background-color: transparent;
+    -fx-text-fill: #FF007F;
+    -fx-border-color: #FF007F;
+    -fx-border-width: 2px;
+    -fx-border-radius: 8px;
+}
+
+/* Close Button */
+.closeBtn {
+    -fx-fill: #6D6D6D;
+}
+.closeBtn:hover {
+    -fx-fill: #FF4B4B;
+}
+
+/* File Selection Button - Gradient Glow */
+.ChooseFileBtn {
+    -fx-background-color: white;
+    -fx-border-color: linear-gradient(to right, #8E2DE2, #FF007F);
+    -fx-border-width: 2px;
+    -fx-border-radius: 6px;
+    -fx-text-fill: #8E2DE2;
+}
+.ChooseFileBtn:hover {
+    -fx-background-color: linear-gradient(to right, #FF007F, #4A00E0);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* Back Button */
+.backBtn {
+    -fx-fill: #6D6D6D;
+}
+.backBtn:hover {
+    -fx-fill: #FF007F;
+}
+
+/* Input Fields - Modern Borders */
+.codelb,
+.verificationCodeField,
+.confirmPasswordField {
+    -fx-background-color: white;
+    -fx-border-color: linear-gradient(to right, #FF007F, #8E2DE2);
+    -fx-border-width: 3px;
+    -fx-border-radius: 6px;
+    -fx-effect: dropshadow(gaussian, rgba(255, 0, 127, 0.6), 10, 0, 0, 2);
+}
