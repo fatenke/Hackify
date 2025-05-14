@@ -76,7 +76,7 @@ public class RegistrationUI implements Initializable {
         return signUpPane;
     }
     private UserService us = new UserService();
-
+    private File selectedPhotoFile = null;
 
     @FXML
     void chooseFile(ActionEvent event) {
@@ -87,6 +87,7 @@ public class RegistrationUI implements Initializable {
         );
         File selectedFile = fileChooser.showOpenDialog(userPhoto.getScene().getWindow());
         if (selectedFile != null) {
+            selectedPhotoFile = selectedFile;
             Image image = new Image(selectedFile.toURI().toString());
             userPhoto.setImage(image);
         }
@@ -134,7 +135,7 @@ public class RegistrationUI implements Initializable {
 
     private void addUserToDatabase() {
         try {
-            String photo = userPhoto.getImage() != null ? userPhoto.getImage().getUrl() : "";
+            String photo = selectedPhotoFile != null ? selectedPhotoFile.getAbsolutePath() : "";
             String nom = nomTF.getText();
             String prenom = prenomTF.getText();
             String email = emailTF.getText();

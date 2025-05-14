@@ -198,26 +198,51 @@ public class Dashboard implements Initializable {
     private void displayUsers() {
         try {
             feedbackContentContainer.getChildren().clear();
+            System.out.println("Total users to display: " + users.size());
+            
             for (User u : users) {
-                FXMLLoader fxmlLoader = new FXMLLoader();
-                fxmlLoader.setLocation(getClass().getResource("/usersDashboardItem.fxml"));
-                Parent root = fxmlLoader.load();
-                // userDashboardItem itemController = fxmlLoader.getController();
-                userDashboardItem itemController = fxmlLoader.getController();
-                itemController.setFeedBackData(u);
-                feedbackContentContainer.getChildren().add(root);
+                try {
+                    URL resource = getClass().getResource("/usersDashboardItem.fxml");
+                    if (resource == null) {
+                        System.err.println("Could not find usersDashboardItem.fxml");
+                        continue;
+                    }
+                    
+                    FXMLLoader fxmlLoader = new FXMLLoader(resource);
+                    Parent root = fxmlLoader.load();
+                    userDashboardItem itemController = fxmlLoader.getController();
+                    
+                    // Add user to the list regardless of photo
+                    itemController.setFeedBackData(u);
+                    feedbackContentContainer.getChildren().add(root);
+                    System.out.println("Added user: " + u.getNom());
+                    
+                } catch (Exception e) {
+                    System.err.println("Error loading user item for " + u.getNom() + ": " + e.getMessage());
+                    e.printStackTrace();
+                    // Continue with next user
+                    continue;
+                }
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }}
+        } catch (Exception e) {
+            System.err.println("Error displaying users: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     public void showAllUsers() throws SQLException {
-        UserService use = new UserService();
-        users = use.recuperer();
-        users = users.stream()
-                .filter(user -> !user.getRole().equals(UserRole.ADMIN))
-                .collect(Collectors.toList());
-        displayUsers();
+        try {
+            UserService use = new UserService();
+            users = use.recuperer();
+            users = users.stream()
+                    .filter(user -> !user.getRole().equals(UserRole.ADMIN))
+                    .collect(Collectors.toList());
+            System.out.println("Retrieved " + users.size() + " non-admin users");
+            displayUsers();
+        } catch (Exception e) {
+            System.err.println("Error in showAllUsers: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     @FXML
     private JFXTextField searchinput;

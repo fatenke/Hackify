@@ -13,8 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
@@ -22,7 +21,7 @@ import javafx.util.Duration;
 import models.Status;
 import models.User;
 import services.UserService;
-import controllers.Home;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -45,28 +44,47 @@ public class userDashboardItem implements Initializable {
     private User user;
 
     public void setFeedBackData(User user){
-        imageCircle.setFill(new ImagePattern(new Image(user.getPhoto().replace("\\","/"))));
+        // Set default circle fill color
+        imageCircle.setFill(Color.DODGERBLUE);
+        
+        // Try to load user photo if available
+        String photoPath = user.getPhoto();
+        if (photoPath != null && !photoPath.trim().isEmpty()) {
+            try {
+                // Try to load from file system
+                File photoFile = new File(photoPath);
+                if (photoFile.exists()) {
+                    Image img = new Image(photoFile.toURI().toString());
+                    if (!img.isError()) {
+                        imageCircle.setFill(new ImagePattern(img));
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("Could not load image for user " + user.getNom() + ": " + e.getMessage());
+                // Keep default color if image loading fails
+            }
+        }
+        
         fullNameLabel.setText(user.getNom());
         roleLabel.setText(user.getRole());
         this.user = user;
+        
         if(user.getStatus().equals(Status.ACTIVE)) {
             banButton.setText(" Ban user");
             statuslab.setText("ACTIVE");
             statuslab.setStyle("-fx-text-fill: green;");
-        }
-        else {
+        } else {
             banButton.setText(" Unban user");
             statuslab.setText("INACTIVE");
             statuslab.setStyle("-fx-text-fill: red;");
         }
-        banButton.setOnAction(event ->
-        {
+        
+        banButton.setOnAction(__ -> {
             try {
                 if(user.getStatus().equals(Status.ACTIVE)) {
                     banButton.setText(" Unban user");
                     statuslab.setText("INACTIVE");
                     statuslab.setStyle("-fx-text-fill: red;");
-
                 }
                 else {
                     banButton.setText(" Ban user");
