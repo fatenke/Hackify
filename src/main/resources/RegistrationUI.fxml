@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="signUpPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="752.0" prefWidth="400.0" styleClass="parent" stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.RegistrationUI">
+<AnchorPane fx:id="signUpPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="400.0" styleClass="parent" stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.RegistrationUI">
     <children>
         <ImageView fitHeight="150.0" fitWidth="150.0" layoutX="12.0" layoutY="24.0" pickOnBounds="true" smooth="false">
             <image>
@@ -28,39 +28,44 @@
             </font>
         </Label>
 <!--        <FontAwesomeIconView glyphName="CLOSE" layoutX="374.0" layoutY="27.0" onMouseClicked="#close_app" size="15" stroke="WHITE" styleClass="closeBtn" />-->
-        <JFXTextField fx:id="nomTF" focusColor="#4A00E0" labelFloat="true" layoutX="50.0" layoutY="210.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Enter Username *" stylesheets="@stylesheet.css" unFocusColor="#4A00E0">
+        <JFXTextField fx:id="nomTF" focusColor="#4A00E0" labelFloat="true" layoutX="50.0" layoutY="190.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Enter Last Name *" stylesheets="@stylesheet.css" unFocusColor="#4A00E0">
             <font>
                 <Font size="14.0" />
             </font>
         </JFXTextField>
-        <JFXTextField fx:id="emailTF" focusColor="#4A00E0" labelFloat="true" layoutX="50.0" layoutY="267.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Email *" stylesheets="@stylesheet.css" unFocusColor="#4A00E0">
+        <JFXTextField fx:id="prenomTF" focusColor="#4A00E0" labelFloat="true" layoutX="50.0" layoutY="240.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Enter First Name *" stylesheets="@stylesheet.css" unFocusColor="#4A00E0">
             <font>
                 <Font size="14.0" />
             </font>
         </JFXTextField>
-        <JFXTextField fx:id="telTF" focusColor="#4A00E0" labelFloat="true" layoutX="51.0" layoutY="325.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Phone Number *" stylesheets="@stylesheet.css" unFocusColor="#4A00E0">
+        <JFXTextField fx:id="emailTF" focusColor="#4A00E0" labelFloat="true" layoutX="50.0" layoutY="290.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Email *" stylesheets="@stylesheet.css" unFocusColor="#4A00E0">
             <font>
                 <Font size="14.0" />
             </font>
         </JFXTextField>
-        <JFXTextField fx:id="adressTF" focusColor="#4A00E0" labelFloat="true" layoutX="50.0" layoutY="383.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Adress *" stylesheets="@stylesheet.css" unFocusColor="#4A00E0">
+        <JFXTextField fx:id="telTF" focusColor="#4A00E0" labelFloat="true" layoutX="51.0" layoutY="340.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Phone Number *" stylesheets="@stylesheet.css" unFocusColor="#4A00E0">
             <font>
                 <Font size="14.0" />
             </font>
         </JFXTextField>
-        <JFXPasswordField fx:id="mdpPF" focusColor="#4A00E0" labelFloat="true" layoutX="50.0" layoutY="503.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Password *" stylesheets="@stylesheet.css" unFocusColor="#4A00E0">
+        <JFXTextField fx:id="adressTF" focusColor="#4A00E0" labelFloat="true" layoutX="50.0" layoutY="390.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Adress *" stylesheets="@stylesheet.css" unFocusColor="#4A00E0">
             <font>
                 <Font size="14.0" />
             </font>
-        </JFXPasswordField>
-        <JFXPasswordField fx:id="cmdpPF" focusColor="#4A00E0" labelFloat="true" layoutX="50.0" layoutY="568.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Confirm Password *" stylesheets="@stylesheet.css" unFocusColor="#4A00E0">
-            <font>
-                <Font size="14.0" />
-            </font>
-        </JFXPasswordField>
+        </JFXTextField>
         <JFXComboBox fx:id="roleCB" focusColor="#4A00E0" labelFloat="true" layoutX="50.0" layoutY="440.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Role *" unFocusColor="#4A00E0" />
-        <JFXButton fx:id="choosefileBT" layoutX="50.0" layoutY="647.0" onAction="#chooseFile" prefHeight="30.0" prefWidth="300.0" ripplerFill="#4A00E0" styleClass="ChooseFileBtn" text="Choose File" textFill="#4A00E0" />
-        <JFXButton buttonType="RAISED" layoutX="262.0" layoutY="686.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#AddUser" prefHeight="40.0" prefWidth="124.0" ripplerFill="#4A00E0" styleClass="loginBtn" stylesheets="@stylesheet.css" text="Register">
+        <JFXPasswordField fx:id="mdpPF" focusColor="#4A00E0" labelFloat="true" layoutX="50.0" layoutY="490.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Password *" stylesheets="@stylesheet.css" unFocusColor="#4A00E0">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </JFXPasswordField>
+        <JFXPasswordField fx:id="cmdpPF" focusColor="#4A00E0" labelFloat="true" layoutX="50.0" layoutY="540.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="300.0" promptText="Confirm Password *" stylesheets="@stylesheet.css" unFocusColor="#4A00E0">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </JFXPasswordField>
+        <JFXButton fx:id="choosefileBT" layoutX="50.0" layoutY="590.0" onAction="#chooseFile" prefHeight="30.0" prefWidth="300.0" ripplerFill="#4A00E0" styleClass="ChooseFileBtn" text="Choose File" textFill="#4A00E0" />
+        <JFXButton buttonType="RAISED" layoutX="262.0" layoutY="640.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#AddUser" prefHeight="40.0" prefWidth="124.0" ripplerFill="#4A00E0" styleClass="loginBtn" stylesheets="@stylesheet.css" text="Register">
             <font>
                 <Font name="System Bold" size="14.0" />
             </font>
@@ -120,6 +125,6 @@
          <font>
             <Font name="Ebrima" size="12.0" />
          </font></Label>
-      <Label layoutX="-24.0" layoutY="734.0" prefHeight="18.0" prefWidth="174.0" text="        HACKIFY App Version : 1.0.0 " />
+      <Label layoutX="-24.0" layoutY="770.0" prefHeight="18.0" prefWidth="174.0" text="        HACKIFY App Version : 1.0.0 " />
     </children>
 </AnchorPane>

@@ -16,6 +16,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import models.Status;
 import models.User;
+import models.UserRole;
 import services.UserService;
 
 import java.io.IOException;
@@ -72,7 +73,7 @@ public class Dashboard implements Initializable {
         try {
             List<User> users = ps.recuperer();
             users = users.stream()
-                    .filter(user -> !user.getRole().equals("ADMIN"))
+                    .filter(user -> !UserRole.ADMIN.equals(user.getRole()))
                     .collect(Collectors.toList());
             ObservableList<User> observableList = FXCollections.observableList(users);
             tableView.setItems(observableList);
@@ -214,7 +215,7 @@ public class Dashboard implements Initializable {
         UserService use = new UserService();
         users = use.recuperer();
         users = users.stream()
-                .filter(user -> !user.getRole().equals("ADMIN"))
+                .filter(user -> !user.getRole().equals(UserRole.ADMIN))
                 .collect(Collectors.toList());
         displayUsers();
     }

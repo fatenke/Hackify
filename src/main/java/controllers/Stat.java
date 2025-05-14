@@ -37,7 +37,7 @@ public class Stat implements Initializable {
 
         try {
 
-            String query = "SELECT COUNT(*), role_user FROM user WHERE role_user != 'ADMIN' GROUP BY role_user" ;
+            String query = "SELECT COUNT(*), role_user FROM user WHERE role_user != '[\"ROLE_ADMIN\"]' GROUP BY role_user" ;
 
             PreparedStatement PreparedStatement = cnx.prepareStatement(query);
             rs = PreparedStatement.executeQuery();
@@ -56,7 +56,7 @@ public class Stat implements Initializable {
 
         try {
 
-            String query = "SELECT COUNT(*), role_user FROM user WHERE role_user != 'ADMIN' GROUP BY role_user" ;
+            String query = "SELECT COUNT(*), role_user FROM user WHERE role_user != '[\"ROLE_ADMIN\"]' GROUP BY role_user" ;
 
             PreparedStatement PreparedStatement = cnx.prepareStatement(query);
             rs = PreparedStatement.executeQuery();

@@ -31,23 +31,24 @@ public class UserService implements IService <User>{
     @Override
     public void ajouter(User user) throws SQLException {
 
-        String req="INSERT INTO user (tel_user,nom_user,email_user,mdp_user,role_user,adresse_user,status_user,photo_user) VALUES ("+user.getTel()+",'"+user.getNom()+"','"+user.getEmail()+"','"+user.getMdp()+"','"+user.getRole()+"','"+user.getAdresse()+"','"+user.getStatus()+"','"+user.getPhoto()+"')";
+        String req="INSERT INTO user (tel_user,nom_user,prenom_user,email_user,mdp_user,role_user,adresse_user,status_user,photo_user) VALUES ("+user.getTel()+",'"+ user.getNom()+"','"+ user.getPrenom()+"','"+ user.getEmail()+"','"+ user.getMdp()+"','"+ user.getRole()+"','"+ user.getAdresse()+"','"+ user.getStatus()+"','"+ user.getPhoto()+"')";
         Statement st = connection.createStatement();
         st.executeUpdate(req);
         System.out.println("Ajoutée");
     }
     @Override
     public void modifier(User user) throws SQLException {
-        String req = "UPDATE user SET nom_user = ?,  adresse_user = ? , photo_user = ? , email_user = ? , tel_user = ?,status_user = ? WHERE id_user = ?";
+        String req = "UPDATE user SET nom_user = ?, prenom_user = ?, adresse_user = ? , photo_user = ? , email_user = ? , tel_user = ?,status_user = ? WHERE id_user = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(req);
             ps.setString(1, user.getNom());
-            ps.setString(2, user.getAdresse());
-            ps.setString(3, user.getPhoto());
-            ps.setString(4, user.getEmail());
-            ps.setInt(5, user.getTel());
-            ps.setString(6, user.getStatus().name());
-            ps.setInt(7, user.getId());
+            ps.setString(2, user.getPrenom());
+            ps.setString(3, user.getAdresse());
+            ps.setString(4, user.getPhoto());
+            ps.setString(5, user.getEmail());
+            ps.setInt(6, user.getTel());
+            ps.setString(7, user.getStatus().name());
+            ps.setInt(8, user.getId());
 
             System.out.println("Modifié");
             int rowsAffected = ps.executeUpdate();
@@ -79,6 +80,7 @@ public class UserService implements IService <User>{
             user.setId(rs.getInt("id_user"));
             user.setTel(rs.getInt("tel_user"));
             user.setNom(rs.getString("nom_user"));
+            user.setPrenom(rs.getString("prenom_user"));
             user.setEmail(rs.getString("email_user"));
             user.setMdp(rs.getString("mdp_user"));
             user.setRole(rs.getString("role_user"));
@@ -120,6 +122,7 @@ public class UserService implements IService <User>{
                                         resultSet.getInt("id_user"),
                                         resultSet.getInt("tel_user"),
                                         resultSet.getString("nom_user"),
+                                        resultSet.getString("prenom_user"),
                                         resultSet.getString("email_user"),
                                         resultSet.getString("mdp_user"),
                                         resultSet.getString("role_user"),
@@ -127,9 +130,7 @@ public class UserService implements IService <User>{
                                         Status.fromString(resultSet.getString("status_user")),
                                         resultSet.getString("photo_user")
                                 );
-                                    String messageBody = "Welcome back, " + user.getNom() + ".";
-                                //SmsSender.sendSms(String.valueOf(user.getTel()), messageBody);
-
+                                //SmsSender.sendSms(String.valueOf(user.getTel()), "Welcome back, " + user.getNom() + ".");
                                 return SessionManager.createSession(user);
                             } else {
 
@@ -221,7 +222,7 @@ public class UserService implements IService <User>{
             ResultSet rs = st.executeQuery(query);
             while (rs.next()) {
 
-                t = new User(rs.getInt("id_user"), rs.getInt("tel_user"), rs.getString("nom_user"), rs.getString("email_user"),
+                t = new User(rs.getInt("id_user"), rs.getInt("tel_user"), rs.getString("nom_user"), rs.getString("prenom_user"), rs.getString("email_user"),
                         rs.getString("mdp_user"), rs.getString("role_user"), rs.getString("adresse_user"), Status.valueOf(rs.getString("status_user").toUpperCase()),
                         rs.getString("photo_user"));
             }

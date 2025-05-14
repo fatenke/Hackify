@@ -3,6 +3,7 @@ package controllers;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
+import models.UserRole;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -10,7 +11,6 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import models.Role;
 import models.User;
 import services.UserService;
 
@@ -48,12 +48,11 @@ public class Welcome {
         try {
             User user = UserService.getUserFromSession(sessionId); // Assuming you have a method like this in your UserService class
             if (user != null) {
-                Role userRole = Role.valueOf(user.getRole());
-                String username = user.getNom(); // Assuming this is the username
+                String userRole = user.getRole();
 
-                if (userRole != Role.ADMIN) {
-
-
+                // Check if user is admin
+                if (!UserRole.ADMIN.equals(userRole)) {
+                    // Load the dashboard for non-admin users
                     System.out.println("User role: " + userRole);
                     Parent root = FXMLLoader.load(getClass().getResource("/Home.fxml"));
                     Stage homeStage = new Stage();
@@ -82,7 +81,7 @@ public class Welcome {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("Dashboard.fxml"));
                 Parent root;
 
-                if (Role.ADMIN.equals(Role.valueOf(user.getRole()))) {
+                if (UserRole.ADMIN.equals(user.getRole())) {
                     root = loader.load();
                     Dashboard controller = loader.getController();
 

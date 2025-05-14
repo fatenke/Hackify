@@ -1,18 +1,13 @@
 package controllers;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXTextField;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -21,24 +16,11 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.util.Duration;
-import models.Role;
-import models.Status;
 import models.User;
-import services.UserService;
 import utils.SessionManager;
 
-import javax.mail.internet.*;
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
 import java.util.ResourceBundle;
 
 public class Dash implements Initializable {
@@ -73,15 +55,30 @@ public class Dash implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-
-
         makeStageDrageable();
         User loggedInUser = SessionManager.getSession(SessionManager.getLastSessionId());
-        profileImg.setFill(new ImagePattern(new Image(loggedInUser.getPhoto())));
+        
+        // Set user name
         dashusername.setText(loggedInUser.getNom());
+        
+        // Try to load profile image
+        String photoUrl = loggedInUser.getPhoto();
+        if (photoUrl != null && !photoUrl.isEmpty()) {
+            try {
+                // Try to load from absolute path first
+                Image img = new Image("file:" + photoUrl);
+                if (img.isError()) {
+                    // If that fails, try as a resource
+                    img = new Image(getClass().getResource("/" + photoUrl).toExternalForm());
+                }
+                profileImg.setFill(new ImagePattern(img));
+            } catch (Exception e) {
+                System.out.println("Could not load profile image: " + e.getMessage());
+                // Set a default image or leave as is
+            }
+        }
+        
         okba.setVisible(true);
-
     }
     @FXML
     private void btn_list_view(ActionEvent event) throws IOException {

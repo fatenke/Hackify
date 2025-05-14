@@ -3,6 +3,7 @@ package models;
 public class User {
     private int id,tel;
     private String nom;
+    private String prenom;
     private String email;
     private String mdp;
     private String role;
@@ -14,10 +15,11 @@ public class User {
     public User() {
 
     }
-    public User(int id, int tel, String nom, String email, String mdp, String role, String adresse, Status status, String photo) {
+    public User(int id, int tel, String nom, String prenom, String email, String mdp, String role, String adresse, Status status, String photo) {
         this.id = id;
         this.tel = tel;
         this.nom = nom;
+        this.prenom = prenom;
         this.email = email;
         this.mdp = mdp;
         this.role = role;
@@ -26,31 +28,35 @@ public class User {
         this.status = status;
     }
 
-    public User(int tel, String nom, String email, String mdp, String role, String adresse,Status status, String photo) {
+    public User(int tel, String nom, String prenom, String email, String mdp, String role, String adresse, Status status, String photo) {
         this.tel = tel;
         this.nom = nom;
+        this.prenom = prenom;
         this.email = email;
         this.mdp = mdp;
         this.role = role;
         this.adresse = adresse;
+        this.status = status;
         this.photo = photo;
     }
 
 
-    public User(int id, int tel, String nom, String email, String mdp, String adresse, String photo) {
+    public User(int id, int tel, String nom, String prenom, String email, String mdp, String adresse, String photo) {
         this.id = id;
         this.tel = tel;
         this.nom = nom;
+        this.prenom = prenom;
         this.email = email;
         this.mdp = mdp;
         this.adresse = adresse;
         this.photo = photo;
     }
 
-    public User(int id,int tel, String nom, String email, String adresse, String photo) {
+    public User(int id, int tel, String nom, String prenom, String email, String adresse, String photo) {
         this.id = id;
         this.tel = tel;
         this.nom = nom;
+        this.prenom = prenom;
         this.email = email;
         this.adresse = adresse;
         this.photo = photo;
@@ -93,6 +99,14 @@ public class User {
 
     public void setNom(String nom) {
         this.nom = nom;
+    }
+
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
     }
 
     public String getEmail() {
@@ -141,6 +155,7 @@ public class User {
                 "id=" + id +
                 ", tel=" + tel +
                 ", nom='" + nom + '\'' +
+                ", prenom='" + prenom + '\'' +
                 ", email='" + email + '\'' +
                 ", mdp='" + mdp + '\'' +
                 ", role='" + role + '\'' +

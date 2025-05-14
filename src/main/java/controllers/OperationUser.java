@@ -9,18 +9,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.text.Text;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import models.Status;
 import models.User;
 import services.UserService;
-import utils.PasswordHasher;
 import utils.SessionManager;
 
 import java.io.File;
@@ -166,7 +163,7 @@ public class OperationUser implements Initializable {
                 System.out.println("User ID: " + id);
                 us.supprimer(id);
                 doneEditCourse.setVisible(true);
-                Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1500), e -> doneEditCourse.setVisible(false)));
+                Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1500), __ -> doneEditCourse.setVisible(false)));
                 timeline.setCycleCount(1);
                 timeline.play();
                 FXMLLoader fxmlLoader = new FXMLLoader(Home.class.getResource("/MainUI.fxml"));
@@ -193,7 +190,6 @@ public class OperationUser implements Initializable {
 
 
     }
-    private String photo;
     @FXML
     public void editUserButton(ActionEvent event) throws SQLException, NoSuchAlgorithmException {
         User loggedInUser = SessionManager.getSession(SessionManager.getLastSessionId());
@@ -209,7 +205,7 @@ public class OperationUser implements Initializable {
 
         UserService serv = new UserService();
 
-        User editeduser = new User(id, tel, nom, email, adresse, photo);
+        User editeduser = new User(id, tel, nom, "", email, adresse, photo);
         System.out.println( "photo : " + photo);
         serv.modifier(editeduser);
         showUserDetails(editeduser);
