@@ -3,8 +3,6 @@ package controllers;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXPasswordField;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,15 +12,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ResourceBundle;
 
 import com.jfoenix.controls.JFXTextField;
@@ -31,11 +26,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-import javafx.util.StringConverter;
-import models.Role;
 import models.Status;
 import models.User;
+import models.UserRole;
 import services.UserService;
 import util.PasswordHasher;
 
@@ -56,6 +49,8 @@ public class RegistrationUI implements Initializable {
     private JFXPasswordField mdpPF;
     @FXML
     private JFXTextField nomTF;
+    @FXML
+    private JFXTextField prenomTF;
     @FXML
     private AnchorPane pane;
     @FXML
@@ -103,7 +98,7 @@ public class RegistrationUI implements Initializable {
         String password = mdpPF.getText();
         String confirmPassword = cmdpPF.getText();
 
-        if (!nomTF.getText().isEmpty() && !emailTF.getText().isEmpty() && roleCB.getValue() != null &&
+        if (!nomTF.getText().isEmpty() && !prenomTF.getText().isEmpty() && !emailTF.getText().isEmpty() && roleCB.getValue() != null &&
                 !telTF.getText().isEmpty() && !adressTF.getText().isEmpty() && !mdpPF.getText().isEmpty() && !cmdpPF.getText().isEmpty()) {
 
             if (!emailTF.getText().matches(emailPattern)) {
@@ -130,28 +125,26 @@ public class RegistrationUI implements Initializable {
                 return false;
             }
             registrationlabel.setText("");
-
-            addUserToDatabase();
+            return true;
         } else {
             registrationlabel.setText("Please fill all necessary fields ");
+            return false;
         }
-        return false;
-        }
+    }
 
     private void addUserToDatabase() {
         try {
-
-            String photo = userPhoto.getImage().getUrl();
+            String photo = userPhoto.getImage() != null ? userPhoto.getImage().getUrl() : "";
             String nom = nomTF.getText();
+            String prenom = prenomTF.getText();
             String email = emailTF.getText();
             int tel = Integer.parseInt(telTF.getText());
             String address = adressTF.getText();
-            Status status= Status.ACTIVE;
+            Status status = Status.ACTIVE;
             String hashedPassword = PasswordHasher.hashPassword(mdpPF.getText());
-            String role = roleCB.getValue();
+            String role = roleCB.getValue(); // Get role exactly as selected
 
-
-            User user = new User(tel, nom, email, hashedPassword, role, address,status, photo);
+            User user = new User(tel, nom, prenom, email, hashedPassword, role, address, status, photo);
             ps.ajouter(user);
             clearFields();
             registrationlabel.setText("Successfully registered");
@@ -160,16 +153,18 @@ public class RegistrationUI implements Initializable {
             alert.setHeaderText(null);
             alert.setContentText("User registered successfully.");
             alert.showAndWait();
-            Parent root = FXMLLoader.load(getClass().getResource("/MainUi.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/MainUI.fxml"));
             emailTF.getScene().setRoot(root);
         } catch (Exception e) {
-            registrationlabel.setText("Choose photo");
+            registrationlabel.setText("Registration failed: " + e.getMessage());
+            e.printStackTrace();
         }
     }
     @FXML
     void AddUser(ActionEvent event) throws IOException {
-       validateFields();
-
+        if (validateFields()) {
+            addUserToDatabase();
+        }
     }
     @FXML
     private void close_app(MouseEvent event) {
@@ -183,10 +178,10 @@ public class RegistrationUI implements Initializable {
 
 
     public void selectRole(ObservableList<String> list) {
-        list.add(Role.ORGANISATEUR.toString());
-        list.add(Role.COACH.toString());
-        list.add(Role.JURY.toString());
-        list.add(Role.PARTICIPANT.toString());
+        list.add(UserRole.PARTICIPANT);
+        list.add(UserRole.JURY);
+        list.add(UserRole.COACH);
+        list.add(UserRole.ORGANISATEUR);
     }
     @FXML
     private void reduceWindow(MouseEvent event) {
@@ -198,6 +193,7 @@ public class RegistrationUI implements Initializable {
 
     private void clearFields() {
         nomTF.clear();
+        prenomTF.clear();
         emailTF.clear();
         telTF.clear();
         adressTF.clear();
@@ -211,9 +207,8 @@ public class RegistrationUI implements Initializable {
         selectRole(list);
         roleCB.setItems(list);
 
-        nomTF.textProperty().addListener((observable, oldValue, newValue) -> validateFields());
-        emailTF.textProperty().addListener((observable, oldValue, newValue) -> validateFields());
-        telTF.textProperty().addListener((observable, oldValue, newValue) -> {
+        // Only validate phone number format while typing
+        telTF.textProperty().addListener((__, ___, newValue) -> {
             if (!newValue.matches("\\d*")) {
                 telTF.setText(newValue.replaceAll("[^\\d]", ""));
             }
@@ -223,10 +218,5 @@ public class RegistrationUI implements Initializable {
                 telTF.setText(limitedText);
             }
         });
-        adressTF.textProperty().addListener((observable, oldValue, newValue) -> validateFields());
-        mdpPF.textProperty().addListener((observable, oldValue, newValue) -> validateFields());
-        cmdpPF.textProperty().addListener((observable, oldValue, newValue) -> validateFields());
-        roleCB.valueProperty().addListener((observable, oldValue, newValue) -> validateFields());
     }
-
-    }
+}

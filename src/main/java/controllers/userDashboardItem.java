@@ -44,38 +44,40 @@ public class userDashboardItem implements Initializable {
     private Label statuslab;
     private User user;
 
-    public void setFeedBackData(User user) {
-        if (user == null) {
-            return;
-        }
+    public void setFeedBackData(User user){
+        imageCircle.setFill(new ImagePattern(new Image(user.getPhoto().replace("\\","/"))));
+        fullNameLabel.setText(user.getNom());
+        roleLabel.setText(user.getRole());
         this.user = user;
-        
-        // Set user photo with error handling
-        try {
-            String photoPath = user.getPhoto();
-            if (photoPath != null && !photoPath.isEmpty()) {
-                photoPath = photoPath.replace("\\", "/");
-                Image image = new Image(photoPath, false);
-                imageCircle.setFill(new ImagePattern(image));
-            } else {
-                // Set a default image or placeholder
-                imageCircle.setFill(javafx.scene.paint.Color.LIGHTGRAY);
-            }
-        } catch (Exception e) {
-            System.err.println("Error loading user photo: " + e.getMessage());
-            imageCircle.setFill(javafx.scene.paint.Color.LIGHTGRAY);
+        if(user.getStatus().equals(Status.ACTIVE)) {
+            banButton.setText(" Ban user");
+            statuslab.setText("ACTIVE");
+            statuslab.setStyle("-fx-text-fill: green;");
         }
+        else {
+            banButton.setText(" Unban user");
+            statuslab.setText("INACTIVE");
+            statuslab.setStyle("-fx-text-fill: red;");
+        }
+        banButton.setOnAction(event ->
+        {
+            try {
+                if(user.getStatus().equals(Status.ACTIVE)) {
+                    banButton.setText(" Unban user");
+                    statuslab.setText("INACTIVE");
+                    statuslab.setStyle("-fx-text-fill: red;");
 
-        // Set user information with null checks
-        fullNameLabel.setText(user.getNom() != null ? user.getNom() : "N/A");
-        roleLabel.setText(user.getRole() != null ? user.getRole() : "User");
-        
-        // Handle status and button state
-        Status userStatus = user.getStatus() != null ? user.getStatus() : Status.ACTIVE;
-        updateStatusDisplay(userStatus);
-        
-        // Set up ban button action
-        banButton.setOnAction(event -> handleBanAction());
+                }
+                else {
+                    banButton.setText(" Ban user");
+                    statuslab.setText("ACTIVE");
+                    statuslab.setStyle("-fx-text-fill: green;");
+                }
+                banUser();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
 
 
@@ -95,46 +97,30 @@ public class userDashboardItem implements Initializable {
 
 
     }
-    private void updateStatusDisplay(Status status) {
-        boolean isActive = status == Status.ACTIVE;
-        banButton.setText(isActive ? " Ban user" : " Unban user");
-        statuslab.setText(isActive ? "ACTIVE" : "INACTIVE");
-        statuslab.setStyle("-fx-text-fill: " + (isActive ? "green" : "red") + ";");
-    }
-
-    private void showActionFeedback() {
-        doneAction.setVisible(true);
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1500), e -> doneAction.setVisible(false)));
-        timeline.setCycleCount(1);
-        timeline.play();
-    }
-
-    private void handleBanAction() {
-        try {
-            if (user == null) return;
-            Status newStatus = user.getStatus() == Status.ACTIVE ? Status.INACTIVE : Status.ACTIVE;
-            user.setStatus(newStatus);
-            updateStatusDisplay(newStatus);
-            banUser();
-        } catch (SQLException e) {
-            System.err.println("Error updating user status: " + e.getMessage());
-            // Revert UI changes if the database update failed
-            updateStatusDisplay(user.getStatus());
-        }
-    }
-
     @FXML
-    private void banUser() throws SQLException {
-        if (user == null) return;
-        
-        try {
-            UserService usr = new UserService();
+    public void banUser() throws SQLException {
+
+        UserService usr = new UserService();
+        Status currentUserState = user.getStatus();
+
+        if (currentUserState.equals(Status.ACTIVE)) {
+            // User is currently active, so ban the user
+            user.setStatus(Status.INACTIVE);
             usr.modifier(user);
-            showActionFeedback();
-            System.out.println("User " + (user.getStatus() == Status.ACTIVE ? "unbanned" : "banned"));
-        } catch (SQLException e) {
-            System.err.println("Database error while updating user status: " + e.getMessage());
-            throw e; // Re-throw to be handled by caller
+            doneAction.setVisible(true);
+            Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1500), e -> doneAction.setVisible(false)));
+            timeline.setCycleCount(1);
+            timeline.play();
+            System.out.println("User banned");
+        } else {
+            // User is currently banned, so unban the user
+            user.setStatus(Status.ACTIVE);
+            usr.modifier(user);
+            doneAction.setVisible(true);
+            Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1500), e -> doneAction.setVisible(false)));
+            timeline.setCycleCount(1);
+            timeline.play();
+            System.out.println("User unbanned");
         }
 
     }

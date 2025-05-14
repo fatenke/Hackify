@@ -122,7 +122,7 @@ public class SignIn implements Initializable {
             alert.showAndWait();
             return;
         }
-        String sessionId = ps.authenticateUser(usernameField.getText(), password);
+        String sessionId = ps.authenticateUser(username, password);
         User user = ps.getUserFromSession(sessionId);
         if (UserService.blocked==true) {
 

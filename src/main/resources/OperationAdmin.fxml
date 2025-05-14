@@ -20,13 +20,13 @@
         <AnchorPane fx:id="coursesDetailsContainer" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="1113.0" styleClass="courses-details-container" stylesheets="@coursesMainPage.css">
             <children>
                 <Button layoutX="69.0" layoutY="27.0" mnemonicParsing="false" onAction="#goBack" prefHeight="43.0" prefWidth="127.0" styleClass="go-back-course-btn" stylesheets="@addNewUser.css" text="Go Back">
-<!--                    <graphic>-->
-<!--                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">-->
-<!--                            <image>-->
-<!--                                <Image url="@" />-->
-<!--                            </image>-->
-<!--                        </ImageView>-->
-<!--                    </graphic>-->
+                    <!--                    <graphic>-->
+                    <!--                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">-->
+                    <!--                            <image>-->
+                    <!--                                <Image url="@" />-->
+                    <!--                            </image>-->
+                    <!--                        </ImageView>-->
+                    <!--                    </graphic>-->
                 </Button>
                 <Label alignment="CENTER" layoutX="515.0" layoutY="24.0" styleClass="title-form" stylesheets="@addNewUser.css" text="User Profile" />
                 <Pane layoutX="49.0" layoutY="117.0" prefHeight="406.0" prefWidth="800.0" styleClass="left-menu-container" stylesheets="@styleEye.css">
@@ -39,25 +39,25 @@
                                             <opaqueInsets>
                                                 <Insets />
                                             </opaqueInsets>
-                                 <children>
-                                              <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="71.0" prefWidth="708.0" spacing="50.0" styleClass="left-menu-container" stylesheets="@styleEye.css">
-                                                  <opaqueInsets>
-                                                      <Insets />
-                                                  </opaqueInsets>
-                                                  <children>
-                                                      <Label styleClass="label-details" stylesheets="@coursesMainPage.css" text="Name :">
-                                                          <HBox.margin>
-                                                              <Insets left="20.0" />
-                                                          </HBox.margin>
-                                                      </Label>
-                                                      <Text fx:id="firstNameLabelDetail" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label-data" text="foulen" translateX="5.0" wrappingWidth="147.90155029296875">
-                                                          <HBox.margin>
-                                                              <Insets left="78.0" />
-                                                          </HBox.margin>
-                                                      </Text>
-                                                  </children>
-                                              </HBox>
-                                 </children>
+                                            <children>
+                                                <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="71.0" prefWidth="708.0" spacing="50.0" styleClass="left-menu-container" stylesheets="@styleEye.css">
+                                                    <opaqueInsets>
+                                                        <Insets />
+                                                    </opaqueInsets>
+                                                    <children>
+                                                        <Label styleClass="label-details" stylesheets="@coursesMainPage.css" text="Name :">
+                                                            <HBox.margin>
+                                                                <Insets left="20.0" />
+                                                            </HBox.margin>
+                                                        </Label>
+                                                        <Text fx:id="firstNameLabelDetail" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label-data" text="foulen" translateX="5.0" wrappingWidth="147.90155029296875">
+                                                            <HBox.margin>
+                                                                <Insets left="78.0" />
+                                                            </HBox.margin>
+                                                        </Text>
+                                                    </children>
+                                                </HBox>
+                                            </children>
                                         </HBox>
                                         <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="71.0" prefWidth="708.0" spacing="50.0" styleClass="left-menu-container" stylesheets="@styleEye.css">
                                             <opaqueInsets>
@@ -110,23 +110,23 @@
                                                 </Text>
                                             </children>
                                         </HBox>
-                              <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="71.0" prefWidth="708.0" spacing="50.0" styleClass="left-menu-container" stylesheets="@styleEye.css">
-                                 <opaqueInsets>
-                                    <Insets />
-                                 </opaqueInsets>
-                                 <children>
-                                    <Label styleClass="label-details" stylesheets="@coursesMainPage.css" text="Role :">
-                                       <HBox.margin>
-                                          <Insets left="20.0" />
-                                       </HBox.margin>
-                                    </Label>
-                                    <Text fx:id="Adminlabel" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label-data" text="ADMIN" translateX="95.0">
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </Text>
-                                 </children>
-                              </HBox>
+                                        <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="71.0" prefWidth="708.0" spacing="50.0" styleClass="left-menu-container" stylesheets="@styleEye.css">
+                                            <opaqueInsets>
+                                                <Insets />
+                                            </opaqueInsets>
+                                            <children>
+                                                <Label styleClass="label-details" stylesheets="@coursesMainPage.css" text="Role :">
+                                                    <HBox.margin>
+                                                        <Insets left="20.0" />
+                                                    </HBox.margin>
+                                                </Label>
+                                                <Text fx:id="Adminlabel" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label-data" text="ADMIN" translateX="95.0">
+                                                    <HBox.margin>
+                                                        <Insets />
+                                                    </HBox.margin>
+                                                </Text>
+                                            </children>
+                                        </HBox>
                                     </children>
                                 </VBox>
                             </content>
@@ -134,18 +134,18 @@
                     </children>
                 </Pane>
                 <AnchorPane fx:id="warningDeleteCourseContainer" layoutX="357.0" layoutY="156.0" prefHeight="359.0" prefWidth="492.0" styleClass="delete-warning-container" stylesheets="@coursesMainPage.css" visible="false">
-<!--                    onDragDetected="#deleteCourseBtnClicked"-->
+                    <!--                    onDragDetected="#deleteCourseBtnClicked"-->
                     <children>
                         <Line endX="271.13330078125" layoutX="198.0" layoutY="41.0" startX="-180.066650390625" stroke="RED" />
                         <Label layoutX="186.0" layoutY="4.0" styleClass="warning-delete-label" stylesheets="@coursesMainPage.css" text="Warning !" />
                         <Button layoutX="423.0" layoutY="-1.0" mnemonicParsing="false" styleClass="Details-button" stylesheets="@button.css">
-<!--                            <graphic>-->
-<!--                                <ImageView fx:id="closeWarningPassword" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">-->
-<!--                                    <image>-->
-<!--                                        <Image url="@../../icons/dark/close-circle-filll.png" />-->
-<!--                                    </image>-->
-<!--                                </ImageView>-->
-<!--                            </graphic>-->
+                            <!--                            <graphic>-->
+                            <!--                                <ImageView fx:id="closeWarningPassword" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">-->
+                            <!--                                    <image>-->
+                            <!--                                        <Image url="@../../icons/dark/close-circle-filll.png" />-->
+                            <!--                                    </image>-->
+                            <!--                                </ImageView>-->
+                            <!--                            </graphic>-->
                         </Button>
                         <Text layoutX="62.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="warning-delete-text" text="Are you sure you want to delete this User?" textAlignment="CENTER" wrappingWidth="394.8240966796875" />
                         <Button fx:id="confirmDeleteCourseBtn" layoutX="254.0" layoutY="274.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="188.0" styleClass="confirm-delete-course-btn" stylesheets="@coursesMainPage.css" text="Confirm" />
@@ -310,13 +310,13 @@
                     </opaqueInsets>
                 </VBox>
                 <Button fx:id="goBackCourseBtnEdit" layoutX="45.0" layoutY="41.0" mnemonicParsing="false" onAction="#goBack" prefHeight="43.0" prefWidth="127.0" styleClass="go-back-course-btn" stylesheets="@addNewUser.css" text="Go Back">
-<!--                    <graphic>-->
-<!--                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">-->
-<!--                            <image>-->
-<!--                                <Image url="@../../icons/light/arrow-left-line.png" />-->
-<!--                            </image>-->
-<!--                        </ImageView>-->
-<!--                    </graphic>-->
+                    <!--                    <graphic>-->
+                    <!--                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">-->
+                    <!--                            <image>-->
+                    <!--                                <Image url="@../../icons/light/arrow-left-line.png" />-->
+                    <!--                            </image>-->
+                    <!--                        </ImageView>-->
+                    <!--                    </graphic>-->
                 </Button>
                 <Button fx:id="editimgbutton" layoutX="987.0" layoutY="155.0" mnemonicParsing="false" prefHeight="56.0" prefWidth="160.0" styleClass="choose-img_btn" stylesheets="@addNewUser.css" text="Choose image">
                     <font>

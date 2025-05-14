@@ -9,18 +9,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.text.Text;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import models.Status;
 import models.User;
 import services.UserService;
-import util.PasswordHasher;
 import util.SessionManager;
 
 import java.io.File;
@@ -126,9 +123,9 @@ public class OperationUser implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-                coursesDetailsContainer.setVisible(true);
+        coursesDetailsContainer.setVisible(true);
         warningDeleteCourseContainer.setVisible(false);
-      editanchorpane.setVisible(false);
+        editanchorpane.setVisible(false);
 
     }
 
@@ -159,25 +156,25 @@ public class OperationUser implements Initializable {
     public void confirmDeleteUser(ActionEvent event) throws IOException, SQLException, NoSuchAlgorithmException {
         UserService us = new UserService();
 
-            try {
-                User loggedInUser = SessionManager.getSession(SessionManager.getLastSessionId());
-                int id = loggedInUser.getId();
+        try {
+            User loggedInUser = SessionManager.getSession(SessionManager.getLastSessionId());
+            int id = loggedInUser.getId();
 
-                System.out.println("User ID: " + id);
-                us.supprimer(id);
-                doneEditCourse.setVisible(true);
-                Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1500), e -> doneEditCourse.setVisible(false)));
-                timeline.setCycleCount(1);
-                timeline.play();
-                FXMLLoader fxmlLoader = new FXMLLoader(Home.class.getResource("/MainUI.fxml"));
-                Scene scene = new Scene(fxmlLoader.load(), 800, 751);
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                stage.setScene(scene);
-                stage.show();
-            } catch (NumberFormatException e) {
-                System.err.println("Error parsing user ID: " + e.getMessage());
-            }
+            System.out.println("User ID: " + id);
+            us.supprimer(id);
+            doneEditCourse.setVisible(true);
+            Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1500), __ -> doneEditCourse.setVisible(false)));
+            timeline.setCycleCount(1);
+            timeline.play();
+            FXMLLoader fxmlLoader = new FXMLLoader(Home.class.getResource("/MainUI.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 800, 751);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (NumberFormatException e) {
+            System.err.println("Error parsing user ID: " + e.getMessage());
         }
+    }
 
 
 
@@ -193,7 +190,6 @@ public class OperationUser implements Initializable {
 
 
     }
-    private String photo;
     @FXML
     public void editUserButton(ActionEvent event) throws SQLException, NoSuchAlgorithmException {
         User loggedInUser = SessionManager.getSession(SessionManager.getLastSessionId());
@@ -203,13 +199,13 @@ public class OperationUser implements Initializable {
         String adresse = editadresseuser.getText();
         int tel = Integer.parseInt(editnumberuser.getText());
 
-      String photo = editimguser.getImage().getUrl();
+        String photo = editimguser.getImage().getUrl();
 
         //String tof  = loggedInUser.getPhoto();
 
         UserService serv = new UserService();
 
-        User editeduser = new User(id, tel, nom, email, adresse, photo);
+        User editeduser = new User(id, tel, nom, "", email, adresse, photo);
         System.out.println( "photo : " + photo);
         serv.modifier(editeduser);
         showUserDetails(editeduser);

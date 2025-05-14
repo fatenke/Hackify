@@ -1,5 +1,7 @@
 package services;
 
+
+
 import Interfaces.IService;
 import controllers.SmsSender;
 import models.Status;
@@ -30,23 +32,24 @@ public class UserService implements IService<User> {
     @Override
     public void ajouter(User user) throws SQLException {
 
-        String req="INSERT INTO user (tel_user,nom_user,email_user,mdp_user,role_user,adresse_user,status_user,photo_user) VALUES ("+user.getTel()+",'"+user.getNom()+"','"+user.getEmail()+"','"+user.getMdp()+"','"+user.getRole()+"','"+user.getAdresse()+"','"+user.getStatus()+"','"+user.getPhoto()+"')";
+        String req="INSERT INTO user (tel_user,nom_user,prenom_user,email_user,mdp_user,role_user,adresse_user,status_user,photo_user) VALUES ("+user.getTel()+",'"+ user.getNom()+"','"+ user.getPrenom()+"','"+ user.getEmail()+"','"+ user.getMdp()+"','"+ user.getRole()+"','"+ user.getAdresse()+"','"+ user.getStatus()+"','"+ user.getPhoto()+"')";
         Statement st = connection.createStatement();
         st.executeUpdate(req);
         System.out.println("Ajoutée");
     }
     @Override
     public void modifier(User user) throws SQLException {
-        String req = "UPDATE user SET nom_user = ?,  adresse_user = ? , photo_user = ? , email_user = ? , tel_user = ?,status_user = ? WHERE id_user = ?";
+        String req = "UPDATE user SET nom_user = ?, prenom_user = ?, adresse_user = ? , photo_user = ? , email_user = ? , tel_user = ?,status_user = ? WHERE id_user = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(req);
             ps.setString(1, user.getNom());
-            ps.setString(2, user.getAdresse());
-            ps.setString(3, user.getPhoto());
-            ps.setString(4, user.getEmail());
-            ps.setInt(5, user.getTel());
-            ps.setString(6, user.getStatus().name());
-            ps.setInt(7, user.getId());
+            ps.setString(2, user.getPrenom());
+            ps.setString(3, user.getAdresse());
+            ps.setString(4, user.getPhoto());
+            ps.setString(5, user.getEmail());
+            ps.setInt(6, user.getTel());
+            ps.setString(7, user.getStatus().name());
+            ps.setInt(8, user.getId());
 
             System.out.println("Modifié");
             int rowsAffected = ps.executeUpdate();
@@ -78,6 +81,7 @@ public class UserService implements IService<User> {
             user.setId(rs.getInt("id_user"));
             user.setTel(rs.getInt("tel_user"));
             user.setNom(rs.getString("nom_user"));
+            user.setPrenom(rs.getString("prenom_user"));
             user.setEmail(rs.getString("email_user"));
             user.setMdp(rs.getString("mdp_user"));
             user.setRole(rs.getString("role_user"));
@@ -119,6 +123,7 @@ public class UserService implements IService<User> {
                                         resultSet.getInt("id_user"),
                                         resultSet.getInt("tel_user"),
                                         resultSet.getString("nom_user"),
+                                        resultSet.getString("prenom_user"),
                                         resultSet.getString("email_user"),
                                         resultSet.getString("mdp_user"),
                                         resultSet.getString("role_user"),
@@ -126,18 +131,13 @@ public class UserService implements IService<User> {
                                         Status.fromString(resultSet.getString("status_user")),
                                         resultSet.getString("photo_user")
                                 );
-                                String messageBody = "Welcome back, " + user.getNom() + ".";
-                                //SmsSender.sendSms(String.valueOf(user.getTel()), messageBody);
-
+                                //SmsSender.sendSms(String.valueOf(user.getTel()), "Welcome back, " + user.getNom() + ".");
                                 return SessionManager.createSession(user);
                             } else {
+
                                 String messageBody = "Your account has been blocked, please contact us for more information :" + "evh0hve@gmail.com .";
-                                try {
-                                    SmsSender.sendSms("55420690", messageBody);
-                                } catch (IOException e) {
-                                    System.err.println("Failed to send SMS: " + e.getMessage());
-                                }
-                                blocked = true;
+                                SmsSender.sendSms("55420690", messageBody);
+                                blocked=true;
                             }
                         } else {
                             // Passwords don't match
@@ -147,19 +147,12 @@ public class UserService implements IService<User> {
                         // No user found with the given email
                         System.out.println("User not found.");
                     }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
             }
         } catch (SQLException | NoSuchAlgorithmException e) {
-            System.err.println("Error during authentication: " + e.getMessage());
             e.printStackTrace();
-        } finally {
-            try {
-                if (connection != null && connection.isClosed()) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                System.err.println("Error closing connection: " + e.getMessage());
-            }
         }
         return null;
     }
@@ -167,6 +160,7 @@ public class UserService implements IService<User> {
     public static User getUserFromSession(String sessionId) {
         System.out.println(sessionId);
         return SessionManager.getSession(sessionId);
+
     }
 
     public static boolean doesEmailExist(String email) {
@@ -181,21 +175,25 @@ public class UserService implements IService<User> {
             statement.setString(1, email);
             resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                return resultSet.getInt("count") > 0;
+                int count = resultSet.getInt("count");
+                return count > 0;
             }
-            return false;
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         } finally {
+
             try {
-                if (resultSet != null) resultSet.close();
-                if (statement != null) statement.close();
-                if (connection != null) connection.close();
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
+        return false;
     }
 
     public boolean checkEmailExists(String email) {
@@ -211,6 +209,7 @@ public class UserService implements IService<User> {
         } catch (SQLException ex) {
             System.err.println(ex.getMessage());
         }
+
         return result;
     }
 
@@ -224,7 +223,7 @@ public class UserService implements IService<User> {
             ResultSet rs = st.executeQuery(query);
             while (rs.next()) {
 
-                t = new User(rs.getInt("id_user"), rs.getInt("tel_user"), rs.getString("nom_user"), rs.getString("email_user"),
+                t = new User(rs.getInt("id_user"), rs.getInt("tel_user"), rs.getString("nom_user"), rs.getString("prenom_user"), rs.getString("email_user"),
                         rs.getString("mdp_user"), rs.getString("role_user"), rs.getString("adresse_user"), Status.valueOf(rs.getString("status_user").toUpperCase()),
                         rs.getString("photo_user"));
             }
@@ -274,31 +273,35 @@ public class UserService implements IService<User> {
         }
         return null;}
 
-    public List<User> searchUsers(String searchTerm) throws SQLException {
+    public List<User> searchUsers(String searchTerm) {
         List<User> searchResults = new ArrayList<>();
         String sql = "SELECT * FROM user WHERE nom_user LIKE ? OR role_user LIKE ? AND photo_user IS NOT NULL";
 
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        String likeTerm = "%" + searchTerm + "%";
-        preparedStatement.setString(1, likeTerm);
-        preparedStatement.setString(2, likeTerm);
-        ResultSet rs = preparedStatement.executeQuery();
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            String likeTerm = "%" + searchTerm + "%";
+            preparedStatement.setString(1, likeTerm);
+            preparedStatement.setString(2, likeTerm);
+            ResultSet rs = preparedStatement.executeQuery();
 
-        while (rs.next()) {
-            User user = new User();
-            user.setId(rs.getInt("id_user"));
-            user.setTel(rs.getInt("tel_user"));
-            user.setNom(rs.getString("nom_user"));
-            user.setEmail(rs.getString("email_user"));
-            user.setMdp(rs.getString("mdp_user"));
-            user.setRole(rs.getString("role_user"));
-            user.setAdresse(rs.getString("adresse_user"));
-            String statusString = rs.getString("status_user");
-            Status status = Status.fromString(statusString);
-            user.setStatus(status);
-            user.setPhoto(rs.getString("photo_user"));
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id_user"));
+                user.setTel(rs.getInt("tel_user"));
+                user.setNom(rs.getString("nom_user"));
+                user.setEmail(rs.getString("email_user"));
+                user.setMdp(rs.getString("mdp_user"));
+                user.setRole(rs.getString("role_user"));
+                user.setAdresse(rs.getString("adresse_user"));
+                String statusString = rs.getString("status_user");
+                Status status = Status.fromString(statusString);
+                user.setStatus(status);
+                user.setPhoto(rs.getString("photo_user"));
 
-            searchResults.add(user);
+                searchResults.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
         return searchResults;
@@ -320,4 +323,3 @@ public class UserService implements IService<User> {
         return false;
     }
 }
-

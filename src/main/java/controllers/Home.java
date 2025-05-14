@@ -71,13 +71,13 @@ public class Home {
 
 
         dashusername.setText(loggedInUser.getNom());
-if (loggedInUser.getPhoto() != null) {
-    User loggedInUser = SessionManager.getSession(SessionManager.getLastSessionId());
-    profileImg.setFill(new ImagePattern(new Image(loggedInUser.getPhoto())));
-}
-else {
-    profileImg.setVisible(false);
-}
+        if (loggedInUser.getPhoto() != null) {
+            User loggedInUser = SessionManager.getSession(SessionManager.getLastSessionId());
+            profileImg.setFill(new ImagePattern(new Image(loggedInUser.getPhoto())));
+        }
+        else {
+            profileImg.setVisible(false);
+        }
 
     }
 
@@ -131,4 +131,21 @@ else {
         alert.setContentText(message);
         alert.showAndWait();
     }
+    //wallet
+    @FXML
+    private void openWallet() {
+        try {
+            // Load the WalletPage.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/WalletPage.fxml"));
+            Parent walletPage = loader.load();
+
+            // Set the WalletPage as the content of paneshow
+            paneshow.getChildren().clear();
+            paneshow.getChildren().add(walletPage);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
