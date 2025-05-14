@@ -17,7 +17,6 @@ public class UpdateHackathon {
 
     @FXML
     private DatePicker dp_date_debut;
-
     @FXML
     private DatePicker dp_date_fin;
 
@@ -27,8 +26,7 @@ public class UpdateHackathon {
     @FXML
     private Spinner<Integer> sp_heure_fin;
 
-    @FXML
-    private ComboBox<String> cbTypeParticipation;
+
     @FXML
     private TextField tbNbrMax;
 
@@ -51,7 +49,6 @@ public class UpdateHackathon {
         tf_description.setText(h.getDescription());
         tf_lieu.setText(h.getLieu());
         tbNbrMax.setText(String.valueOf(h.getMax_participants()));
-        cbTypeParticipation.setValue(h.getType_participation());
         tf_theme.setText(h.getTheme());
         dp_date_debut.setValue(h.getDate_debut().toLocalDate());
         dp_date_fin.setValue(h.getDate_fin().toLocalDate());

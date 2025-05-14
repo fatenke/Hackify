@@ -89,7 +89,7 @@ public class AjouterHackathon {
             afficherAlerte("Champs obligatoires", "Veuillez remplir tous les champs avant de continuer.");
             return;
         }
-        Hackathon h= new Hackathon(nom,description,theme,dateTimeDebut,dateTimeFin,lieu,typeParticipation,maxParticipants);
+        Hackathon h= new Hackathon(nom,description,theme,dateTimeDebut,dateTimeFin,lieu,maxParticipants);
         if (confirmerAction("Confirmer l'ajout", "Voulez-vous vraiment ajouter ce hackathon ?")) {
             hackathonService.add(h);
             afficherAlerteSucces("Ajout réussi", "Le hackathon a été ajouté avec succès !");

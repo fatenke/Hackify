@@ -33,7 +33,6 @@ public class HackathonService implements GlobalInterface<Hackathon> {
             statement.setString(6, hackathon.getLieu());
             statement.setString(7, hackathon.getTheme());
             statement.setInt(8, hackathon.getMax_participants());
-            statement.setString(9, hackathon.getType_participation());
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("Hackathon ajouté avec succès !");
@@ -59,7 +58,6 @@ public class HackathonService implements GlobalInterface<Hackathon> {
             statement.setString(5, hackathon.getLieu());
             statement.setString(6, hackathon.getTheme());
             statement.setInt(7, hackathon.getMax_participants());
-            statement.setString(8, hackathon.getType_participation());
             statement.setInt(9, hackathon.getId_hackathon());
 
             int rowsAffected = statement.executeUpdate();
@@ -92,8 +90,7 @@ public class HackathonService implements GlobalInterface<Hackathon> {
                         resultSet.getTimestamp("date_debut").toLocalDateTime(),
                         resultSet.getTimestamp("date_fin").toLocalDateTime(),
                         resultSet.getString("lieu"),
-                        resultSet.getInt("max_participants"),
-                        resultSet.getString("type_participation")
+                        resultSet.getInt("max_participants")
                 );
                 hackathons.add(hackathon);
             }
