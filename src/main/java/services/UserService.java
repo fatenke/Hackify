@@ -1,7 +1,7 @@
 package services;
 
 import Interfaces.IService;
-/*import controllers.SmsSender;*/
+import controllers.SmsSender;
 import models.Status;
 import models.User;
 import util.MyConnection;
@@ -22,7 +22,7 @@ public class UserService implements IService<User> {
     private Connection connection;
     public static boolean blocked=false;
     public UserService(){
-        connection = MyConnection.getInstance().getCnx();
+        connection = MyConnection.getInstance().getConnection();
 
     }
 
@@ -126,15 +126,18 @@ public class UserService implements IService<User> {
                                         Status.fromString(resultSet.getString("status_user")),
                                         resultSet.getString("photo_user")
                                 );
-                                    String messageBody = "Welcome back, " + user.getNom() + ".";
+                                String messageBody = "Welcome back, " + user.getNom() + ".";
                                 //SmsSender.sendSms(String.valueOf(user.getTel()), messageBody);
 
                                 return SessionManager.createSession(user);
                             } else {
-
                                 String messageBody = "Your account has been blocked, please contact us for more information :" + "evh0hve@gmail.com .";
-                                SmsSender.sendSms("55420690", messageBody);
-                                blocked=true;
+                                try {
+                                    SmsSender.sendSms("55420690", messageBody);
+                                } catch (IOException e) {
+                                    System.err.println("Failed to send SMS: " + e.getMessage());
+                                }
+                                blocked = true;
                             }
                         } else {
                             // Passwords don't match
@@ -144,12 +147,19 @@ public class UserService implements IService<User> {
                         // No user found with the given email
                         System.out.println("User not found.");
                     }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
                 }
             }
         } catch (SQLException | NoSuchAlgorithmException e) {
+            System.err.println("Error during authentication: " + e.getMessage());
             e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null && connection.isClosed()) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("Error closing connection: " + e.getMessage());
+            }
         }
         return null;
     }
@@ -157,7 +167,6 @@ public class UserService implements IService<User> {
     public static User getUserFromSession(String sessionId) {
         System.out.println(sessionId);
         return SessionManager.getSession(sessionId);
-
     }
 
     public static boolean doesEmailExist(String email) {
@@ -166,35 +175,31 @@ public class UserService implements IService<User> {
         ResultSet resultSet = null;
 
         try {
-            connection = MyConnection.getInstance().getCnx();
+            connection = MyConnection.getInstance().getConnection();
             String sql = "SELECT COUNT(*) AS count FROM user WHERE email_user = ?";
             statement = connection.prepareStatement(sql);
             statement.setString(1, email);
             resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                int count = resultSet.getInt("count");
-                return count > 0;
+                return resultSet.getInt("count") > 0;
             }
+            return false;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         } finally {
-
             try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
+                if (resultSet != null) resultSet.close();
+                if (statement != null) statement.close();
+                if (connection != null) connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-        return false;
     }
 
     public boolean checkEmailExists(String email) {
-        connection = MyConnection.getInstance().getCnx();
+        connection = MyConnection.getInstance().getConnection();
         boolean result = false;
         try {
             String req = "SELECT * FROM user WHERE email = ?";
@@ -206,12 +211,11 @@ public class UserService implements IService<User> {
         } catch (SQLException ex) {
             System.err.println(ex.getMessage());
         }
-
         return result;
     }
 
     public User getUserByEmail(String email) {
-        connection = MyConnection.getInstance().getCnx();
+        connection = MyConnection.getInstance().getConnection();
         String query = "SELECT * from user WHERE email_user = '" + email + "'";
 
         User t = null;

@@ -18,7 +18,7 @@ import static services.MailService.*;
 public class ParticipationService implements GlobalInterface<Participation> {
     private final Connection connection;
     public ParticipationService() {
-        this.connection = MyConnection.getInstance().getCnx();
+        this.connection = MyConnection.getInstance().getConnection();
     }
 
     @Override

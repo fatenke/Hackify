@@ -37,7 +37,7 @@ import models.Role;
 import models.Status;
 import models.User;
 import services.UserService;
-import utils.PasswordHasher;
+import util.PasswordHasher;
 
 public class RegistrationUI implements Initializable {
     private final UserService ps = new UserService();

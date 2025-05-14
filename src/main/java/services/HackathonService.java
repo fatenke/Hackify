@@ -16,7 +16,7 @@ public class HackathonService implements GlobalInterface<Hackathon> {
     private final Connection connection;
 
     public HackathonService() {
-        this.connection = MyConnection.getInstance().getCnx();
+        this.connection = MyConnection.getInstance().getConnection();
     }
 
     @Override
