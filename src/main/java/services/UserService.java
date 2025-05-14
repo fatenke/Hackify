@@ -1,16 +1,12 @@
 package services;
 
-
-
 import Interfaces.IService;
-import controllers.SmsSender;
 import models.Status;
 import models.User;
 import util.MyConnection;
 import util.PasswordHasher;
 import util.SessionManager;
 
-import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -20,23 +16,21 @@ import java.util.logging.Logger;
 
 public class UserService implements IService<User> {
 
-
     private Connection connection;
-    public static boolean blocked=false;
-    public UserService(){
+    public static boolean blocked = false;
+
+    public UserService() {
         connection = MyConnection.getInstance().getConnection();
-
     }
-
 
     @Override
     public void ajouter(User user) throws SQLException {
-
-        String req="INSERT INTO user (tel_user,nom_user,prenom_user,email_user,mdp_user,role_user,adresse_user,status_user,photo_user) VALUES ("+user.getTel()+",'"+ user.getNom()+"','"+ user.getPrenom()+"','"+ user.getEmail()+"','"+ user.getMdp()+"','"+ user.getRole()+"','"+ user.getAdresse()+"','"+ user.getStatus()+"','"+ user.getPhoto()+"')";
+        String req = "INSERT INTO user (tel_user,nom_user,prenom_user,email_user,mdp_user,role_user,adresse_user,status_user,photo_user) VALUES (" + user.getTel() + ",'" + user.getNom() + "','" + user.getPrenom() + "','" + user.getEmail() + "','" + user.getMdp() + "','" + user.getRole() + "','" + user.getAdresse() + "','" + user.getStatus() + "','" + user.getPhoto() + "')";
         Statement st = connection.createStatement();
         st.executeUpdate(req);
         System.out.println("Ajoutée");
     }
+
     @Override
     public void modifier(User user) throws SQLException {
         String req = "UPDATE user SET nom_user = ?, prenom_user = ?, adresse_user = ? , photo_user = ? , email_user = ? , tel_user = ?,status_user = ? WHERE id_user = ?";
@@ -97,64 +91,44 @@ public class UserService implements IService<User> {
 
     public String authenticateUser(String email, String password) {
         try {
-            // Hash the password
             String hashedPassword = PasswordHasher.hashPassword(password);
-
-            // Prepare the SQL query
-            String query = "SELECT * FROM user WHERE email_user = ?";
-
-            // Create a PreparedStatement
+            String query = "SELECT * FROM user WHERE email_user = ? AND mdp_user = ?";
+            
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setString(1, email);
-
-                // Execute the query
+                statement.setString(2, hashedPassword);
+                
                 try (ResultSet resultSet = statement.executeQuery()) {
                     if (resultSet.next()) {
-                        // Retrieve the hashed password and user status from the database
-                        String storedHashedPassword = resultSet.getString("mdp_user");
-                        Status userStatus = Status.fromString(resultSet.getString("status_user"));
-
-                        // Compare the hashed passwords and check user status
-                        if (hashedPassword.equals(storedHashedPassword)) {
-                            // Passwords match, check user status
-                            if (userStatus == Status.ACTIVE) {
-                                // User is active, create session
-                                User user = new User(
-                                        resultSet.getInt("id_user"),
-                                        resultSet.getInt("tel_user"),
-                                        resultSet.getString("nom_user"),
-                                        resultSet.getString("prenom_user"),
-                                        resultSet.getString("email_user"),
-                                        resultSet.getString("mdp_user"),
-                                        resultSet.getString("role_user"),
-                                        resultSet.getString("adresse_user"),
-                                        Status.fromString(resultSet.getString("status_user")),
-                                        resultSet.getString("photo_user")
-                                );
-                                //SmsSender.sendSms(String.valueOf(user.getTel()), "Welcome back, " + user.getNom() + ".");
-                                return SessionManager.createSession(user);
-                            } else {
-
-                                String messageBody = "Your account has been blocked, please contact us for more information :" + "evh0hve@gmail.com .";
-                                SmsSender.sendSms("55420690", messageBody);
-                                blocked=true;
-                            }
+                        Status userStatus = Status.valueOf(resultSet.getString("status_user").toUpperCase());
+                        
+                        if (userStatus == Status.ACTIVE) {
+                            User user = new User(
+                                resultSet.getInt("id_user"),
+                                resultSet.getInt("tel_user"),
+                                resultSet.getString("nom_user"),
+                                resultSet.getString("prenom_user"),
+                                resultSet.getString("email_user"),
+                                resultSet.getString("mdp_user"),
+                                resultSet.getString("role_user"),
+                                resultSet.getString("adresse_user"),
+                                userStatus,
+                                resultSet.getString("photo_user")
+                            );
+                            return SessionManager.createSession(user);
                         } else {
-                            // Passwords don't match
-                            System.out.println("Invalid email or password.");
+                            blocked = true;
+                            return null;
                         }
-                    } else {
-                        // No user found with the given email
-                        System.out.println("User not found.");
                     }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    System.out.println("Invalid email or password.");
+                    return null;
                 }
             }
         } catch (SQLException | NoSuchAlgorithmException e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     public static User getUserFromSession(String sessionId) {

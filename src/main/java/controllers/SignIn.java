@@ -103,18 +103,20 @@ public class SignIn implements Initializable {
         String username = usernameField.getText();
         String password = passwordField.getText();
         String emailPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        
+        // Clear previous error messages
+        LoginMessagelabel.setText("");
+        
         // Validate input
         if (username.isEmpty() || password.isEmpty()) {
             LoginMessagelabel.setText("Please enter email and password.");
             return;
         }
-        else if (!usernameField.getText().matches(emailPattern)) {
+        if (!username.matches(emailPattern)) {
             LoginMessagelabel.setText("Please enter a valid email address.");
             return;
         }
-
         if (!code.equals(codecaptcha)) {
-            // CodeMessagelabel.setText("Please enter a valid code.");
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Attention");
             alert.setHeaderText(null);
@@ -122,43 +124,54 @@ public class SignIn implements Initializable {
             alert.showAndWait();
             return;
         }
-        String sessionId = ps.authenticateUser(username, password);
-        User user = ps.getUserFromSession(sessionId);
-        if (UserService.blocked==true) {
 
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Inactive Account");
-            alert.setHeaderText(null);
-            alert.setContentText("Your account is inactive. Please contact your administrator !");
-            alert.showAndWait();
-            UserService.blocked=false;
-            return;
-        }
-        else{
-            LoginMessagelabel.setText("Invalid email or password.");
-        }
-        User loggedInUser = SessionManager.getSession(SessionManager.getLastSessionId());
+        try {
+            String sessionId = ps.authenticateUser(username, password);
+            if (sessionId == null) {
+                if (UserService.blocked) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Inactive Account");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Your account is inactive. Please contact your administrator!");
+                    alert.showAndWait();
+                    UserService.blocked = false;
+                } else {
+                    LoginMessagelabel.setText("Invalid email or password.");
+                }
+                return;
+            }
 
-        openWelcomeWindow(loggedInUser.getNom());
+            User user = UserService.getUserFromSession(sessionId);
+            if (user == null) {
+                LoginMessagelabel.setText("Error retrieving user information.");
+                return;
+            }
+
+            // Open welcome window with user's name
+            openWelcomeWindow(user.getNom());
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            LoginMessagelabel.setText("An error occurred during sign in: " + e.getMessage());
+        }
     }
     private void openWelcomeWindow(String username) {
         try {
-
-
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherHachathon.fxml"));
             Parent root = loader.load();
-
-
-            Welcome controller = loader.getController();
-            controller.setUserName(username);
+            
+            // Create and show the new stage
             Stage stage = new Stage();
             stage.initStyle(StageStyle.UNDECORATED);
             stage.setScene(new Scene(root));
             stage.show();
+            
+            // Close the login window
             Stage signInStage = (Stage) usernameField.getScene().getWindow();
             signInStage.close();
         } catch (IOException e) {
             e.printStackTrace();
+            LoginMessagelabel.setText("Error opening welcome window: " + e.getMessage());
         }
     }
     public void makeStageDrageable(){

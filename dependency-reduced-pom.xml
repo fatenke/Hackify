@@ -64,8 +64,8 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <javafx.version>23.0.1</javafx.version>
-    <maven.compiler.target>23</maven.compiler.target>
-    <maven.compiler.source>23</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
+    <maven.compiler.source>21</maven.compiler.source>
     <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
   </properties>
 </project>

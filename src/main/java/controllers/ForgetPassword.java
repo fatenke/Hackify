@@ -50,7 +50,7 @@ public class ForgetPassword implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        verificationCodeField.textProperty().addListener((observable, oldValue, newValue) -> {
+        verificationCodeField.textProperty().addListener((_unused, _oldValue, newValue) -> {
             if (!newValue.matches("[A-Z0-9]*")) {
                 verificationCodeField.setText(newValue.replaceAll("[^A-Z0-9]", ""));
             }
