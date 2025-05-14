@@ -91,7 +91,7 @@ public class UserService implements IService<User> {
         return users;
     }
 
-    /*public String authenticateUser(String email, String password) {
+    public String authenticateUser(String email, String password) {
         try {
             // Hash the password
             String hashedPassword = PasswordHasher.hashPassword(password);
@@ -152,7 +152,7 @@ public class UserService implements IService<User> {
             e.printStackTrace();
         }
         return null;
-    }*/
+    }
 
     public static User getUserFromSession(String sessionId) {
         System.out.println(sessionId);
@@ -270,35 +270,31 @@ public class UserService implements IService<User> {
         }
         return null;}
 
-    public List<User> searchUsers(String searchTerm) {
+    public List<User> searchUsers(String searchTerm) throws SQLException {
         List<User> searchResults = new ArrayList<>();
         String sql = "SELECT * FROM user WHERE nom_user LIKE ? OR role_user LIKE ? AND photo_user IS NOT NULL";
 
-        try{
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            String likeTerm = "%" + searchTerm + "%";
-            preparedStatement.setString(1, likeTerm);
-            preparedStatement.setString(2, likeTerm);
-            ResultSet rs = preparedStatement.executeQuery();
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        String likeTerm = "%" + searchTerm + "%";
+        preparedStatement.setString(1, likeTerm);
+        preparedStatement.setString(2, likeTerm);
+        ResultSet rs = preparedStatement.executeQuery();
 
-            while (rs.next()) {
-                User user = new User();
-                user.setId(rs.getInt("id_user"));
-                user.setTel(rs.getInt("tel_user"));
-                user.setNom(rs.getString("nom_user"));
-                user.setEmail(rs.getString("email_user"));
-                user.setMdp(rs.getString("mdp_user"));
-                user.setRole(rs.getString("role_user"));
-                user.setAdresse(rs.getString("adresse_user"));
-                String statusString = rs.getString("status_user");
-                Status status = Status.fromString(statusString);
-                user.setStatus(status);
-                user.setPhoto(rs.getString("photo_user"));
+        while (rs.next()) {
+            User user = new User();
+            user.setId(rs.getInt("id_user"));
+            user.setTel(rs.getInt("tel_user"));
+            user.setNom(rs.getString("nom_user"));
+            user.setEmail(rs.getString("email_user"));
+            user.setMdp(rs.getString("mdp_user"));
+            user.setRole(rs.getString("role_user"));
+            user.setAdresse(rs.getString("adresse_user"));
+            String statusString = rs.getString("status_user");
+            Status status = Status.fromString(statusString);
+            user.setStatus(status);
+            user.setPhoto(rs.getString("photo_user"));
 
-                searchResults.add(user);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            searchResults.add(user);
         }
 
         return searchResults;

@@ -63,7 +63,13 @@
 }
 
 /* Input Fields - Modern Borders */
-.codelb,
+.codelb{
+    -fx-background-color: white;
+    -fx-border-color: #D291BC;
+    -fx-border-width: 3px;
+    -fx-border-radius: 6px;
+
+}
 .verificationCodeField,
 .confirmPasswordField {
     -fx-background-color: white;

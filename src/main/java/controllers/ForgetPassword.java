@@ -274,7 +274,7 @@ public class ForgetPassword implements Initializable {
                 "<div class='verification-code'>" + code + "</div>" +
                 "<p>If you did not request a password reset, please ignore this message.</p>" +
                 "</div>" +
-                "<div class='footer'>Best regards,<br/>The E.V.H Team</div>" +
+                "<div class='footer'>Best regards,<br/>The HACKIFY Team</div>" +
                 "</div></body></html>";
         Mailing mailing = new Mailing();
         mailing.sendMailex(email, subject, body);

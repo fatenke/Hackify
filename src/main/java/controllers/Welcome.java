@@ -13,7 +13,8 @@ import javafx.util.Duration;
 import models.Role;
 import models.User;
 import services.UserService;
-import utils.SessionManager;
+
+import util.SessionManager;
 
 import java.io.IOException;
 
@@ -51,6 +52,7 @@ public class Welcome {
                 String username = user.getNom(); // Assuming this is the username
 
                 if (userRole != Role.ADMIN) {
+
 
                     System.out.println("User role: " + userRole);
                     Parent root = FXMLLoader.load(getClass().getResource("/Home.fxml"));

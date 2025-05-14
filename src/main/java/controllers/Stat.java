@@ -5,7 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
 import javafx.geometry.Side;
 import javafx.scene.chart.PieChart;
-import utils.MyConnection;
+import util.MyConnection;
 
 import java.net.URL;
 import java.sql.*;

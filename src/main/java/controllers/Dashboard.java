@@ -3,6 +3,8 @@ package controllers;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import javafx.collections.FXCollections;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.event.ActionEvent;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -30,6 +32,9 @@ public class Dashboard implements Initializable {
     User user = null ;
     String query = null ;
     private final UserService ps = new UserService();
+    @FXML
+    private JFXTextField searchinput;
+
     @FXML
     private TableColumn<User, String> statusc;
     @FXML
@@ -82,14 +87,18 @@ public class Dashboard implements Initializable {
             telc.setCellValueFactory(new PropertyValueFactory<>("tel"));
             rolec.setCellValueFactory(new PropertyValueFactory<>("role"));
             adressec.setCellValueFactory(new PropertyValueFactory<>("adresse"));
-            statusc.setCellValueFactory(new PropertyValueFactory<>("status"));
+            statusc.setCellValueFactory(cellData -> {
+                User user = cellData.getValue();
+                String statusStr = user.getStatus() != null ? user.getStatus().toString() : "ACTIVE";
+                return new SimpleStringProperty(statusStr);
+            });
 
-            operationc.setCellFactory(cell -> new TableCell<>() {
+            operationc.setCellFactory((TableColumn<User, String> column) -> new TableCell<User, String>() {
                 private final JFXButton blockButton = new JFXButton("Block");
                 private final JFXButton unblockButton = new JFXButton("Unblock");
                 {
-                blockButton.setStyle("-fx-background-color: red; -fx-text-fill: black; -fx-border-radius: 5px; -fx-cursor: hand;");
-                unblockButton.setStyle("-fx-background-color: red; -fx-text-fill: black; -fx-border-radius: 5px; -fx-cursor: hand;");
+                    blockButton.setStyle("-fx-background-color: #ff4d4d; -fx-text-fill: white; -fx-border-radius: 5px; -fx-cursor: hand;");
+                    unblockButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-border-radius: 5px; -fx-cursor: hand;");
 
 
                     blockButton.setOnAction(event -> {
@@ -99,7 +108,7 @@ public class Dashboard implements Initializable {
                         }
                     });
 
-                    unblockButton.setOnAction(event -> {
+                    unblockButton.setOnAction((ActionEvent event) -> {
                         User user = getTableRow().getItem();
                         if (user != null) {
                             unblockUser(user);
@@ -201,7 +210,7 @@ public class Dashboard implements Initializable {
                 FXMLLoader fxmlLoader = new FXMLLoader();
                 fxmlLoader.setLocation(getClass().getResource("/usersDashboardItem.fxml"));
                 Parent root = fxmlLoader.load();
-               // userDashboardItem itemController = fxmlLoader.getController();
+                // userDashboardItem itemController = fxmlLoader.getController();
                 userDashboardItem itemController = fxmlLoader.getController();
                 itemController.setFeedBackData(u);
                 feedbackContentContainer.getChildren().add(root);
@@ -218,8 +227,7 @@ public class Dashboard implements Initializable {
                 .collect(Collectors.toList());
         displayUsers();
     }
-    @FXML
-    private JFXTextField searchinput;
+
     @FXML
     private void handleSearch() {
         String searchTerm = searchinput.getText().trim();
@@ -228,8 +236,15 @@ public class Dashboard implements Initializable {
     }
 
     public void showAllUsers(String searchTerm) {
-        UserService userService = new UserService();
-        users = userService.searchUsers(searchTerm);
-        displayUsers();
+        try {
+            UserService userService = new UserService();
+            users = userService.searchUsers(searchTerm);
+            displayUsers();
+        } catch (SQLException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("Error searching users: " + e.getMessage());
+            alert.showAndWait();
+        }
     }
 }

@@ -1,0 +1,102 @@
+/* Main container */
+.container {
+    -fx-background-color: #1E0525; /* Light gray background for main content */
+}
+
+/* Left menu container (sidebar) */
+.left-menu-container {
+    -fx-background-color: #286371; /* Teal/blue background for sidebar */
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-border-color: transparent;
+}
+
+/* Buttons in the sidebar */
+.menu-btn {
+    -fx-background-color: #1b3347; /* Dark blue background for buttons */
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+    -fx-text-fill: white; /* White text */
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+    -fx-padding: 10 20 10 20;
+    -fx-alignment: center-left;
+}
+
+.menu-btn:hover {
+    -fx-background-color: #2a2a3d; /* Slightly lighter dark background on hover */
+    -fx-text-fill: #ffffff; /* White text on hover */
+}
+
+/* Profile image container */
+.user-details-container {
+    -fx-background-color: #286371; /* Dark blue background */
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 0);
+}
+
+/* Welcome back label */
+#okba {
+    -fx-text-fill: #ffffff; /* Teal/blue text */
+    -fx-font-size: 36;
+    -fx-font-weight: bold;
+    -fx-font-family: "Roboto";
+}
+
+/* Icons and images */
+ImageView {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 0);
+}
+
+/* Close and reduce icons */
+#reduceIcon, #closeIcon {
+    -fx-cursor: hand;
+}
+
+#reduceIcon:hover, #closeIcon:hover {
+    -fx-opacity: 0.8;
+}
+
+/* Dashboard title */
+Text {
+    -fx-fill: #ffff; /* Dark text */
+    -fx-font-size: 24;
+    -fx-font-weight: bold;
+    -fx-font-family: "Roboto";
+}
+
+/* Main content pane */
+#paneshow {
+    -fx-background-color:  #1E0525; /* White background */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+}
+/* Scroll pane */
+.scroll-pane {
+    -fx-background-color: #D291BC; /* White background */
+}
+
+.scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 2px;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: #D291BC;; /* Bright blue scroll thumb */
+}
+
+.scroll-pane .scroll-bar:vertical .thumb:hover {
+    -fx-opacity: 0.6;
+}
+
+.scroll-pane .scroll-bar:vertical .increment-button,
+.scroll-pane .scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+}
+
+.vbox {
+    -fx-background-color: #286371;
+}

@@ -30,7 +30,7 @@
 .title-form{
     -fx-font-family: "Jost Medium";
     -fx-font-size: 32;
-    -fx-fill: #000000;
+    -fx-fill: #ffff;
 }
 .add-course-input{
     -fx-background-color: #fff;
@@ -46,9 +46,9 @@
 .description-input{
     -fx-control-inner-background: #fff;
     -fx-border-radius: 6px;
-    -fx-border-color: #999;
+    -fx-border-color: #ffff;
     -fx-background-radius: 6px;
-    -fx-prompt-text-fill: #999;
+    -fx-prompt-text-fill: #ffff;
     -fx-font-family: "Jost Medium";
     -fx-font-weight: 600;
     -fx-font-size: 16px;

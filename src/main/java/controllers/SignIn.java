@@ -27,7 +27,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import models.User;
 import services.UserService;
-import utils.SessionManager;
+import util.SessionManager;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -122,7 +122,7 @@ public class SignIn implements Initializable {
             alert.showAndWait();
             return;
         }
-        String sessionId = ps.authenticateUser(username, password);
+        String sessionId = ps.authenticateUser(usernameField.getText(), password);
         User user = ps.getUserFromSession(sessionId);
         if (UserService.blocked==true) {
 

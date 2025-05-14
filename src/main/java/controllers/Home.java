@@ -5,15 +5,19 @@ import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
@@ -21,6 +25,8 @@ import models.User;
 import util.SessionManager;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
 
 public class Home {
     @FXML
@@ -50,6 +56,7 @@ public class Home {
 
     @FXML
     private Pane paneshow;
+
 
 
 
@@ -86,6 +93,11 @@ else {
 
     }
 
+    @FXML
+    private void btn_contact_us() {
+        // Placeholder: Open a contact form or provide contact information for customer support
+        showAlert("Contact Us", "For support, please email support@example.com");
+    }
 
     @FXML
     private void logoutuser(ActionEvent event) throws IOException {
@@ -119,21 +131,4 @@ else {
         alert.setContentText(message);
         alert.showAndWait();
     }
-//wallet
-    @FXML
-    private void openWallet() {
-        try {
-            // Load the WalletPage.fxml file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/WalletPage.fxml"));
-            Parent walletPage = loader.load();
-
-            // Set the WalletPage as the content of paneshow
-            paneshow.getChildren().clear();
-            paneshow.getChildren().add(walletPage);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
 }

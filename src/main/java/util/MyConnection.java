@@ -1,40 +1,35 @@
 package util;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class MyConnection {
-    final String URL = "jdbc:mysql://localhost:3306/hackify";
-    final String USER = "root";
-    final String PASS ="";
+    private final String URL = "jdbc:mysql://localhost:3306/hackify";
+    private final String USER = "root";
+    private final String PASS = "";
 
-    Connection cnx;
-    static MyConnection instance;
+    private Connection cnx;
+    private static MyConnection instance;
 
-
-
-    //privatisation de constructeur
-    private MyConnection (){
-        try{
+    // Private constructor for Singleton pattern
+    private MyConnection() {
+        try {
             cnx = DriverManager.getConnection(URL, USER, PASS);
             System.out.println("Connected ");
-
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
-        public static MyConnection getInstance() {
-            if (instance == null) {
-                instance = new MyConnection();
-            }
-            return instance;
+    public static MyConnection getInstance() {
+        if (instance == null) {
+            instance = new MyConnection();
         }
-        public Connection getCnx() {
-            return cnx;
-        }
+        return instance;
+    }
 
+    public Connection getConnection() {
+        return cnx;
+    }
 }
