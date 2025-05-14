@@ -49,15 +49,14 @@ public class MessageService implements GlobalInterface<Message> {
     }
 
     private void saveMessage(Message message) {
-        String sql = "INSERT INTO message (chat_id, posted_by, contenu, post_time) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO message (chat_id, posted_by, contenu, type, post_time) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, message.getChatId());
             stmt.setInt(2, message.getPostedBy());
             stmt.setString(3, message.getContenu());
-            stmt.setTimestamp(4, message.getPostTime());
+            stmt.setString(4, "MESSAGE"); // Default type for user messages
+            stmt.setTimestamp(5, message.getPostTime());
             stmt.executeUpdate();
-
-            // Retrieve the generated ID
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
                     message.setId(rs.getInt(1));
@@ -65,8 +64,10 @@ public class MessageService implements GlobalInterface<Message> {
             }
         } catch (SQLException e) {
             System.out.println("Erreur lors de l'enregistrement du message : " + e.getMessage());
+            throw new RuntimeException("Échec de l'enregistrement du message", e);
         }
     }
+
 
     @Override
     public void update(Message message) {
