@@ -2,8 +2,8 @@ package services;
 
 import Interfaces.GlobalInterface;
 import models.Hackathon;
-import util.MyConnection;
 
+import util.MyConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,13 +15,16 @@ public class HackathonService implements GlobalInterface<Hackathon> {
 
     private final Connection connection;
 
+
+
+
     public HackathonService() {
         this.connection = MyConnection.getInstance().getConnection();
     }
 
     @Override
     public void add(Hackathon hackathon) {
-        String req = "INSERT INTO `hackathon`(`id_organisateur`, `nom_hackathon`, `description`, `date_debut`, `date_fin`, `lieu`, `theme`, `max_participants`, `type_participation`)  VALUES (?,?,?,?,?,?,?,?,?)";
+        String req = "INSERT INTO `hackathon`(`id_organisateur`, `nom_hackathon`, `description`, `date_debut`, `date_fin`, `lieu`, `theme`, `max_participants`)  VALUES (?,?,?,?,?,?,?,?)";
         PreparedStatement statement;
         try {
             statement = connection.prepareStatement(req);

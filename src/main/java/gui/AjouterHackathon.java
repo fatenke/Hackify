@@ -12,8 +12,7 @@ import java.util.Optional;
 
 public class AjouterHackathon {
     private final HackathonService hackathonService= new HackathonService();
-    @FXML
-    private ComboBox<?> cbTypeParticipation;
+
 
     @FXML
     private DatePicker dp_date_debut;
@@ -72,7 +71,6 @@ public class AjouterHackathon {
             return;
         }
         String lieu = tf_lieu.getText().trim();
-        String typeParticipation = (String) cbTypeParticipation.getValue();
         int maxParticipants ;
         try {
             maxParticipants = Integer.parseInt(tbNbrMax.getText().trim());
@@ -85,16 +83,26 @@ public class AjouterHackathon {
             return;
         }
 
-        if (nom.isEmpty() || description.isEmpty() || theme.isEmpty() || lieu.isEmpty() || typeParticipation == null) {
+        if (nom.isEmpty() || description.isEmpty() || theme.isEmpty() || lieu.isEmpty() ) {
             afficherAlerte("Champs obligatoires", "Veuillez remplir tous les champs avant de continuer.");
             return;
         }
-        Hackathon h= new Hackathon(nom,description,theme,dateTimeDebut,dateTimeFin,lieu,maxParticipants);
+        // 🔐 Récupération de l'utilisateur connecté
+        String sessionId = util.SessionManager.getLastSessionId();
+        models.User userConnecte = util.SessionManager.getSession(sessionId);
+
+        if (userConnecte == null) {
+            afficherAlerte("Non connecté", "Aucun utilisateur connecté. Veuillez vous connecter avant d'ajouter un hackathon.");
+            return;
+        }
+
+        Hackathon h = new Hackathon(nom, description, theme, dateTimeDebut, dateTimeFin, lieu, maxParticipants);
+        h.setId_organisateur(userConnecte.getId()); // ✅ On fixe l'organisateur ici
         if (confirmerAction("Confirmer l'ajout", "Voulez-vous vraiment ajouter ce hackathon ?")) {
             hackathonService.add(h);
             afficherAlerteSucces("Ajout réussi", "Le hackathon a été ajouté avec succès !");
         }
-        /*hackathonService.add(h);*/
+
     }
 
     private void afficherAlerte(String titre, String message) {

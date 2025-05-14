@@ -145,7 +145,7 @@ public class SignIn implements Initializable {
         try {
 
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Welcome.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherHachathon.fxml"));
             Parent root = loader.load();
 
 

@@ -80,6 +80,10 @@ public class Hackathon {
         return id_organisateur;
     }
 
+    public void setId_organisateur(int id_organisateur) {
+        this.id_organisateur = id_organisateur;
+    }
+
     public LocalDateTime getDate_debut() {
         return date_debut;
     }
