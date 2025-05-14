@@ -1,18 +1,8 @@
 package org.example;
 
-import models.Chat;
-import models.ChatType;
-import models.Communaute;
-import models.Message;
-import services.ChatService;
-import services.CommunauteService;
-import services.MessageService;
 import util.MyConnection;
 
 import java.sql.Connection;
-import java.sql.Date;
-import java.sql.Timestamp;
-import java.util.List;
 
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or

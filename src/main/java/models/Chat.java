@@ -3,45 +3,37 @@ package models;
 import java.sql.Timestamp;
 
 public class Chat {
-
     private int id;
     private int communauteId;
     private String nom;
-    private ChatType type;
+    private String type;
     private Timestamp dateCreation;
+    private boolean isActive;
 
+    // Default constructor
+    public Chat() {
+    }
 
+    // Constructor for creating a new chat
+    public Chat(int communauteId, String nom, String type) {
+        this.communauteId = communauteId;
+        this.nom = nom;
+        this.type = type;
+        this.dateCreation = new Timestamp(System.currentTimeMillis());
+        this.isActive = true;
+    }
 
-
-    public Chat(){}
-    public Chat(int id, int communauteId, String nom, ChatType type, Timestamp dateCreation) {
+    // Constructor for retrieving from database
+    public Chat(int id, int communauteId, String nom, String type, Timestamp dateCreation, boolean isActive) {
         this.id = id;
         this.communauteId = communauteId;
         this.nom = nom;
         this.type = type;
         this.dateCreation = dateCreation;
-
+        this.isActive = isActive;
     }
 
-    public Chat(int communauteId, String nom, ChatType type) {
-        this.communauteId = communauteId;
-        this.nom = nom;
-        this.type = type;
-        this.dateCreation = new Timestamp(System.currentTimeMillis());
-    }
-
-    public Chat(String nom, ChatType type , int id) {
-
-        this.nom = nom;
-        this.type = type;
-        this.id = id;
-    }
-
-    public Chat( int id) {
-
-        this.id = id;
-    }
-
+    // Getters and setters
     public int getId() {
         return id;
     }
@@ -66,11 +58,11 @@ public class Chat {
         this.nom = nom;
     }
 
-    public ChatType getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(ChatType type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -82,14 +74,23 @@ public class Chat {
         this.dateCreation = dateCreation;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
     @Override
     public String toString() {
         return "Chat{" +
                 "id=" + id +
                 ", communauteId=" + communauteId +
                 ", nom='" + nom + '\'' +
-                ", type=" + type +
+                ", type='" + type + '\'' +
                 ", dateCreation=" + dateCreation +
+                ", isActive=" + isActive +
                 '}';
     }
 }

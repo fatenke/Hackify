@@ -6,33 +6,29 @@ public class Message {
     private int id;
     private int chatId;
     private String contenu;
-    private MessageType type;
+    private String type; // Changed from MessageType to String
     private Timestamp postTime;
     private int postedBy; // User ID of the sender
 
 
-    public Message(int id, int chatId, String contenu, MessageType type, Timestamp postTime, int postedBy) {
-        this.id = id;
-        this.chatId = chatId;
-        this.contenu = contenu;
-        this.type = type;
-        this.postTime = postTime;
-        this.postedBy = postedBy;
-    }
-
-    public enum MessageType {
-        QUESTION, REPONSE , SUGGESTION
-    }
 
     public Message() {}
 
-    public Message(int chatId, String contenu, MessageType type, Timestamp postTime, int postedBy) {
+    public Message(int chatId, String contenu, Timestamp postTime, int postedBy) {
         this.chatId = chatId;
         this.contenu = contenu;
-        this.type = type;
         this.postTime = postTime;
         this.postedBy = postedBy;
     }
+
+    public Message(int id, int chatId, String contenu, Timestamp postTime, int postedBy) {
+        this.id = id;
+        this.chatId = chatId;
+        this.contenu = contenu;
+        this.postTime = postTime;
+        this.postedBy = postedBy;
+    }
+
 
     // Getters and Setters
     public int getId() {
@@ -59,11 +55,11 @@ public class Message {
         this.contenu = contenu;
     }
 
-    public MessageType getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(MessageType type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -83,14 +79,13 @@ public class Message {
         this.postedBy = postedBy;
     }
 
-    // ToString for debugging
     @Override
     public String toString() {
         return "Message{" +
                 "id=" + id +
                 ", chatId=" + chatId +
                 ", contenu='" + contenu + '\'' +
-                ", type=" + type +
+                ", type='" + type + '\'' +
                 ", postTime=" + postTime +
                 ", postedBy=" + postedBy +
                 '}';

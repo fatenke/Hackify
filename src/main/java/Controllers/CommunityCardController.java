@@ -4,7 +4,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import models.Communaute;
@@ -12,35 +14,34 @@ import services.CommunauteService;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Optional;
 
 public class CommunityCardController {
     @FXML
-    public Label communityName;
+    private Label communityName;
     @FXML
-    public Button seeChatsButton;
+    private Button seeChatsButton;
     @FXML
-    public Label communityDescription;
+    private Label communityDescription;
     @FXML
-    public Label communityDate;
+    private Label communityDate;
     @FXML
     private Button deleteButton;
 
-    // Field for community id
     private int communityId;
-
-    // Service instance
     private CommunauteService communauteService;
 
     public CommunityCardController() {
         this.communauteService = new CommunauteService();
     }
 
-    // Updated method to set community details, including id, name, description, and date
     public void setCommunityDetails(int id, String name, String description, Timestamp date) {
         this.communityId = id;
-        communityName.setText(name);
-        communityDescription.setText(description);
-        communityDate.setText(date != null ? date.toString() : "No Date"); // Convert Timestamp to String
+        communityName.setText(name != null ? name : "Sans nom");
+        communityDescription.setText(description != null ? description : "Aucune description");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        communityDate.setText(date != null ? sdf.format(date) : "Aucune date");
     }
 
     @FXML
@@ -57,21 +58,42 @@ public class CommunityCardController {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            showAlert("Erreur", "Erreur lors du chargement des chats : " + e.getMessage());
         }
     }
 
     @FXML
     private void handleDelete() {
-        try {
-            Communaute communaute = new Communaute(communityId);
-            communauteService.delete(communaute);
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Confirmer la suppression");
+        confirmation.setHeaderText(null);
+        confirmation.setContentText("Êtes-vous sûr de vouloir supprimer cette communauté ?");
+        Optional<ButtonType> result = confirmation.showAndWait();
 
-            Stage stage = (Stage) deleteButton.getScene().getWindow();
-            stage.close(); // Closes the card window
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error deleting community: " + e.getMessage());
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                Communaute communaute = communauteService.getById(communityId);
+                if (communaute == null) {
+                    showAlert("Erreur", "Communauté non trouvée avec l'ID : " + communityId);
+                    return;
+                }
+                communauteService.delete(communaute);
+                showAlert("Succès", "Communauté supprimée avec succès !");
+                // Optionally, refresh the parent UI instead of closing
+                // For now, close the card's parent container (assumed to be a modal or pane)
+                deleteButton.getParent().setVisible(false);
+                deleteButton.getParent().setManaged(false);
+            } catch (Exception e) {
+                showAlert("Erreur", "Erreur lors de la suppression de la communauté : " + e.getMessage());
+            }
         }
+    }
+
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(title.equals("Erreur") ? Alert.AlertType.ERROR : Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }

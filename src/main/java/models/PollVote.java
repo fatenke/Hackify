@@ -1,29 +1,31 @@
 package models;
 
-public class Vote {
-
+public class PollVote {
     private int id;
-    private int pollId;
-    private int optionId;
-    private int userId; // Who voted
+    private int pollId; // Foreign key to poll
+    private int optionId; // Foreign key to poll_option
+    private int userId; // Foreign key to user
 
-    // Constructor, getters, setters
-    public Vote(int id, int pollId, int optionId, int userId) {
+    // Default constructor
+    public PollVote() {
+    }
+
+    // Constructor for creating a new vote
+    public PollVote(int pollId, int optionId, int userId) {
+        this.pollId = pollId;
+        this.optionId = optionId;
+        this.userId = userId;
+    }
+
+    // Constructor for retrieving from database
+    public PollVote(int id, int pollId, int optionId, int userId) {
         this.id = id;
         this.pollId = pollId;
         this.optionId = optionId;
         this.userId = userId;
     }
 
-    public Vote() {
-    }
-
-    public Vote(int optionId, int pollId, int userId) {
-        this.optionId = optionId;
-        this.pollId = pollId;
-        this.userId = userId;
-    }
-
+    // Getters and setters
     public int getId() {
         return id;
     }

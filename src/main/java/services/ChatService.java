@@ -2,17 +2,14 @@ package services;
 
 import Interfaces.GlobalInterface;
 import models.Chat;
-import models.ChatType;
 import util.MyConnection;
 
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.*;
-
 
 public class ChatService implements GlobalInterface<Chat> {
     private Connection conn;
-
 
     public ChatService() {
         conn = MyConnection.getInstance().getCnx();
@@ -23,13 +20,19 @@ public class ChatService implements GlobalInterface<Chat> {
 
     @Override
     public void add(Chat chat) {
-        String sql = "INSERT INTO chat (communaute_id, nom, type, date_creation) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO chat (communaute_id, nom, type, date_creation, is_active) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, chat.getCommunauteId());
             stmt.setString(2, chat.getNom());
-            stmt.setString(3, chat.getType().name());  // Convert Enum to String
+            stmt.setString(3, chat.getType());
             stmt.setTimestamp(4, chat.getDateCreation());
+            stmt.setBoolean(5, chat.isActive());
             stmt.executeUpdate();
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    chat.setId(generatedKeys.getInt(1)); // Set the generated ID
+                }
+            }
             System.out.println("Chat ajouté avec succès !");
         } catch (SQLException e) {
             System.out.println("Erreur lors de l'ajout du chat : " + e.getMessage());
@@ -38,11 +41,14 @@ public class ChatService implements GlobalInterface<Chat> {
 
     @Override
     public void update(Chat chat) {
-        String sql = "UPDATE chat SET nom = ?, type = ? WHERE id = ?";
+        String sql = "UPDATE chat SET communaute_id = ?, nom = ?, type = ?, date_creation = ?, is_active = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, chat.getNom());
-            stmt.setString(2, chat.getType().name()); // Enum to String
-            stmt.setInt(3, chat.getId());
+            stmt.setInt(1, chat.getCommunauteId());
+            stmt.setString(2, chat.getNom());
+            stmt.setString(3, chat.getType());
+            stmt.setTimestamp(4, chat.getDateCreation());
+            stmt.setBoolean(5, chat.isActive());
+            stmt.setInt(6, chat.getId());
             stmt.executeUpdate();
             System.out.println("Chat mis à jour !");
         } catch (SQLException e) {
@@ -57,20 +63,14 @@ public class ChatService implements GlobalInterface<Chat> {
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                String typeString = rs.getString("type").toUpperCase(); // Convert to uppercase
-                try {
-                    ChatType type = ChatType.valueOf(typeString); // Convert String to Enum
-                    chats.add(new Chat(
-                            rs.getInt("id"),
-                            rs.getInt("communaute_id"),
-                            rs.getString("nom"),
-                            type,  // Use the converted enum
-                            rs.getTimestamp("date_creation")
-                    ));
-                } catch (IllegalArgumentException e) {
-                    System.err.println("Invalid ChatType: " + typeString);
-                    // Handle the error (e.g., skip this record or use a default value)
-                }
+                chats.add(new Chat(
+                        rs.getInt("id"),
+                        rs.getInt("communaute_id"),
+                        rs.getString("nom"),
+                        rs.getString("type"),
+                        rs.getTimestamp("date_creation"),
+                        rs.getBoolean("is_active")
+                ));
             }
         } catch (SQLException e) {
             System.out.println("Erreur lors de la récupération des chats : " + e.getMessage());
@@ -102,21 +102,29 @@ public class ChatService implements GlobalInterface<Chat> {
         }
     }
 
-    // chat par defaut (rooms)
+    // Add default chats with specific types and names
     public void addDefaultChats(int communauteId) {
-        String sql = "INSERT INTO chat (communaute_id, nom, type, date_creation) VALUES (?, ?, ?, ?)";
-
+        String sql = "INSERT INTO chat (communaute_id, nom, type, date_creation, is_active) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            for (ChatType type : ChatType.values()) {
-                if (type != ChatType.CUSTOM) { // Ignore CUSTOM type
-                    stmt.setInt(1, communauteId);
-                    stmt.setString(2, type.name()); // Chat name = type
-                    stmt.setString(3, type.name()); // Enum to string
-                    stmt.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
+            // Define the default chats with names and types
+            String[][] defaultChats = {
+                    {"Annonces", "ANNOUNCEMENT"},
+                    {"Questions", "QUESTION"},
+                    {"Retour", "FEEDBACK"},
+                    {"Coaching", "COACH"},
+                    {"Support", "BOT_SUPPORT"}
+            };
 
-
-                    stmt.executeUpdate();
-                }
+            Timestamp now = new Timestamp(System.currentTimeMillis());
+            for (String[] chatInfo : defaultChats) {
+                String nom = chatInfo[0];
+                String type = chatInfo[1];
+                stmt.setInt(1, communauteId);
+                stmt.setString(2, nom);
+                stmt.setString(3, type);
+                stmt.setTimestamp(4, now);
+                stmt.setBoolean(5, true); // All default chats are active
+                stmt.executeUpdate();
             }
             System.out.println("Chats par défaut ajoutés pour la communauté ID: " + communauteId);
         } catch (SQLException e) {
@@ -124,53 +132,48 @@ public class ChatService implements GlobalInterface<Chat> {
         }
     }
 
-        public List<Chat> getChatsByCommunityId(int communauteId) {
-            List<Chat> chats = new ArrayList<>();
-            String sql = "SELECT * FROM chat WHERE communaute_id = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setInt(1, communauteId);
-                ResultSet rs = stmt.executeQuery();
+    public List<Chat> getChatsByCommunityId(int communauteId) {
+        List<Chat> chats = new ArrayList<>();
+        String sql = "SELECT * FROM chat WHERE communaute_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, communauteId);
+            try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    String typeString = rs.getString("type").toUpperCase();
-                    try {
-                        ChatType type = ChatType.valueOf(typeString);
-                        chats.add(new Chat(
-                                rs.getInt("id"),
-                                rs.getInt("communaute_id"),
-                                rs.getString("nom"),
-                                type,
-                                rs.getTimestamp("date_creation")
-                        ));
-                    } catch (IllegalArgumentException e) {
-                        System.err.println("Invalid ChatType: " + typeString);
-                    }
+                    chats.add(new Chat(
+                            rs.getInt("id"),
+                            rs.getInt("communaute_id"),
+                            rs.getString("nom"),
+                            rs.getString("type"),
+                            rs.getTimestamp("date_creation"),
+                            rs.getBoolean("is_active")
+                    ));
                 }
-            } catch (SQLException e) {
-                System.out.println("Erreur lors de la récupération des chats : " + e.getMessage());
             }
-            return chats;
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération des chats : " + e.getMessage());
         }
+        return chats;
+    }
 
     public Chat getChatById(int chatId) {
         String sql = "SELECT * FROM chat WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, chatId);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return new Chat(
-                        rs.getInt("id"),
-                        rs.getInt("communaute_id"),
-                        rs.getString("nom"),
-                        ChatType.valueOf(rs.getString("type")),
-                        rs.getTimestamp("date_creation")
-                );
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Chat(
+                            rs.getInt("id"),
+                            rs.getInt("communaute_id"),
+                            rs.getString("nom"),
+                            rs.getString("type"),
+                            rs.getTimestamp("date_creation"),
+                            rs.getBoolean("is_active")
+                    );
+                }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Erreur lors de la récupération du chat : " + e.getMessage());
         }
         return null;
     }
 }
-
-
-

@@ -1,55 +1,39 @@
 package models;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 public class Communaute {
     private int id;
-    private int id_hackathon;
-    private String nom;
-    private String description;
-    private Timestamp dateCreation;
+    private int idHackathon; // Foreign key to hackathon
+    private String nom; // Community name
+    private String description; // Community description
+    private Timestamp dateCreation; // Creation timestamp
+    private boolean isActive; // Whether the community is active
 
+    // Default constructor
+    public Communaute() {
+    }
 
-    public Communaute() {}
+    // Constructor for creating a new community
+    public Communaute(int idHackathon, String nom, String description) {
+        this.idHackathon = idHackathon;
+        this.nom = nom;
+        this.description = description;
+        this.dateCreation = new Timestamp(System.currentTimeMillis());
+        this.isActive = true;
+    }
 
-    public Communaute(int id, int id_hackathon, String nom, String description, Timestamp dateCreation) {
+    // Constructor for retrieving from database
+    public Communaute(int id, int idHackathon, String nom, String description, Timestamp dateCreation, boolean isActive) {
         this.id = id;
-        this.id_hackathon = id_hackathon;  // Use the provided value
+        this.idHackathon = idHackathon;
         this.nom = nom;
         this.description = description;
         this.dateCreation = dateCreation;
+        this.isActive = isActive;
     }
 
-    // Constructor without ID (for new objects)
-    public Communaute(int id_hackathon, String nom, String description) {
-        this.id_hackathon = id_hackathon;  // Use the provided value
-        this.nom = nom;
-        this.description = description;
-        this.dateCreation = new Timestamp(System.currentTimeMillis()); // Default to current time
-    }
-
-    public Communaute( String nom, String description ,int id) {
-
-        this.nom = nom;
-        this.description = description;
-        this.id = id;
-    }
-
-    public Communaute( int id) {
-        this.id = id;
-    }
-    @Override
-    public String toString() {
-        return "Communaute{" +
-                "id=" + id +
-                ", hackathonId=" + id_hackathon +
-                ", nom='" + nom + '\'' +
-                ", description='" + description + '\'' +
-                ", dateCreation=" + dateCreation +
-                '}';
-    }
-
+    // Getters and setters
     public int getId() {
         return id;
     }
@@ -58,12 +42,12 @@ public class Communaute {
         this.id = id;
     }
 
-    public int getHackathonId() {
-        return id_hackathon;
+    public int getIdHackathon() {
+        return idHackathon;
     }
 
-    public void setHackathonId(int id_hackathon) {
-        this.id_hackathon = id_hackathon;
+    public void setIdHackathon(int idHackathon) {
+        this.idHackathon = idHackathon;
     }
 
     public String getNom() {
@@ -82,10 +66,31 @@ public class Communaute {
         this.description = description;
     }
 
-    public Timestamp getDateCreation() { return dateCreation; }
-    public void setDateCreation(Timestamp dateCreation) { this.dateCreation = dateCreation; }
+    public Timestamp getDateCreation() {
+        return dateCreation;
+    }
+
+    public void setDateCreation(Timestamp dateCreation) {
+        this.dateCreation = dateCreation;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    @Override
+    public String toString() {
+        return "Communaute{" +
+                "id=" + id +
+                ", idHackathon=" + idHackathon +
+                ", nom='" + nom + '\'' +
+                ", description='" + description + '\'' +
+                ", dateCreation=" + dateCreation +
+                ", isActive=" + isActive +
+                '}';
+    }
 }
-
-
-
-

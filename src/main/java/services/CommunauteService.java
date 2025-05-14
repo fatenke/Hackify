@@ -1,113 +1,143 @@
 package services;
 
 import Interfaces.GlobalInterface;
-import com.mysql.cj.jdbc.JdbcConnection;
 import models.Communaute;
 import util.MyConnection;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CommunauteService implements GlobalInterface<Communaute> {
     private ChatService chatService;
-    Connection conn ;
+    private Connection conn;
+
     public CommunauteService() {
-        this.conn = MyConnection.getInstance().getCnx() ;
-        this.chatService = new ChatService(); // Initialize ChatService
-
+        this.conn = MyConnection.getInstance().getCnx();
+        if (conn == null) {
+            throw new IllegalStateException("Connexion à la base de données non établie.");
+        }
+        this.chatService = new ChatService();
     }
-
 
     @Override
     public void add(Communaute communaute) {
-        String sql = "INSERT INTO communaute (id_hackathon, nom, description, date_creation) VALUES (?, ?, ?, ?)";
-
+        String sql = "INSERT INTO communaute (id_hackathon, nom, description, date_creation, is_active) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setInt(1, communaute.getHackathonId());  // Set hackathon_id
-            stmt.setString(2, communaute.getNom());       // Set name
-            stmt.setString(3, communaute.getDescription());// Set description
-            stmt.setTimestamp(4, new Timestamp(System.currentTimeMillis())); // Current date
+            stmt.setInt(1, communaute.getIdHackathon());
+            stmt.setString(2, communaute.getNom());
+            stmt.setString(3, communaute.getDescription());
+            stmt.setTimestamp(4, communaute.getDateCreation());
+            stmt.setBoolean(5, communaute.isActive());
 
             int affectedRows = stmt.executeUpdate();
             if (affectedRows > 0) {
                 try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
                         int communauteId = generatedKeys.getInt(1);
-                        System.out.println("Communaute créée avec ID: " + communauteId);
-
-                        // Ajouter les chats par défaut
+                        communaute.setId(communauteId);
+                        System.out.println("Communauté créée avec ID : " + communauteId);
                         chatService.addDefaultChats(communauteId);
                     }
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            throw new RuntimeException("Erreur lors de l'ajout de la communauté : " + e.getMessage());
         }
     }
 
     @Override
     public void update(Communaute communaute) {
-            String sql = "UPDATE communaute SET   nom = ?, description = ? WHERE id = ?";
+        String sql = "UPDATE communaute SET id_hackathon = ?, nom = ?, description = ?, date_creation = ?, is_active = ? WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, communaute.getIdHackathon());
+            stmt.setString(2, communaute.getNom());
+            stmt.setString(3, communaute.getDescription());
+            stmt.setTimestamp(4, communaute.getDateCreation());
+            stmt.setBoolean(5, communaute.isActive());
+            stmt.setInt(6, communaute.getId());
 
-            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setString(1, communaute.getNom());
-                pstmt.setString(2, communaute.getDescription());
-                pstmt.setInt(3, communaute.getId());
-
-                int rowsUpdated = pstmt.executeUpdate();
-                if (rowsUpdated > 0) {
-                    System.out.println("Communaute updated successfully!");
-                }
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
+            int rowsUpdated = stmt.executeUpdate();
+            if (rowsUpdated == 0) {
+                throw new RuntimeException("Aucune communauté trouvée avec l'ID : " + communaute.getId());
             }
-
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors de la mise à jour de la communauté : " + e.getMessage());
+        }
     }
 
     @Override
     public List<Communaute> getAll() {
         List<Communaute> communautes = new ArrayList<>();
         String sql = "SELECT * FROM communaute";
-
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
-
             while (rs.next()) {
-                Communaute c = new Communaute(
+                Communaute communaute = new Communaute(
                         rs.getInt("id"),
                         rs.getInt("id_hackathon"),
                         rs.getString("nom"),
                         rs.getString("description"),
-                        rs.getTimestamp("date_creation")
+                        rs.getTimestamp("date_creation"),
+                        rs.getBoolean("is_active")
                 );
-                communautes.add(c);
+                communautes.add(communaute);
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            throw new RuntimeException("Erreur lors de la récupération des communautés : " + e.getMessage());
         }
         return communautes;
     }
 
     @Override
     public void delete(Communaute communaute) {
-        // Step 1: Delete all chats related to this community
-        chatService.deleteAllByCommunityId(communaute.getId());
-
-        // Step 2: Delete the community itself
-        String sql = "DELETE FROM communaute WHERE id = ?";
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1, communaute.getId());
-            int rowsDeleted = pstmt.executeUpdate();
-            if (rowsDeleted > 0) {
-                System.out.println("Communaute deleted successfully!");
-            } else {
-                System.out.println("No Communaute found with ID: " + communaute.getId());
+        try {
+            conn.setAutoCommit(false); // Start transaction
+            chatService.deleteAllByCommunityId(communaute.getId());
+            String sql = "DELETE FROM communaute WHERE id = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setInt(1, communaute.getId());
+                int rowsDeleted = stmt.executeUpdate();
+                if (rowsDeleted == 0) {
+                    throw new SQLException("Aucune communauté trouvée avec l'ID : " + communaute.getId());
+                }
             }
+            conn.commit(); // Commit transaction
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            try {
+                conn.rollback(); // Rollback on error
+            } catch (SQLException rollbackEx) {
+                throw new RuntimeException("Erreur lors de l'annulation de la transaction : " + rollbackEx.getMessage());
+            }
+            throw new RuntimeException("Erreur lors de la suppression de la communauté : " + e.getMessage());
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                throw new RuntimeException("Erreur lors de la réinitialisation de l'auto-commit : " + e.getMessage());
+            }
         }
     }
 
-
-
+    public Communaute getById(int id) {
+        String sql = "SELECT * FROM communaute WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Communaute(
+                            rs.getInt("id"),
+                            rs.getInt("id_hackathon"),
+                            rs.getString("nom"),
+                            rs.getString("description"),
+                            rs.getTimestamp("date_creation"),
+                            rs.getBoolean("is_active")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors de la récupération de la communauté : " + e.getMessage());
+        }
+        return null;
+    }
 }

@@ -1,32 +1,41 @@
 package models;
 
-
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 public class Poll {
     private int id;
-    private int chatId; // Links to a specific chat (announcement, feedback, etc.)
-    private String question; // e.g., "Which project idea is best?"
-    private List<PollOption> options; // List of voting options
-    private boolean isClosed; // Whether voting is still open
-    private Date createdAt;
+    private int chatId; // Foreign key to chat
+    private String question; // Poll question
+    private List<PollOption> options; // List of poll options
+    private boolean isClosed; // Whether the poll is closed
+    private Timestamp createdAt; // Creation timestamp
 
-    // Constructor, getters, setters
-    public Poll(int id, int chatId, String question, List<PollOption> options) {
-        this.id = id;
+    // Default constructor
+    public Poll() {
+    }
+
+    // Constructor for creating a new poll
+    public Poll(int chatId, String question, List<PollOption> options) {
         this.chatId = chatId;
         this.question = question;
         this.options = options;
         this.isClosed = false;
-        this.createdAt = new Date();
+        this.createdAt = new Timestamp(System.currentTimeMillis());
     }
 
-    public Poll() {
+    // Constructor for retrieving from database
+    public Poll(int id, int chatId, String question, boolean isClosed, Timestamp createdAt) {
+        this.id = id;
+        this.chatId = chatId;
+        this.question = question;
+        this.isClosed = isClosed;
+        this.createdAt = createdAt;
     }
 
-    public Poll(int chatId, String question, List<PollOption> options, boolean isClosed, Date createdAt) {
+    // Full constructor including options
+    public Poll(int id, int chatId, String question, List<PollOption> options, boolean isClosed, Timestamp createdAt) {
+        this.id = id;
         this.chatId = chatId;
         this.question = question;
         this.options = options;
@@ -34,9 +43,7 @@ public class Poll {
         this.createdAt = createdAt;
     }
 
-    public Poll(int id, int chatId, String question, Timestamp createdAt, boolean isClosed) {
-    }
-
+    // Getters and setters
     public int getId() {
         return id;
     }
@@ -73,15 +80,15 @@ public class Poll {
         return isClosed;
     }
 
-    public void setClosed(boolean closed) {
-        isClosed = closed;
+    public void setClosed(boolean isClosed) {
+        this.isClosed = isClosed;
     }
 
     public Timestamp getCreatedAt() {
-        return (Timestamp) createdAt;
+        return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 }

@@ -2,30 +2,30 @@ package models;
 
 public class PollOption {
     private int id;
-    private int pollId; // Links to the parent poll
-    private String text; // e.g., "Idea A"
-    private int voteCount; // Number of votes for this option
+    private int pollId; // Foreign key to poll
+    private String text; // Option text
+    private int voteCount; // Number of votes
 
-    // Constructor, getters, setters
-    public PollOption(int id, int pollId, String text) {
-        this.id = id;
+    // Default constructor
+    public PollOption() {
+    }
+
+    // Constructor for creating a new option
+    public PollOption(int pollId, String text) {
         this.pollId = pollId;
         this.text = text;
         this.voteCount = 0;
     }
 
-    public PollOption(int pollId, String text, int voteCount) {
+    // Constructor for retrieving from database
+    public PollOption(int id, int pollId, String text, int voteCount) {
+        this.id = id;
         this.pollId = pollId;
         this.text = text;
         this.voteCount = voteCount;
     }
 
-    public PollOption() {
-    }
-
-    public PollOption(int id, int pollId, String text, int voteCount) {
-    }
-
+    // Getters and setters
     public int getId() {
         return id;
     }

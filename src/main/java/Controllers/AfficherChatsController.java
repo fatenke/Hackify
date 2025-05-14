@@ -17,21 +17,18 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import models.Chat;
-import models.ChatType;
 import models.Message;
-import models.Message.MessageType;
+import models.Poll;
+import models.PollOption;
 import models.Reaction;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeRegular;
 import org.kordamp.ikonli.javafx.FontIcon;
 import services.*;
-import util.MyConnection;
 
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -58,20 +55,18 @@ public class AfficherChatsController {
     private GeminiService geminiService;
     private ChatService chatService;
     private MessageService messageService;
-    private PollService pollService = new PollService();
-    private PollOptionService pollOptionService = new PollOptionService();
-    private VoteService voteService = new VoteService();
+    private PollService pollService;
+    private PollOptionService pollOptionService;
+    private PollVoteService voteService;
     private ReactionService reactionService;
     private int currentUserId = 6;
-    private boolean suggestionTriggered = false;
     private int currentCommunityId;
     private Chat selectedChat;
-    private ToggleGroup pollToggleGroup = new ToggleGroup();
 
     private static final String[] SUGGESTIONS = {
-            "How to join a hackathon?",
-            "Where to find resources?",
-            "where can i find my wallet ?"
+            "Comment rejoindre un hackathon ?",
+            "Où trouver des ressources ?",
+            "Où puis-je trouver mon portefeuille ?"
     };
 
     public void setCurrentCommunityId(int id) {
@@ -83,11 +78,10 @@ public class AfficherChatsController {
     public void initialize() {
         chatService = new ChatService();
         geminiService = new GeminiService("AIzaSyAdtU0BkTPvbpbKhK1J6AGNaSwaywhByZc");
-        messageService = new MessageService(
-                MyConnection.getInstance().getCnx(),
-                chatService,
-                geminiService
-        );
+        messageService = new MessageService(chatService, geminiService);
+        pollService = new PollService();
+        pollOptionService = new PollOptionService();
+        voteService = new PollVoteService();
         reactionService = new ReactionService();
 
         messagesListView.setCellFactory(lv -> new MessageCell());
@@ -100,12 +94,12 @@ public class AfficherChatsController {
                     setGraphic(null);
                     setText(null);
                 } else {
-                    String chatName = "Unknown Chat";
+                    String chatName = "Chat inconnu";
                     Chat chat = chatService.getChatById(item.getChatId());
                     if (chat != null) {
                         chatName = chat.getNom();
                     }
-                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                    SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.FRENCH);
                     String timeFormatted = sdf.format(item.getPostTime());
                     TextFlow messageFlow = new TextFlow();
                     String content = item.getContenu();
@@ -130,7 +124,7 @@ public class AfficherChatsController {
                     VBox vbox = new VBox(5);
                     Label chatNameLabel = new Label(chatName);
                     chatNameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 10; -fx-text-fill: gray;");
-                    Label timeLabel = new Label(timeFormatted + " - User: " + item.getPostedBy());
+                    Label timeLabel = new Label(timeFormatted + " - Utilisateur: " + item.getPostedBy());
                     timeLabel.setStyle("-fx-font-size: 10; -fx-text-fill: gray;");
                     vbox.getChildren().addAll(chatNameLabel, messageFlow, timeLabel);
                     setGraphic(vbox);
@@ -166,6 +160,9 @@ public class AfficherChatsController {
             }
         });
 
+        // Bind pollIconButton to show poll popout
+        pollIconButton.setOnAction(e -> handleShowPollPopout());
+
         loadActivePolls();
     }
 
@@ -179,18 +176,22 @@ public class AfficherChatsController {
             noResultsLabel.setManaged(false);
             return;
         }
-        List<Message> results = messageService.searchMessages(term);
-        if (results.isEmpty()) {
-            searchResultsListView.setVisible(false);
-            searchResultsListView.setManaged(false);
-            noResultsLabel.setVisible(true);
-            noResultsLabel.setManaged(true);
-        } else {
-            searchResultsListView.setItems(FXCollections.observableArrayList(results));
-            searchResultsListView.setVisible(true);
-            searchResultsListView.setManaged(true);
-            noResultsLabel.setVisible(false);
-            noResultsLabel.setManaged(false);
+        try {
+            List<Message> results = messageService.searchMessages(term);
+            if (results == null || results.isEmpty()) {
+                searchResultsListView.setVisible(false);
+                searchResultsListView.setManaged(false);
+                noResultsLabel.setVisible(true);
+                noResultsLabel.setManaged(true);
+            } else {
+                searchResultsListView.setItems(FXCollections.observableArrayList(results));
+                searchResultsListView.setVisible(true);
+                searchResultsListView.setManaged(true);
+                noResultsLabel.setVisible(false);
+                noResultsLabel.setManaged(false);
+            }
+        } catch (RuntimeException e) {
+            showAlert("Erreur", "Erreur lors de la recherche des messages : " + e.getMessage());
         }
     }
 
@@ -216,6 +217,10 @@ public class AfficherChatsController {
     private void loadChats() {
         chatsListView.getItems().clear();
         List<Chat> communityChats = chatService.getChatsByCommunityId(currentCommunityId);
+        if (communityChats == null || communityChats.isEmpty()) {
+            showAlert("Information", "Aucun chat trouvé pour cette communauté.");
+            return;
+        }
         for (Chat c : communityChats) {
             chatsListView.getItems().add(c.getNom());
         }
@@ -238,13 +243,18 @@ public class AfficherChatsController {
     }
 
     private void loadMessagesForChat(int chatId) {
-        List<Message> chatMessages = messageService.getMessagesByChatId(chatId);
-        List<Object> items = new ArrayList<>(chatMessages.stream()
-                .filter(m -> m.getType() != MessageType.SUGGESTION)
-                .collect(Collectors.toList()));
-        messagesListView.getItems().setAll(items);
-        displaySuggestions();
-        loadActivePolls();
+        try {
+            List<Message> chatMessages = messageService.getMessagesByChatId(chatId);
+            if (chatMessages == null) {
+                chatMessages = new ArrayList<>();
+            }
+            List<Object> items = new ArrayList<>(chatMessages);
+            messagesListView.getItems().setAll(items);
+            displaySuggestions();
+            loadActivePolls();
+        } catch (RuntimeException e) {
+            showAlert("Erreur", "Erreur lors du chargement des messages : " + e.getMessage());
+        }
     }
 
     private void handleSuggestionClick(String suggestionText) {
@@ -255,21 +265,23 @@ public class AfficherChatsController {
     @FXML
     private void handleSendMessage() {
         String content = messageField.getText().trim();
-        if (content.isEmpty() || selectedChat == null) return;
-        Message newMessage = new Message(
-                selectedChat.getId(),
-                content,
-                MessageType.QUESTION,
-                new Timestamp(System.currentTimeMillis()),
-                currentUserId
-        );
-        messageService.add(newMessage);
-        messageField.clear();
-        loadMessagesForChat(selectedChat.getId());
-        if (!suggestionTriggered) {
+        if (content.isEmpty() || selectedChat == null) {
+            showAlert("Erreur", "Le message ne peut pas être vide ou aucun chat sélectionné.");
+            return;
+        }
+        try {
+            Message newMessage = new Message(
+                    selectedChat.getId(),
+                    content,
+                    new Timestamp(System.currentTimeMillis()),
+                    currentUserId
+            );
+            messageService.add(newMessage);
+            messageField.clear();
+            loadMessagesForChat(selectedChat.getId());
             displaySuggestions();
-        } else {
-            suggestionTriggered = false;
+        } catch (RuntimeException e) {
+            showAlert("Erreur", "Erreur lors de l'envoi du message : " + e.getMessage());
         }
     }
 
@@ -283,16 +295,18 @@ public class AfficherChatsController {
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
+            showAlert("Erreur", "Erreur lors du retour : " + e.getMessage());
         }
     }
 
     private void displaySuggestions() {
-        if (selectedChat == null || selectedChat.getType() != ChatType.BOT_SUPPORT) {
-            suggestionBox.getChildren().clear();
+        suggestionBox.getChildren().clear();
+        if (selectedChat == null) {
             return;
         }
-        suggestionBox.getChildren().clear();
+        if (!"BOT_SUPPORT".equals(selectedChat.getType())) {
+            return;
+        }
         for (String suggestion : SUGGESTIONS) {
             Button suggestionBtn = new Button(suggestion);
             suggestionBtn.setStyle("-fx-background-color: #4A148C; -fx-text-fill: white; -fx-background-radius: 15; -fx-padding: 5 10; -fx-cursor: hand;");
@@ -323,25 +337,34 @@ public class AfficherChatsController {
         String option2 = pollOption2Field.getText().trim();
 
         if (question.isEmpty() || option1.isEmpty() || option2.isEmpty() || selectedChat == null) {
-            showAlert("Error", "Please fill all poll fields.");
+            showAlert("Erreur", "Veuillez remplir tous les champs du sondage.");
+            return;
+        }
+        if (option1.equals(option2)) {
+            showAlert("Erreur", "Les options du sondage doivent être différentes.");
             return;
         }
 
-        Timestamp createdAt = new Timestamp(System.currentTimeMillis());
-        int pollId = pollService.createPoll(selectedChat.getId(), question, createdAt);
-        if (pollId != -1) {
-            int opt1Id = pollOptionService.createOption(pollId, option1);
-            int opt2Id = pollOptionService.createOption(pollId, option2);
-            addPollToChat(pollId, question, option1, opt1Id, option2, opt2Id, createdAt, false);
-        } else {
-            showAlert("Error", "Failed to create poll.");
-        }
+        try {
+            List<PollOption> options = new ArrayList<>();
+            options.add(new PollOption(0, option1));
+            options.add(new PollOption(0, option2));
+            Poll poll = new Poll(selectedChat.getId(), question, options);
+            pollService.add(poll);
 
-        pollQuestionField.clear();
-        pollOption1Field.clear();
-        pollOption2Field.clear();
-        handleCancelPoll();
-        loadMessagesForChat(selectedChat.getId());
+            if (poll.getId() == 0) {
+                showAlert("Erreur", "Échec de la création du sondage.");
+                return;
+            }
+
+            pollQuestionField.clear();
+            pollOption1Field.clear();
+            pollOption2Field.clear();
+            handleCancelPoll();
+            loadMessagesForChat(selectedChat.getId());
+        } catch (RuntimeException e) {
+            showAlert("Erreur", "Erreur lors de la création du sondage : " + e.getMessage());
+        }
     }
 
     @FXML
@@ -353,65 +376,90 @@ public class AfficherChatsController {
         pollOption2Field.clear();
     }
 
-    private void handleVote(int pollId) {
+    private void handleVote(int pollId, ToggleGroup toggleGroup) {
         if (selectedChat == null) {
-            showAlert("Error", "No chat selected.");
+            showAlert("Erreur", "Aucun chat sélectionné.");
             return;
         }
 
-        System.out.println("Handling vote for poll ID: " + pollId);
-
-        RadioButton selectedOption = (RadioButton) pollToggleGroup.getSelectedToggle();
+        RadioButton selectedOption = (RadioButton) toggleGroup.getSelectedToggle();
         if (selectedOption == null) {
-            showAlert("Error", "Please select an option to vote.");
+            showAlert("Erreur", "Veuillez sélectionner une option pour voter.");
             return;
         }
 
-        int optionId = (int) selectedOption.getUserData();
-        if (voteService.hasUserVoted(pollId, currentUserId)) {
-            showAlert("Info", "You have already voted in this poll.");
-            return;
-        }
+        try {
+            int optionId = (int) selectedOption.getUserData();
+            Poll poll = pollService.getById(pollId);
+            if (poll == null) {
+                showAlert("Erreur", "Sondage non trouvé.");
+                return;
+            }
+            if (poll.isClosed()) {
+                showAlert("Information", "Ce sondage est fermé et n'accepte plus de votes.");
+                return;
+            }
+            if (voteService.hasUserVoted(pollId, currentUserId)) {
+                showAlert("Information", "Vous avez déjà voté dans ce sondage.");
+                return;
+            }
 
-        if (pollService.isPollClosed(pollId)) {
-            showAlert("Info", "This poll is closed and cannot accept votes.");
-            return;
+            voteService.recordVote(pollId, optionId, currentUserId);
+            loadActivePolls();
+        } catch (RuntimeException e) {
+            showAlert("Erreur", "Erreur lors du vote : " + e.getMessage());
         }
-
-        voteService.recordVote(pollId, optionId, currentUserId);
-        pollOptionService.incrementVoteCount(optionId);
-        loadActivePolls();
     }
 
     private void handleClosePoll(int pollId) {
         if (selectedChat == null) {
-            showAlert("Error", "No chat selected.");
+            showAlert("Erreur", "Aucun chat sélectionné.");
             return;
         }
 
-        System.out.println("Handling close for poll ID: " + pollId);
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Confirmer la fermeture");
+        confirmation.setHeaderText(null);
+        confirmation.setContentText("Êtes-vous sûr de vouloir fermer ce sondage ?");
+        Optional<ButtonType> result = confirmation.showAndWait();
 
-        pollService.closePoll(pollId);
-        loadActivePolls();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                pollService.closePoll(pollId);
+                showAlert("Succès", "Sondage fermé avec succès.");
+                loadActivePolls();
+            } catch (RuntimeException e) {
+                showAlert("Erreur", "Erreur lors de la fermeture du sondage : " + e.getMessage());
+            }
+        }
     }
 
     private void handleDeletePoll(int pollId) {
         if (selectedChat == null) {
-            showAlert("Error", "No chat selected.");
+            showAlert("Erreur", "Aucun chat sélectionné.");
             return;
         }
 
-        System.out.println("Handling delete for poll ID: " + pollId);
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Confirmer la suppression");
+        confirmation.setHeaderText(null);
+        confirmation.setContentText("Êtes-vous sûr de vouloir supprimer ce sondage ?");
+        Optional<ButtonType> result = confirmation.showAndWait();
 
-        pollService.deletePoll(pollId);
-        loadActivePolls();
-    }
-
-    private int getPollIdFromNode(VBox pollNode) {
-        if (pollNode != null && pollNode.getUserData() instanceof Integer) {
-            return (int) pollNode.getUserData();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                Poll poll = pollService.getById(pollId);
+                if (poll != null) {
+                    pollService.delete(poll);
+                    showAlert("Succès", "Sondage supprimé avec succès.");
+                } else {
+                    showAlert("Erreur", "Sondage non trouvé.");
+                }
+                loadActivePolls();
+            } catch (RuntimeException e) {
+                showAlert("Erreur", "Erreur lors de la suppression du sondage : " + e.getMessage());
+            }
         }
-        return -1;
     }
 
     private void loadActivePolls() {
@@ -421,50 +469,16 @@ public class AfficherChatsController {
         }
 
         try {
-            Connection conn = MyConnection.getInstance().getCnx();
-            PreparedStatement ps = conn.prepareStatement(
-                    "SELECT p.id AS poll_id, p.question, p.is_closed, p.created_at, po.id AS option_id, po.text, po.vote_count " +
-                            "FROM polls p " +
-                            "LEFT JOIN poll_options po ON p.id = po.poll_id " +
-                            "WHERE p.chat_id = ? AND p.is_closed = FALSE " +
-                            "ORDER BY p.created_at ASC");
-            ps.setInt(1, selectedChat.getId());
-            ResultSet rs = ps.executeQuery();
-
+            List<Poll> polls = pollService.getPollsByChatId(selectedChat.getId());
             List<VBox> pollNodes = new ArrayList<>();
-            int currentPollId = -1;
-            String question = null;
-            Timestamp createdAt = null;
-            boolean isClosed = false;
-            List<String> options = new ArrayList<>();
-            List<Integer> optionIds = new ArrayList<>();
-            List<Integer> voteCounts = new ArrayList<>();
 
-            while (rs.next()) {
-                int pollId = rs.getInt("poll_id");
-                if (pollId != currentPollId) {
-                    if (currentPollId != -1 && !options.isEmpty()) {
-                        addPollNode(pollNodes, currentPollId, question, options, optionIds, voteCounts, createdAt, isClosed);
+            for (Poll poll : polls) {
+                if (!poll.isClosed()) {
+                    VBox pollNode = createPollNode(poll);
+                    if (pollNode != null) {
+                        pollNodes.add(pollNode);
                     }
-                    currentPollId = pollId;
-                    question = rs.getString("question");
-                    isClosed = rs.getBoolean("is_closed");
-                    createdAt = rs.getTimestamp("created_at");
-                    options.clear();
-                    optionIds.clear();
-                    voteCounts.clear();
                 }
-                String optionText = rs.getString("text");
-                int optionId = rs.getInt("option_id");
-                int voteCount = rs.getInt("vote_count");
-                if (optionText != null) {
-                    options.add(optionText);
-                    optionIds.add(optionId);
-                    voteCounts.add(voteCount);
-                }
-            }
-            if (currentPollId != -1 && !options.isEmpty()) {
-                addPollNode(pollNodes, currentPollId, question, options, optionIds, voteCounts, createdAt, isClosed);
             }
 
             if (!pollNodes.isEmpty()) {
@@ -472,117 +486,68 @@ public class AfficherChatsController {
                 currentItems.removeIf(item -> item instanceof VBox);
                 currentItems.addAll(pollNodes);
                 messagesListView.getItems().setAll(currentItems);
-                messagesListView.scrollTo(messagesListView.getItems().size() - 1);
+                if (!currentItems.isEmpty()) {
+                    messagesListView.scrollTo(currentItems.size() - 1);
+                }
             } else {
                 removeAllPollsFromChat();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            showAlert("Error", "Failed to load polls: " + e.getMessage());
+        } catch (RuntimeException e) {
+            showAlert("Erreur", "Erreur lors du chargement des sondages : " + e.getMessage());
         }
     }
 
-    private void addPollNode(List<VBox> pollNodes, int pollId, String question, List<String> options, List<Integer> optionIds, List<Integer> voteCounts, Timestamp createdAt, boolean isClosed) {
-        if (options.size() != 2) {
-            System.out.println("Warning: Poll should have exactly 2 options, found " + options.size() + " for poll ID " + pollId);
-            return;
+    private VBox createPollNode(Poll poll) {
+        List<PollOption> options = poll.getOptions();
+        if (options == null || options.isEmpty()) {
+            System.out.println("Avertissement : Le sondage doit avoir au moins une option, trouvé " + (options == null ? 0 : options.size()) + " pour le sondage ID " + poll.getId());
+            return null;
         }
 
         VBox pollNode = new VBox(5);
         pollNode.setStyle("-fx-background-color: #E3F2FD; -fx-padding: 8; -fx-border-radius: 15; -fx-border-color: #BBDEFB;");
         pollNode.setAlignment(Pos.CENTER_LEFT);
-        pollNode.setUserData(pollId);
+        pollNode.setUserData(poll.getId());
 
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        Label timeLabel = new Label("Created at: " + sdf.format(createdAt));
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.FRENCH);
+        Label timeLabel = new Label("Créé à : " + sdf.format(poll.getCreatedAt()));
         timeLabel.setStyle("-fx-font-size: 10; -fx-text-fill: gray;");
         pollNode.getChildren().add(timeLabel);
 
-        Label questionLabel = new Label(question);
+        Label questionLabel = new Label(poll.getQuestion());
         questionLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12;");
         pollNode.getChildren().add(questionLabel);
 
-        pollToggleGroup = new ToggleGroup();
-        for (int i = 0; i < options.size(); i++) {
-            RadioButton option = new RadioButton(options.get(i) + " (" + voteCounts.get(i) + " votes)");
-            option.setToggleGroup(pollToggleGroup);
-            option.setUserData(optionIds.get(i));
-            pollNode.getChildren().add(option);
+        ToggleGroup toggleGroup = new ToggleGroup();
+        for (PollOption option : options) {
+            RadioButton radioButton = new RadioButton(option.getText() + " (" + option.getVoteCount() + " votes)");
+            radioButton.setToggleGroup(toggleGroup);
+            radioButton.setUserData(option.getId());
+            pollNode.getChildren().add(radioButton);
         }
 
-        if (!isClosed) {
-            Button voteBtn = new Button("Vote");
+        if (!poll.isClosed()) {
+            Button voteBtn = new Button("Voter");
             voteBtn.setStyle("-fx-background-color: #0078ff; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 2 10;");
-            voteBtn.setOnAction(e -> handleVote(pollId));
+            voteBtn.setOnAction(e -> handleVote(poll.getId(), toggleGroup));
             pollNode.getChildren().add(voteBtn);
 
-            Button closeBtn = new Button("Close Poll");
+            Button closeBtn = new Button("Fermer le sondage");
             closeBtn.setStyle("-fx-background-color: #FF4500; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 2 10;");
-            closeBtn.setOnAction(e -> handleClosePoll(pollId));
+            closeBtn.setOnAction(e -> handleClosePoll(poll.getId()));
             pollNode.getChildren().add(closeBtn);
         } else {
-            Label closedLabel = new Label("Closed");
+            Label closedLabel = new Label("Fermé");
             closedLabel.setStyle("-fx-font-size: 10; -fx-text-fill: red;");
             pollNode.getChildren().add(closedLabel);
         }
 
-        Button deleteBtn = new Button("Delete");
+        Button deleteBtn = new Button("Supprimer");
         deleteBtn.setStyle("-fx-background-color: #FF0000; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 2 10;");
-        deleteBtn.setOnAction(e -> handleDeletePoll(pollId));
+        deleteBtn.setOnAction(e -> handleDeletePoll(poll.getId()));
         pollNode.getChildren().add(deleteBtn);
 
-        pollNodes.add(pollNode);
-    }
-
-    private void addPollToChat(int pollId, String question, String option1, int opt1Id, String option2, int opt2Id, Timestamp createdAt, boolean isClosed) {
-        VBox pollNode = new VBox(5);
-        pollNode.setStyle("-fx-background-color: #E3F2FD; -fx-padding: 8; -fx-border-radius: 15; -fx-border-color: #BBDEFB;");
-        pollNode.setAlignment(Pos.CENTER_LEFT);
-        pollNode.setUserData(pollId);
-
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        Label timeLabel = new Label("Created at: " + sdf.format(createdAt));
-        timeLabel.setStyle("-fx-font-size: 10; -fx-text-fill: gray;");
-        pollNode.getChildren().add(timeLabel);
-
-        Label questionLabel = new Label(question);
-        questionLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12;");
-        pollNode.getChildren().add(questionLabel);
-
-        pollToggleGroup = new ToggleGroup();
-        RadioButton opt1 = new RadioButton(option1 + " (" + pollOptionService.getVoteCount(opt1Id) + " votes)");
-        opt1.setToggleGroup(pollToggleGroup);
-        opt1.setUserData(opt1Id);
-        RadioButton opt2 = new RadioButton(option2 + " (" + pollOptionService.getVoteCount(opt2Id) + " votes)");
-        opt2.setToggleGroup(pollToggleGroup);
-        opt2.setUserData(opt2Id);
-        pollNode.getChildren().addAll(opt1, opt2);
-
-        if (!isClosed) {
-            Button voteBtn = new Button("Vote");
-            voteBtn.setStyle("-fx-background-color: #0078ff; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 2 10;");
-            voteBtn.setOnAction(e -> handleVote(pollId));
-            pollNode.getChildren().add(voteBtn);
-
-            Button closeBtn = new Button("Close Poll");
-            closeBtn.setStyle("-fx-background-color: #FF4500; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 2 10;");
-            closeBtn.setOnAction(e -> handleClosePoll(pollId));
-            pollNode.getChildren().add(closeBtn);
-        } else {
-            Label closedLabel = new Label("Closed");
-            closedLabel.setStyle("-fx-font-size: 10; -fx-text-fill: red;");
-            pollNode.getChildren().add(closedLabel);
-        }
-
-        Button deleteBtn = new Button("Delete");
-        deleteBtn.setStyle("-fx-background-color: #FF0000; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 2 10;");
-        deleteBtn.setOnAction(e -> handleDeletePoll(pollId));
-        pollNode.getChildren().add(deleteBtn);
-
-        List<Object> currentItems = new ArrayList<>(messagesListView.getItems());
-        currentItems.add(pollNode);
-        messagesListView.getItems().setAll(currentItems);
-        messagesListView.scrollTo(messagesListView.getItems().size() - 1);
+        return pollNode;
     }
 
     private void removeAllPollsFromChat() {
@@ -592,7 +557,7 @@ public class AfficherChatsController {
     }
 
     private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        Alert alert = new Alert(title.equals("Information") || title.equals("Succès") ? Alert.AlertType.INFORMATION : Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(content);
@@ -657,14 +622,12 @@ public class AfficherChatsController {
             Message message = (Message) currentItem;
 
             try {
-                // Check if user already reacted with this emoji
                 boolean hasReacted = reactionService.getAll().stream()
                         .anyMatch(r -> r.getMessageId() == message.getId() &&
                                 r.getUserId() == currentUserId &&
                                 r.getEmoji().equals(emoji));
 
                 if (hasReacted) {
-                    // Remove reaction
                     Reaction reaction = reactionService.getAll().stream()
                             .filter(r -> r.getMessageId() == message.getId() &&
                                     r.getUserId() == currentUserId &&
@@ -675,7 +638,6 @@ public class AfficherChatsController {
                         reactionService.delete(reaction);
                     }
                 } else {
-                    // Add reaction
                     Reaction reaction = new Reaction(
                             currentUserId,
                             message.getId(),
@@ -684,42 +646,62 @@ public class AfficherChatsController {
                     );
                     reactionService.add(reaction);
                 }
-                // Refresh messages to update counts
                 loadMessagesForChat(selectedChat.getId());
-            } catch (Exception e) {
-                showAlert("Error", "Failed to process reaction: " + e.getMessage());
+            } catch (RuntimeException e) {
+                showAlert("Erreur", "Échec du traitement de la réaction : " + e.getMessage());
             }
         }
 
         private void handleDelete() {
-            if (currentItem instanceof Message) {
-                Message message = (Message) currentItem;
-                messageService.delete(message);
-                getListView().getItems().remove(currentItem);
+            if (!(currentItem instanceof Message)) return;
+            Message message = (Message) currentItem;
+
+            Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmation.setTitle("Confirmer la suppression");
+            confirmation.setHeaderText(null);
+            confirmation.setContentText("Êtes-vous sûr de vouloir supprimer ce message ?");
+            Optional<ButtonType> result = confirmation.showAndWait();
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                try {
+                    messageService.delete(message);
+                    getListView().getItems().remove(currentItem);
+                    showAlert("Succès", "Message supprimé avec succès.");
+                } catch (RuntimeException e) {
+                    showAlert("Erreur", "Erreur lors de la suppression du message : " + e.getMessage());
+                }
             }
         }
 
         private void handleEdit() {
-            if (currentItem instanceof Message) {
-                Message message = (Message) currentItem;
-                editTextField.setText(message.getContenu());
-                messageVBox.getChildren().setAll(editBox);
-            }
+            if (!(currentItem instanceof Message)) return;
+            Message message = (Message) currentItem;
+            editTextField.setText(message.getContenu());
+            messageVBox.getChildren().setAll(editBox);
         }
 
         private void handleSave() {
             String newContent = editTextField.getText().trim();
-            if (!newContent.isEmpty() && currentItem instanceof Message) {
+            if (newContent.isEmpty() || !(currentItem instanceof Message)) {
+                showAlert("Erreur", "Le message modifié ne peut pas être vide.");
+                return;
+            }
+            try {
                 Message message = (Message) currentItem;
                 message.setContenu(newContent);
                 messageService.update(message);
                 messageLabel.setText(newContent);
                 loadMessagesForChat(selectedChat.getId());
+                showAlert("Succès", "Message modifié avec succès.");
+            } catch (RuntimeException e) {
+                showAlert("Erreur", "Erreur lors de la modification du message : " + e.getMessage());
             }
         }
 
         private void handleCancel() {
-            loadMessagesForChat(selectedChat.getId());
+            if (selectedChat != null) {
+                loadMessagesForChat(selectedChat.getId());
+            }
         }
 
         @Override
@@ -733,37 +715,37 @@ public class AfficherChatsController {
                 currentItem = message;
                 messageLabel.setText(message.getContenu());
 
-                // Get reaction counts
-                Map<String, Long> reactionCounts = reactionService.getReactionCounts(message.getId());
-                StringBuilder countsText = new StringBuilder();
-                reactionCounts.forEach((emoji, count) -> {
-                    if (count > 0) {
-                        countsText.append(emoji).append(" ").append(count).append(" ");
-                    }
-                });
-                reactionCountsLabel.setText(countsText.toString());
+                try {
+                    Map<String, Long> reactionCounts = reactionService.getReactionCounts(message.getId());
+                    StringBuilder countsText = new StringBuilder();
+                    reactionCounts.forEach((emoji, count) -> {
+                        if (count > 0) {
+                            countsText.append(emoji).append(" ").append(count).append(" ");
+                        }
+                    });
+                    reactionCountsLabel.setText(countsText.toString());
+                } catch (RuntimeException e) {
+                    reactionCountsLabel.setText("");
+                    System.out.println("Erreur lors du chargement des réactions : " + e.getMessage());
+                }
 
-                // Configure message appearance
                 configureMessageAppearance(message);
 
-                // Build message display
                 messageVBox.getChildren().clear();
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.FRENCH);
                 String timeFormatted = sdf.format(message.getPostTime());
-                Label chatNameLabel = new Label("User " + message.getPostedBy());
+                Label chatNameLabel = new Label("Utilisateur " + message.getPostedBy());
                 chatNameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 10; -fx-text-fill: gray;");
                 Label timeLabel = new Label(timeFormatted);
                 timeLabel.setStyle("-fx-font-size: 10; -fx-text-fill: gray;");
 
                 if (message.getPostedBy() == -1) {
-                    // Bot message: no reactions or edit/delete
                     messageVBox.getChildren().addAll(
                             chatNameLabel,
                             new TextFlow(new Text(message.getContenu())),
                             timeLabel
                     );
                 } else {
-                    // Non-bot message: include reactions
                     messageVBox.getChildren().addAll(
                             chatNameLabel,
                             new TextFlow(new Text(message.getContenu())),
