@@ -27,7 +27,8 @@ public class NavBar {
 
     @FXML
     private Button btAjouterHackathon;
-
+    @FXML
+    private Button btAjoutertech;
     @FXML
     private Button btHistoriqueParticipation;
 
@@ -118,4 +119,18 @@ public class NavBar {
     }
 
 
+    @FXML
+    private void Ajoutertechnologie(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/AjouterTechnologie.fxml")
+            );
+            Parent newContent = loader.load();
+            Stage stage = (Stage) btAjoutertech.getScene().getWindow();
+            stage.getScene().setRoot(newContent);
+        } catch (IOException e) {
+            e.printStackTrace();
+            // ou showAlert…
+        }
+    }
 }
