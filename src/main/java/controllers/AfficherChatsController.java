@@ -24,6 +24,8 @@ import models.Reaction;
 import org.kordamp.ikonli.fontawesome5.FontAwesomeRegular;
 import org.kordamp.ikonli.javafx.FontIcon;
 import services.*;
+import util.SessionManager;
+
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -59,9 +61,9 @@ public class AfficherChatsController {
     private PollOptionService pollOptionService;
     private PollVoteService voteService;
     private ReactionService reactionService;
-    private int currentUserId = 6;
     private int currentCommunityId;
     private Chat selectedChat;
+    private int currentUserId = SessionManager.getSession(SessionManager.getLastSessionId()).getId();
 
     private static final String[] SUGGESTIONS = {
             "Comment rejoindre un hackathon ?",
@@ -69,7 +71,7 @@ public class AfficherChatsController {
             "Où puis-je trouver mon portefeuille ?"
     };
 
-    public void setCurrentCommunityId(int id) {
+    public void setCommunaute(int id) {
         this.currentCommunityId = id;
         loadChats();
     }

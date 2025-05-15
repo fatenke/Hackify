@@ -3,11 +3,16 @@ package services;
 import Interfaces.GlobalInterface;
 import javafx.scene.control.Alert;
 import models.Message;
+import models.Participation;
+import models.User;
 import util.MyConnection;
+import util.SessionManager;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.lang.System.out;
 
 public class MessageService implements GlobalInterface<Message> {
     private final Connection conn;
@@ -21,6 +26,8 @@ public class MessageService implements GlobalInterface<Message> {
         this.botService = new BotService(this, chatService, geminiService);
     }
 
+
+
     @Override
     public void add(Message message) {
         // Initialize ModerationService with the API key
@@ -28,9 +35,24 @@ public class MessageService implements GlobalInterface<Message> {
         double toxicityScore = moderationService.getToxicityScore(message.getContenu());
         double threshold = 0.8; // Set your toxicity threshold
 
+        // Récupérer l'utilisateur connecté
+        User userConnecte = SessionManager.getSession(SessionManager.getLastSessionId());
+        if (userConnecte == null) {
+            out.println("Aucun utilisateur connecté !");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText("Utilisateur Non Connecté");
+            alert.setContentText("Vous devez être connecté pour envoyer un message.");
+            alert.showAndWait();
+            return;
+        }
+
+        // Set the posted_by field to the current user's ID
+        message.setPostedBy(userConnecte.getId());
+
         // If toxicity score exceeds the threshold, flag and do not save the message
         if (toxicityScore >= threshold) {
-            System.out.println("Message signalé comme toxique (score : " + toxicityScore + "). Message non enregistré.");
+            out.println("Message signalé comme toxique (score : " + toxicityScore + "). Message non enregistré.");
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Message Bloqué");
             alert.setHeaderText("Contenu Inapproprié Détecté");
@@ -67,8 +89,6 @@ public class MessageService implements GlobalInterface<Message> {
             throw new RuntimeException("Échec de l'enregistrement du message", e);
         }
     }
-
-
     @Override
     public void update(Message message) {
         String sql = "UPDATE message SET chat_id = ?, posted_by = ?, contenu = ?, post_time = ? WHERE id = ?";
@@ -80,12 +100,12 @@ public class MessageService implements GlobalInterface<Message> {
             stmt.setInt(5, message.getId());
             int rowsUpdated = stmt.executeUpdate();
             if (rowsUpdated > 0) {
-                System.out.println("Message mis à jour avec succès !");
+                out.println("Message mis à jour avec succès !");
             } else {
-                System.out.println("Aucun message trouvé avec l'ID : " + message.getId());
+                out.println("Aucun message trouvé avec l'ID : " + message.getId());
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la mise à jour du message : " + e.getMessage());
+            out.println("Erreur lors de la mise à jour du message : " + e.getMessage());
         }
     }
 
@@ -105,7 +125,7 @@ public class MessageService implements GlobalInterface<Message> {
                 ));
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la récupération des messages : " + e.getMessage());
+            out.println("Erreur lors de la récupération des messages : " + e.getMessage());
         }
         return messages;
     }
@@ -117,12 +137,12 @@ public class MessageService implements GlobalInterface<Message> {
             stmt.setInt(1, message.getId());
             int rowsDeleted = stmt.executeUpdate();
             if (rowsDeleted > 0) {
-                System.out.println("Message supprimé avec succès !");
+                out.println("Message supprimé avec succès !");
             } else {
-                System.out.println("Aucun message trouvé avec l'ID : " + message.getId());
+                out.println("Aucun message trouvé avec l'ID : " + message.getId());
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la suppression du message : " + e.getMessage());
+            out.println("Erreur lors de la suppression du message : " + e.getMessage());
         }
     }
 
@@ -142,7 +162,7 @@ public class MessageService implements GlobalInterface<Message> {
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la récupération du message : " + e.getMessage());
+            out.println("Erreur lors de la récupération du message : " + e.getMessage());
         }
         return null;
     }
@@ -164,7 +184,7 @@ public class MessageService implements GlobalInterface<Message> {
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la récupération des messages : " + e.getMessage());
+            out.println("Erreur lors de la récupération des messages : " + e.getMessage());
         }
         return messages;
     }
@@ -186,7 +206,7 @@ public class MessageService implements GlobalInterface<Message> {
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la recherche des messages : " + e.getMessage());
+            out.println("Erreur lors de la recherche des messages : " + e.getMessage());
         }
         return messages;
     }

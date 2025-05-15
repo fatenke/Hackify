@@ -2,98 +2,117 @@ package controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import models.Communaute;
+import models.Hackathon;
 import services.CommunauteService;
+import services.ParticipationService;
 
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public class CommunityCardController {
-    @FXML
-    private Label communityName;
-    @FXML
-    private Button seeChatsButton;
-    @FXML
-    private Label communityDescription;
-    @FXML
-    private Label communityDate;
-    @FXML
-    private Button deleteButton;
+    private final CommunauteService commuService= new CommunauteService();
+    private final ParticipationService participationService= new ParticipationService();
 
-    private int communityId;
-    private CommunauteService communauteService;
-
-    public CommunityCardController() {
-        this.communauteService = new CommunauteService();
+    @FXML
+    private GridPane gp_hackathon;
+    @FXML
+    void initialize() {
+        loadCommunities();
     }
+    public void loadCommunities(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm");
+        List<Communaute> communautes = commuService.getAll();
+        int columns = 3;
+        int row = 0, col = 0;
+        for (Communaute c : communautes) {
+            StackPane stack = new StackPane();
+            stack.getStyleClass().add("hackathon-card");
+            stack.setPadding(new Insets(0));
+            Rectangle frontFace = new Rectangle(330, 230);
+            frontFace.setFill(Color.WHITE);
+            frontFace.setStroke(Color.LIGHTGRAY);
+            frontFace.setStrokeWidth(2);
+            frontFace.setArcWidth(60);
+            frontFace.setArcHeight(30);
+            StackPane.setAlignment(frontFace, Pos.TOP_RIGHT);
+            stack.getStyleClass().add("frontFace");
 
-    public void setCommunityDetails(int id, String name, String description, Timestamp date) {
-        this.communityId = id;
-        communityName.setText(name != null ? name : "Sans nom");
-        communityDescription.setText(description != null ? description : "Aucune description");
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        communityDate.setText(date != null ? sdf.format(date) : "Aucune date");
-    }
 
-    @FXML
-    private void handleSeeChats() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/afficherChats.fxml"));
-            Parent root = loader.load();
+            VBox textContainer = new VBox(5);
+            textContainer.setAlignment(Pos.CENTER);
+            textContainer.setPadding(new Insets(10));
+            textContainer.getStyleClass().add("textContainer");
 
-            AfficherChatsController controller = loader.getController();
-            controller.setCurrentCommunityId(communityId);
+            Label nom = new Label(c.getNom());
+            nom.setFont(new Font("Arial", 16));
+            nom.setStyle("-fx-font-weight: bold; -fx-text-fill: #333;");
 
-            Scene scene = new Scene(root);
-            Stage stage = (Stage) seeChatsButton.getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            showAlert("Erreur", "Erreur lors du chargement des chats : " + e.getMessage());
-        }
-    }
 
-    @FXML
-    private void handleDelete() {
-        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmation.setTitle("Confirmer la suppression");
-        confirmation.setHeaderText(null);
-        confirmation.setContentText("Êtes-vous sûr de vouloir supprimer cette communauté ?");
-        Optional<ButtonType> result = confirmation.showAndWait();
 
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            try {
-                Communaute communaute = communauteService.getById(communityId);
-                if (communaute == null) {
-                    showAlert("Erreur", "Communauté non trouvée avec l'ID : " + communityId);
-                    return;
-                }
-                communauteService.delete(communaute);
-                showAlert("Succès", "Communauté supprimée avec succès !");
-                // Optionally, refresh the parent UI instead of closing
-                // For now, close the card's parent container (assumed to be a modal or pane)
-                deleteButton.getParent().setVisible(false);
-                deleteButton.getParent().setManaged(false);
-            } catch (Exception e) {
-                showAlert("Erreur", "Erreur lors de la suppression de la communauté : " + e.getMessage());
+            HBox hbox = new HBox(10);
+            hbox.setAlignment(Pos.CENTER);
+
+
+            Button chatButton = new Button("Voir Chats");
+            chatButton.getStyleClass().add("btn-action");
+            chatButton.setOnAction(event -> afficherChats(c));
+            hbox.getChildren().addAll(chatButton);
+
+
+            stack.getChildren().addAll(frontFace, textContainer);
+            StackPane.setMargin(frontFace, new Insets(-10, -12, 0, 0));
+
+            gp_hackathon.add(stack, col, row);
+            col++;
+            if (col == columns) {
+                col = 0;
+                row++;
             }
         }
+
     }
 
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(title.equals("Erreur") ? Alert.AlertType.ERROR : Alert.AlertType.INFORMATION);
+    private void afficherChats(Communaute communaute) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/AfficherChats.fxml"));
+            Parent newContent = loader.load();
+
+            // Pass the selected community to the new controller if needed
+            AfficherChatsController controller = loader.getController();
+            controller.setCommunaute(communaute.getId());
+
+            Stage stage = (Stage) gp_hackathon.getScene().getWindow();
+            stage.getScene().setRoot(newContent);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Error", "Failed to load the chat view: " + e.getMessage());
+        }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText(content);
+        alert.setContentText(message);
         alert.showAndWait();
     }
+
 }
+

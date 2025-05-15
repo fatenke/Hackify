@@ -11,8 +11,8 @@
 <?import javafx.scene.layout.StackPane?>
 
 <BorderPane xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1"
-            stylesheets="/styles/AfficherChatsStyle.css"
-            fx:controller="Controllers.AfficherChatsController">
+            stylesheets="/Styles/AfficherChatsStyle.css"
+            fx:controller="controllers.AfficherChatsController">
 
     <!-- Top: Header Section -->
     <top>
