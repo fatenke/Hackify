@@ -8,8 +8,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import models.User;
 import util.SessionManager;
@@ -34,6 +36,13 @@ public class NavBar {
 
     @FXML
     private Pane paneshow;
+    @FXML
+    private ImageView reduceIcon;
+
+    @FXML
+    private Circle profileImg;
+
+
 
     @FXML
     void AfficherHackathon(ActionEvent event) {
@@ -86,6 +95,7 @@ public class NavBar {
     @FXML
     private void btn_view_profile(MouseEvent event) throws IOException {
 
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/OperationUser.fxml"));
         Parent root = loader.load();
         OperationUser controller = loader.getController();
@@ -93,7 +103,6 @@ public class NavBar {
         paneshow.getChildren().setAll(root);
 
     }
-
     @FXML
     private void logoutuser(ActionEvent event) throws IOException {
 

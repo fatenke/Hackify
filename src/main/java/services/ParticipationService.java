@@ -178,7 +178,7 @@ public class ParticipationService implements GlobalInterface<Participation> {
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("Toutes les participations en attente ont été refusées pour le hackathon ID: " + idHackathon);
-                /*sendHackathonFullEmail();*/
+
             }
 
         } catch (SQLException ex) {
@@ -197,7 +197,6 @@ public class ParticipationService implements GlobalInterface<Participation> {
         if (participation.getStatut().trim().equals("En attente")) {
             participation.setStatut("Validé");
             update(participation);
-            sendParticipationAcceptanceEmail(participation,"kerroufaten729@gmail.com");
             return true;
         }
         return false;
@@ -207,11 +206,20 @@ public class ParticipationService implements GlobalInterface<Participation> {
         if (participation.getStatut().trim().equals("En attente")) {
             participation.setStatut("Refusé");
             update(participation);
-            sendParticipationRejectionEmail(participation,"kerroufaten729@gmail.com");
             return true;
         }
         return false;
 
 
     }
+    public void deleteByHackathonId(int idHackathon) {
+        String req = "DELETE FROM participation WHERE id_hackathon = ?";
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
+            ps.setInt(1, idHackathon);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

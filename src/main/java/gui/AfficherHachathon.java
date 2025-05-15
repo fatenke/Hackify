@@ -1,45 +1,77 @@
 package gui;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import models.Hackathon;
+import models.User;
 import services.HackathonService;
 import services.ParticipationService;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import util.SessionManager;
 
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 public class AfficherHachathon {
-    private final HackathonService hackathonService= new HackathonService();
-    private final ParticipationService participationService= new ParticipationService();
+
+    private final HackathonService hackathonService = new HackathonService();
+    private final ParticipationService participationService = new ParticipationService();
 
     @FXML
     private GridPane gp_hackathon;
+
     @FXML
     void initialize() {
         loadHackathons();
     }
-    public void loadHackathons(){
+
+    @FXML
+    private void handleAfficherTousHackathons(ActionEvent event) {
+        gp_hackathon.getChildren().clear();
+        loadHackathons();
+    }
+
+    @FXML
+    private void handleAfficherMesHackathons(ActionEvent event) {
+        String sessionId = SessionManager.getLastSessionId(); // récupère la dernière session créée
+        if (sessionId != null) {
+            User currentUser = SessionManager.getSession(sessionId);
+            if (currentUser != null) {
+                int idOrganisateur = currentUser.getId(); // supposé que User a getId()
+                gp_hackathon.getChildren().clear();
+                afficherHackathonsParOrganisateur(idOrganisateur);
+            } else {
+                System.out.println("Utilisateur non trouvé pour la session.");
+            }
+        } else {
+            System.out.println("Aucune session active.");
+        }
+    }
+
+    public void loadHackathons() {
+        afficherHackathons(hackathonService.getAll());
+    }
+
+    public void afficherHackathonsParOrganisateur(int idOrganisateur) {
+        afficherHackathons(hackathonService.getHackathonByIdOrganisateur(idOrganisateur));
+    }
+
+    private void afficherHackathons(List<Hackathon> hackathons) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy HH:mm");
-        List<Hackathon> hackathons = hackathonService.getAll();
         int columns = 3;
         int row = 0, col = 0;
+
         for (Hackathon h : hackathons) {
             StackPane stack = new StackPane();
             stack.getStyleClass().add("hackathon-card");
@@ -52,7 +84,6 @@ public class AfficherHachathon {
             frontFace.setArcHeight(30);
             StackPane.setAlignment(frontFace, Pos.TOP_RIGHT);
             stack.getStyleClass().add("frontFace");
-
 
             VBox textContainer = new VBox(5);
             textContainer.setAlignment(Pos.CENTER);
@@ -67,33 +98,22 @@ public class AfficherHachathon {
             date1.setStyle("-fx-text-fill: #555;");
             Label date2 = new Label("📅 " + h.getDate_fin().format(formatter));
             date2.setStyle("-fx-text-fill: #555;");
-
             Label lieu = new Label("📍 " + h.getLieu());
             lieu.setStyle("-fx-text-fill: #777;");
 
             HBox hbox = new HBox(10);
             hbox.setAlignment(Pos.CENTER);
-            Button updateButton = new Button("Update");
-            Button deleteButton = new Button("Delete");
-            if(participationService.getNebrParticipantPerHackathon(h.getId_hackathon())<h.getMax_participants()){
-                Button participateButton = new Button("Participate");
+
+
+            if (participationService.getNebrParticipantPerHackathon(h.getId_hackathon()) < h.getMax_participants()) {
+                Button participateButton = new Button("Details");
                 participateButton.getStyleClass().add("btn-action");
                 participateButton.setOnAction(event -> participerHackathon(h));
-                textContainer.getChildren().addAll(nom, date1,date2, lieu, hbox, participateButton);
-            }
-            else {
-                textContainer.getChildren().addAll(nom, date1,date2, lieu, hbox);
+                textContainer.getChildren().addAll(nom, date1, date2, lieu, hbox, participateButton);
+            } else {
+                textContainer.getChildren().addAll(nom, date1, date2, lieu, hbox);
                 participationService.refuserParticipationsEnAttente(h.getId_hackathon());
             }
-            Button showButton = new Button("Voir Participants");
-            updateButton.getStyleClass().add("btn-action");
-            deleteButton.getStyleClass().add("btn-action");
-            showButton.getStyleClass().add("btn-action");
-            updateButton.setOnAction(event -> ouvrirUpdateHackathon(h));
-            deleteButton.setOnAction(event -> supprimerHackathon(h));
-            showButton.setOnAction(event -> afficherParticipants(h));
-            hbox.getChildren().addAll(updateButton, deleteButton,showButton);
-
 
             stack.getChildren().addAll(frontFace, textContainer);
             StackPane.setMargin(frontFace, new Insets(-10, -12, 0, 0));
@@ -105,20 +125,6 @@ public class AfficherHachathon {
                 row++;
             }
         }
-
-    }
-    private void ouvrirUpdateHackathon (Hackathon hackathon){
-        System.out.println("ID du hackathon à mettre à jour: " + hackathon.getId_hackathon());
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/UpdateHackathon.fxml"));
-            Parent root = loader.load();
-            UpdateHackathon hackathonToUpdate = loader.getController();
-            hackathonToUpdate.setHackathon(hackathon);
-            Stage stage = (Stage) gp_hackathon.getScene().getWindow();
-            stage.getScene().setRoot(root);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void participerHackathon(Hackathon hackathon) {
@@ -129,42 +135,9 @@ public class AfficherHachathon {
             controller.setHackathon(hackathon);
             Stage stage = (Stage) gp_hackathon.getScene().getWindow();
             stage.getScene().setRoot(newContent);
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-    }
-    public void supprimerHackathon(Hackathon hackathon){
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation de Suppression");
-        alert.setHeaderText(null);
-        alert.setContentText("Voulez-vous vraiment supprimer le hackathon : " + hackathon.getNom_hackathon() + " ?");
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            hackathonService.delete(hackathon);
-            System.out.println("Hackathon supprimé");
-            gp_hackathon.getChildren().clear();
-            loadHackathons();
-        } else {
-            System.out.println("Suppression annulée");
-        }
-
-    }
-    public void afficherParticipants(Hackathon hackathon){
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherParticipation.fxml"));
-            Parent root = loader.load();
-            AfficherParticipation voirParticipants = loader.getController();
-            voirParticipants.setHackathon(hackathon);
-            Stage stage = (Stage) gp_hackathon.getScene().getWindow();
-            stage.getScene().setRoot(root);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
     }
 
 }
-

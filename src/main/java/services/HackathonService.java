@@ -71,8 +71,7 @@ public class HackathonService implements GlobalInterface<Hackathon> {
 
     @Override
     public void update(Hackathon hackathon) {
-
-        String req = "UPDATE `hackathon` SET `nom_hackathon`=?,`description`=?,`date_debut`=?,`date_fin`=?,`lieu`=?,`theme`=?,`max_participants`='?',`type_participation`='?' WHERE `id_hackathon`= ? ";
+        String req = "UPDATE `hackathon` SET `nom_hackathon`=?, `description`=?, `date_debut`=?, `date_fin`=?, `lieu`=?, `theme`=?, `max_participants`=? WHERE `id_hackathon`=?";
 
         try (PreparedStatement statement = connection.prepareStatement(req)) {
             statement.setString(1, hackathon.getNom_hackathon());
@@ -82,19 +81,19 @@ public class HackathonService implements GlobalInterface<Hackathon> {
             statement.setString(5, hackathon.getLieu());
             statement.setString(6, hackathon.getTheme());
             statement.setInt(7, hackathon.getMax_participants());
-            statement.setInt(9, hackathon.getId_hackathon());
+            statement.setInt(8, hackathon.getId_hackathon());
 
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("Hackathon mis à jour avec succès !");
             } else {
-                System.out.println("Aucun hackathon mis à jour!");
+                System.out.println("Aucun hackathon mis à jour !");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
+
 
     @Override
     public List<Hackathon> getAll() {
@@ -154,4 +153,34 @@ public class HackathonService implements GlobalInterface<Hackathon> {
         }
         return hackathon;
     }
+
+    public List<Hackathon> getHackathonByIdOrganisateur(int idOrganisateur) {
+        List<Hackathon> hackathons = new ArrayList<>();
+        String req = "SELECT * FROM hackathon WHERE id_organisateur = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(req)) {
+            statement.setInt(1, idOrganisateur);
+            ResultSet rs = statement.executeQuery();
+
+            while (rs.next()) {
+                Hackathon h = new Hackathon();
+                h.setId_hackathon(rs.getInt("id_hackathon"));
+                h.setNom_hackathon(rs.getString("nom_hackathon"));
+                h.setDescription(rs.getString("description"));
+                h.setDate_debut(rs.getTimestamp("date_debut").toLocalDateTime());
+                h.setDate_fin(rs.getTimestamp("date_fin").toLocalDateTime());
+                h.setLieu(rs.getString("lieu"));
+                h.setTheme(rs.getString("theme"));
+                h.setMax_participants(rs.getInt("max_participants"));
+                h.setId_organisateur(rs.getInt("id_organisateur"));
+
+                hackathons.add(h);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return hackathons;
+    }
+
 }

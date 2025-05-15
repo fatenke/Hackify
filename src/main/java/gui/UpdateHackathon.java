@@ -26,7 +26,6 @@ public class UpdateHackathon {
     @FXML
     private Spinner<Integer> sp_heure_fin;
 
-
     @FXML
     private TextField tbNbrMax;
 
