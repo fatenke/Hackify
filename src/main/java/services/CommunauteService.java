@@ -140,4 +140,57 @@ public class CommunauteService implements GlobalInterface<Communaute> {
         }
         return null;
     }
+
+    public List<Communaute> getByOrganisateur(int idOrganisateur) {
+        List<Communaute> communautes = new ArrayList<>();
+        String sql = "SELECT c.* FROM communaute c " +
+                "INNER JOIN hackathon h ON c.id_hackathon = h.id_hackathon " +
+                "WHERE h.id_organisateur = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idOrganisateur);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    communautes.add(new Communaute(
+                            rs.getInt("id"),
+                            rs.getInt("id_hackathon"),
+                            rs.getString("nom"),
+                            rs.getString("description"),
+                            rs.getTimestamp("date_creation"),
+                            rs.getBoolean("is_active")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors de la récupération des communautés de l'organisateur : " + e.getMessage());
+        }
+        return communautes;
+    }
+
+    public List<Communaute> getByParticipant(int idParticipant) {
+        List<Communaute> communautes = new ArrayList<>();
+        String sql = "SELECT DISTINCT c.* FROM communaute c " +
+                "INNER JOIN hackathon h ON c.id_hackathon = h.id " +
+                "INNER JOIN participation p ON h.id = p.id_hackathon " +
+                "WHERE p.id_participant = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, idParticipant);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    communautes.add(new Communaute(
+                            rs.getInt("id"),
+                            rs.getInt("id_hackathon"),
+                            rs.getString("nom"),
+                            rs.getString("description"),
+                            rs.getTimestamp("date_creation"),
+                            rs.getBoolean("is_active")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors de la récupération des communautés du participant : " + e.getMessage());
+        }
+        return communautes;
+    }
 }
