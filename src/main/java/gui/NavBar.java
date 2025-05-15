@@ -72,7 +72,7 @@ public class NavBar {
 
     @FXML
     void AfficherCommunaute(ActionEvent event) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("views/CommunityCard.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/CommunityCard.fxml"));
         try {
             Parent newContent = loader.load();
             Stage stage = (Stage) btAjouterHackathon.getScene().getWindow();
