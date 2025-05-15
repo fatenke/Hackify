@@ -6,12 +6,10 @@
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.collections.FXCollections?>
-<?import java.lang.String?>
-<?import javafx.scene.layout.HBox?>
+
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.UpdateHackathon">
     <HBox alignment="CENTER" style="-fx-spacing: 20px;" />
     <VBox minWidth="200">
@@ -75,27 +73,10 @@
                     <TextField fx:id="tf_theme" promptText="Ex : Intelligence Artificielle, Santé, Fintech…" />
                 </children>
             </VBox>
-            <Button layoutX="181.0" layoutY="644.0" mnemonicParsing="false" onAction="#UpdateHackathon" prefHeight="58.0" prefWidth="414.0" style="-fx-background-color: #3498DB; -fx-background-radius: 15px;" text=" Ajouter un hackathon">
+            <Button layoutX="181.0" layoutY="644.0" mnemonicParsing="false" onAction="#UpdateHackathon" prefHeight="58.0" prefWidth="414.0" style="-fx-background-color: #3498DB; -fx-background-radius: 15px;" text=" Update hackathon">
                 <font>
                     <Font size="24.0" />
                 </font></Button>
-            <VBox layoutX="97.0" layoutY="524.0" prefHeight="50.0" prefWidth="270.0" style="-fx-background-color: #1e0425; -fx-spacing: 10; -fx-background-radius: 10px; -fx-padding: 15px;">
-                <children>
-                    <Label text="Type de participation" textFill="#82e9f1">
-                        <font>
-                            <Font size="18.0" />
-                        </font></Label>
-                    <ComboBox fx:id="cbTypeParticipation" prefWidth="150.0">
-                        <items>
-                            <FXCollections fx:factory="observableArrayList">
-                                <String fx:value="Individuel" />
-                                <String fx:value="En équipe" />
-                                <String fx:value="Indiv ou en équipe" />
-                            </FXCollections>
-                        </items>
-                    </ComboBox>
-                </children>
-            </VBox>
             <VBox layoutX="407.0" layoutY="524.0" prefHeight="50.0" prefWidth="270.0" style="-fx-background-color: #1e0425; -fx-spacing: 10; -fx-background-radius: 10px; -fx-padding: 15px;">
                 <children>
                     <Label text="Nombre Max de participations" textFill="#82e9f1">

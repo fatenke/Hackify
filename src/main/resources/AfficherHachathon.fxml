@@ -13,11 +13,15 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Button?>
 <AnchorPane prefHeight="679.0" prefWidth="635.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AfficherHachathon">
     <HBox style="-fx-spacing: 20;">
       <VBox minWidth="200">
         <fx:include source="NavBar.fxml" />
-    </VBox>
+      </VBox>
        <VBox alignment="TOP_CENTER" prefHeight="964.0" prefWidth="1117.0" style="-fx-spacing: 30px; -fx-padding: 20px;">
            <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="83.0" prefWidth="403.0" style="-fx-background-color: #286371; -fx-padding: 15px; -fx-background-radius: 15px;">
            <Label prefHeight="27.0" prefWidth="268.0" text="Trouver un hackathon " textFill="WHITE">
@@ -30,7 +34,17 @@
                <Insets left="600.0" />
             </VBox.margin>
            </VBox>
-      <Text fill="#82e9f1" strokeType="OUTSIDE" strokeWidth="0.0" text="Hackathons" wrappingWidth="157.20970916748047">
+           <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-padding: 10px; -fx-background-color: #e1f5fe; -fx-background-radius: 10px;">
+
+               <Button text="Tous les hackathons" onAction="#handleAfficherTousHackathons"
+                       style="-fx-background-color: #0288d1; -fx-text-fill: white; -fx-background-radius: 20; -fx-padding: 8px 16px; -fx-font-size: 13px;" />
+
+               <Button text="Mes hackathons" onAction="#handleAfficherMesHackathons"
+                       style="-fx-background-color: #00796b; -fx-text-fill: white; -fx-background-radius: 20; -fx-padding: 8px 16px; -fx-font-size: 13px;" />
+           </HBox>
+
+
+           <Text fill="#82e9f1" strokeType="OUTSIDE" strokeWidth="0.0" text="Hackathons" wrappingWidth="157.20970916748047">
             <font>
                <Font size="18.0" />
             </font></Text>
