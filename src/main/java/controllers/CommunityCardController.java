@@ -2,124 +2,127 @@ package controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import models.Communaute;
+import models.User;
+import models.UserRole;
 import services.CommunauteService;
+import util.SessionManager;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CommunityCardController {
     @FXML
     private GridPane gp_hackathon;
+    @FXML
+    private TextField searchField;
     private final CommunauteService commuService = new CommunauteService();
+    private User currentUser;
 
     @FXML
     void initialize() {
-        loadCommunities();
+        // Get current user from SessionManager
+        currentUser = SessionManager.getSession(SessionManager.getLastSessionId());
+        if (currentUser == null) {
+            showAlert("Error", "No user logged in");
+            return;
+        }
+
+        // Initialize search functionality
+        if (searchField != null) {
+            searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+                loadCommunities(newValue);
+            });
+        }
+
+        loadCommunities("");
     }
-    public void loadCommunities() {
+    public void loadCommunities(String searchQuery) {
         try {
-            List<Communaute> communautes = commuService.getAll();
+            List<Communaute> communautes;
+            
+            // Get communities based on user role
+            String role = currentUser.getRole();
+            System.out.println("Current user role: " + role); // Debug line
+            
+            if (role == null) {
+                showAlert("Error", "User role is null");
+                return;
+            }
+            
+            // Compare with UserRole constants
+            if (role.equals(UserRole.ORGANISATEUR)) {
+                System.out.println("Role matched: ORGANISATEUR"); // Debug line
+                communautes = commuService.getByOrganisateur(currentUser.getId());
+            } else if (role.equals(UserRole.PARTICIPANT)) {
+                communautes = commuService.getByParticipant(currentUser.getId());
+            } else {
+                showAlert("Error", "Invalid user role: " + role);
+                return;
+            }
+
+            // Filter communities based on search query
+            if (!searchQuery.isEmpty()) {
+                communautes = communautes.stream()
+                    .filter(c -> c.getNom().toLowerCase().contains(searchQuery.toLowerCase()) ||
+                            c.getDescription().toLowerCase().contains(searchQuery.toLowerCase()))
+                    .collect(Collectors.toList());
+            }
+
+            if (communautes.isEmpty()) {
+                VBox emptyBox = new VBox();
+                emptyBox.setAlignment(Pos.CENTER);
+                Label emptyLabel = new Label("Aucune communauté disponible");
+                emptyLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #82e9f1;");
+                emptyBox.getChildren().add(emptyLabel);
+                gp_hackathon.add(emptyBox, 0, 0);
+                return;
+            }
+            
+            gp_hackathon.getChildren().clear();
             int columns = 3;
-            int row = 0, col = 0;
+            int row = 0;
+            int col = 0;
 
-            for (Communaute c : communautes) {
-                // Create card container with fixed size
-                VBox card = new VBox(10);
-                card.setPrefSize(280, 200);
-                card.setMaxSize(280, 200);
-                card.setMinSize(280, 200);
-                card.setStyle(
-                    "-fx-background-color: white;" +
-                    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" +
-                    "-fx-background-radius: 8;" +
-                    "-fx-padding: 15;"
-                );
 
-                // Name label
-                Label nameLabel = new Label(c.getNom());
-                nameLabel.setStyle(
-                    "-fx-font-size: 18px;" +
-                    "-fx-font-weight: bold;" +
-                    "-fx-text-fill: #2C3E50;"
-                );
-                nameLabel.setWrapText(true);
-                nameLabel.setMaxWidth(250);
 
-                // Description label with max height
-                Label descLabel = new Label(c.getDescription());
-                descLabel.setStyle(
-                    "-fx-font-size: 14px;" +
-                    "-fx-text-fill: #7F8C8D;"
-                );
+            for (Communaute communaute : communautes) {
+                VBox card = new VBox(15);
+                card.setStyle("-fx-background-color: #286371; -fx-padding: 20px; -fx-background-radius: 15px;");
+                card.setPrefSize(300, 250);
+                card.setAlignment(Pos.TOP_LEFT);
+
+                Label titleLabel = new Label(communaute.getNom());
+                titleLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 18px; -fx-text-fill: #82e9f1;");
+
+                Label descLabel = new Label(communaute.getDescription());
+                descLabel.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
                 descLabel.setWrapText(true);
-                descLabel.setMaxWidth(250);
-                descLabel.setMaxHeight(80);
+                descLabel.setMaxHeight(100);
 
-                // Button with hover effect
-                Button chatButton = new Button("Voir Chats");
-                chatButton.setStyle(
-                    "-fx-background-color: #3498DB;" +
-                    "-fx-text-fill: white;" +
-                    "-fx-font-size: 14px;" +
-                    "-fx-background-radius: 5;" +
-                    "-fx-padding: 8 16;"
-                );
-                chatButton.setOnMouseEntered(e -> 
-                    chatButton.setStyle(
-                        "-fx-background-color: #2980B9;" +
-                        "-fx-text-fill: white;" +
-                        "-fx-font-size: 14px;" +
-                        "-fx-background-radius: 5;" +
-                        "-fx-padding: 8 16;"
-                    )
-                );
-                chatButton.setOnMouseExited(e -> 
-                    chatButton.setStyle(
-                        "-fx-background-color: #3498DB;" +
-                        "-fx-text-fill: white;" +
-                        "-fx-font-size: 14px;" +
-                        "-fx-background-radius: 5;" +
-                        "-fx-padding: 8 16;"
-                    )
-                );
-
-                // Add hover effect to card
-                card.setOnMouseEntered(e -> 
-                    card.setStyle(
-                        "-fx-background-color: white;" +
-                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 12, 0, 0, 3);" +
-                        "-fx-background-radius: 8;" +
-                        "-fx-padding: 15;"
-                    )
-                );
-                card.setOnMouseExited(e -> 
-                    card.setStyle(
-                        "-fx-background-color: white;" +
-                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" +
-                        "-fx-background-radius: 8;" +
-                        "-fx-padding: 15;"
-                    )
-                );
-
-                // Set up button action
-                final Communaute community = c;
-                chatButton.setOnAction(event -> navigateToChats(community));
-
-                // Add spacing at bottom to push button down
                 Region spacer = new Region();
                 VBox.setVgrow(spacer, Priority.ALWAYS);
 
-                // Add all elements to card
-                card.getChildren().addAll(nameLabel, descLabel, spacer, chatButton);
+                Button chatButton = new Button("Voir Chats");
+                chatButton.setStyle("-fx-background-color: #82e9f1; -fx-text-fill: #286371; -fx-font-weight: bold; -fx-padding: 10px 20px; -fx-background-radius: 20;");
+                chatButton.setOnAction(e -> navigateToChats(communaute));
+                
+                // Hover effect
+                chatButton.setOnMouseEntered(e -> chatButton.setStyle("-fx-background-color: white; -fx-text-fill: #286371; -fx-font-weight: bold; -fx-padding: 10px 20px; -fx-background-radius: 20;"));
+                chatButton.setOnMouseExited(e -> chatButton.setStyle("-fx-background-color: #82e9f1; -fx-text-fill: #286371; -fx-font-weight: bold; -fx-padding: 10px 20px; -fx-background-radius: 20;"));
 
-                // Add card to grid
+                card.getChildren().addAll(titleLabel, descLabel, spacer, chatButton);
+                
+                // Card hover effect
+                card.setOnMouseEntered(e -> card.setStyle("-fx-background-color: #286371; -fx-padding: 20px; -fx-background-radius: 15px; -fx-effect: dropshadow(three-pass-box, rgba(130,233,241,0.4), 10, 0, 0, 0);"));
+                card.setOnMouseExited(e -> card.setStyle("-fx-background-color: #286371; -fx-padding: 20px; -fx-background-radius: 15px;"));
+
                 gp_hackathon.add(card, col, row);
                 col++;
                 if (col == columns) {

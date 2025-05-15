@@ -1,32 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<ScrollPane xmlns="http://javafx.com/javafx"
-           xmlns:fx="http://javafx.com/fxml"
-           fx:controller="controllers.CommunityCardController"
-           fitToWidth="true"
-           style="-fx-background: transparent; -fx-background-color: transparent;">
-    <content>
-        <VBox alignment="TOP_CENTER" spacing="20" style="-fx-background-color: #f4f4f4;">
-            <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
-            </padding>
-            
-            <children>
-                <Label text="Vos Communautés" 
-                       style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #333;"/>
-                       
-                <GridPane fx:id="gp_hackathon" alignment="CENTER" hgap="20" vgap="20">
-                    <padding>
-                        <Insets top="10" right="10" bottom="10" left="10"/>
-                    </padding>
-                </GridPane>
-            </children>
+<AnchorPane prefHeight="679.0" prefWidth="635.0" style="-fx-background-color: #f4f4f4;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CommunityCardController">
+    <HBox style="-fx-spacing: 20;">
+        <VBox minWidth="200">
+            <fx:include source="/NavBar.fxml" />
         </VBox>
-    </content>
-</ScrollPane>
+        <VBox alignment="TOP_CENTER" prefHeight="964.0" prefWidth="1117.0" style="-fx-spacing: 30px; -fx-padding: 20px;">
+            <VBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="83.0" prefWidth="403.0" style="-fx-background-color: #286371; -fx-padding: 15px; -fx-background-radius: 15px;">
+                <Label prefHeight="27.0" prefWidth="268.0" text="Trouver une communauté" textFill="WHITE">
+                    <font>
+                        <Font size="18.0" />
+                    </font>
+                </Label>
+                <TextField promptText="Recherchez une communauté..." />
+                <VBox.margin>
+                    <Insets left="600.0" />
+                </VBox.margin>
+            </VBox>
+            <Text fill="#82e9f1" strokeType="OUTSIDE" strokeWidth="0.0" text="Vos Communautés" wrappingWidth="200">
+                <font>
+                    <Font size="18.0" />
+                </font>
+            </Text>
+            <GridPane fx:id="gp_hackathon" layoutX="62.0" layoutY="26.0" prefHeight="638.0" prefWidth="1078.0" style="-fx-padding: 15px; -fx-hgap: 30px; -fx-vgap: 30px;">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints maxHeight="255.19998779296876" minHeight="10.0" prefHeight="255.19998779296876" vgrow="SOMETIMES" />
+                    <RowConstraints maxHeight="267.20000610351565" minHeight="10.0" prefHeight="251.2000122070313" vgrow="SOMETIMES" />
+                    <RowConstraints maxHeight="124.39999999999998" minHeight="10.0" prefHeight="121.19998779296873" vgrow="SOMETIMES" />
+                </rowConstraints>
+            </GridPane>
+            <HBox.margin>
+                <Insets />
+            </HBox.margin>
+        </VBox>
+    </HBox>
+    <stylesheets>
+        <URL value="@/Styles/style.css" />
+    </stylesheets>
+</AnchorPane>
