@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/23"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="Controllers.MainLayoutController"
+      spacing="20"
+      style="
+        -fx-background-color: #1A1A2E;
+        -fx-padding: 20;
+      ">
+
+    <!-- Sidebar (Left Panel) -->
+    <VBox alignment="TOP_LEFT" spacing="15" prefWidth="200">
+        <Label text="Communities"
+               style="
+                 -fx-font-size: 24;
+                 -fx-font-weight: bold;
+                 -fx-text-fill: #FFFFFF;
+               "/>
+
+        <Button text="Add Community" onAction="#handleAddCommunity"
+                style="
+                  -fx-background-color: #34727e;
+                  -fx-text-fill: #FFFFFF;
+                  -fx-background-radius: 5;
+                  -fx-padding: 8 12 8 12;
+                  -fx-font-size: 12;
+                "/>
+    </VBox>
+
+    <!-- Main Content -->
+    <HBox spacing="20">
+
+
+        <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+            <content>
+                <FlowPane fx:id="communityCardsContainer" hgap="20" vgap="20" alignment="TOP_CENTER"
+                          style="-fx-background-color: transparent;"/>
+            </content>
+        </ScrollPane>
+    </HBox>
+</VBox>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1"
+            stylesheets="/styles/AfficherChatsStyle.css"
+            fx:controller="Controllers.AfficherChatsController">
+
+    <!-- Top: Header Section -->
+    <top>
+        <HBox spacing="20" alignment="CENTER" style="-fx-background-color: #1E0425; -fx-padding: 15; -fx-effect: dropshadow(gaussian, #34727E, 10, 0.5, 0, 2);">
+            <Label fx:id="chatTitle" text="Chat Title"
+                   style="-fx-font-size: 28; -fx-text-fill: #82E9F1; -fx-font-family: 'Arial Rounded MT Bold';"/>
+            <Button fx:id="returnButton" text="Return" onAction="#handleReturn"
+                    style="-fx-background-color: #E26ECC; -fx-text-fill: white; -fx-background-radius: 20; -fx-padding: 10 20; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, #34727E, 5, 0.3, 0, 1);"/>
+        </HBox>
+    </top>
+
+    <!-- Left: Sidebar -->
+    <left>
+        <VBox spacing="20" prefWidth="350" style="-fx-background-color: #1E0425; -fx-padding: 20;">
+            <HBox spacing="10" alignment="CENTER">
+                <TextField fx:id="searchField" promptText="Search..."
+                           style="-fx-background-color: white; -fx-text-fill: black; -fx-border-radius: 20; -fx-padding: 10; -fx-effect: dropshadow(gaussian, #34727E, 5, 0.3, 0, 1);"/>
+                <Button fx:id="searchButton" text="🔍" onAction="#handleSearch"
+                        style="-fx-background-color: #82E9F1; -fx-text-fill: #1E0425; -fx-background-radius: 20; -fx-padding: 10; -fx-cursor: hand;"/>
+                <Button fx:id="cancelButton" text="✖" onAction="#handleCancelSearch"
+                        style="-fx-background-color: #E26ECC; -fx-text-fill: white; -fx-background-radius: 20; -fx-padding: 10;"/>
+            </HBox>
+            <Label text="Existing Chats"
+                   style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #82E9F1; -fx-font-family: 'Arial Rounded MT Bold';"/>
+            <ListView fx:id="chatsListView"
+                      style="-fx-background-color: #FFFFFF; -fx-border-color: #E26ECC; -fx-border-radius: 15; -fx-effect: dropshadow(gaussian, #34727E, 5, 0.3, 0, 1);"/>
+        </VBox>
+    </left>
+
+    <!-- Center: Chat Messages with Polls -->
+    <center>
+        <StackPane>
+            <VBox spacing="20" style="-fx-padding: 20; -fx-background-color: #FFFFFF;">
+                <ListView fx:id="messagesListView" VBox.vgrow="ALWAYS"
+                          style="-fx-border-color: #E26ECC; -fx-border-radius: 15; -fx-effect: dropshadow(gaussian, #34727E, 5, 0.3, 0, 1);">
+                </ListView>
+
+                <!-- Poll Creation Popout -->
+                <VBox fx:id="pollCreationPopout" spacing="15" style="-fx-padding: 20; -fx-background-color: #F5F5F5; -fx-border-radius: 20; -fx-border-color: #E26ECC;" visible="false" managed="false">
+                    <Label text="Create a Poll" style="-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: #1E0425;"/>
+                    <TextField fx:id="pollQuestionField" promptText="Enter your question..." style="-fx-padding: 10; -fx-border-radius: 10;"/>
+                    <TextField fx:id="pollOption1Field" promptText="Option 1" style="-fx-padding: 10; -fx-border-radius: 10;"/>
+                    <TextField fx:id="pollOption2Field" promptText="Option 2" style="-fx-padding: 10; -fx-border-radius: 10;"/>
+                    <HBox spacing="15">
+                        <Button fx:id="createPollButton" text="Create Poll" onAction="#handleCreatePoll"
+                                style="-fx-background-color: #82E9F1; -fx-text-fill: #1E0425; -fx-background-radius: 10; -fx-padding: 10 20;"/>
+                        <Button fx:id="cancelPollButton" text="Cancel" onAction="#handleCancelPoll"
+                                style="-fx-background-color: #E26ECC; -fx-text-fill: white; -fx-background-radius: 10; -fx-padding: 10 20;"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Message Input Box with Poll Icon -->
+                <HBox spacing="15" alignment="CENTER" style="-fx-padding: 10 0 0 0;">
+                    <TextField fx:id="messageField" promptText="Type your message..." HBox.hgrow="ALWAYS"
+                               style="-fx-padding: 12; -fx-border-radius: 20; -fx-background-color: white; -fx-effect: dropshadow(gaussian, #34727E, 5, 0.3, 0, 1);"/>
+                    <Button fx:id="pollIconButton" text="📊" onAction="#handleShowPollPopout"
+                            style="-fx-background-color: #E26ECC; -fx-text-fill: white; -fx-background-radius: 20; -fx-padding: 10; -fx-cursor: hand;"/>
+                    <Button fx:id="sendButton" text="Send" onAction="#handleSendMessage"
+                            style="-fx-background-color: #82E9F1; -fx-text-fill: #1E0425; -fx-background-radius: 20; -fx-padding: 10 20;"/>
+                </HBox>
+                <HBox fx:id="suggestionBox" spacing="15" alignment="CENTER"
+                      style="-fx-padding: 10; -fx-background-color: #F5F5F5; -fx-border-radius: 15; -fx-border-color: #E26ECC;">
+                </HBox>
+            </VBox>
+            <ListView fx:id="searchResultsListView" visible="false" managed="false"
+                      style="-fx-background-color: rgba(255, 255, 255, 0.95); -fx-border-color: #E26ECC; -fx-border-radius: 15; -fx-effect: dropshadow(gaussian, #34727E, 5, 0.3, 0, 1);"/>
+            <Label fx:id="noResultsLabel" text="😞 No results found" visible="false" managed="false"
+                   style="-fx-font-size: 18px; -fx-text-fill: #E26ECC;"/>
+        </StackPane>
+    </center>
+</BorderPane>

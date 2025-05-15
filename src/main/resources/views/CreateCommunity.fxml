@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="Controllers.CreateCommunityController"
+      prefHeight="300.0" prefWidth="300.0"
+      spacing="15"
+      style="
+        -fx-background-color: #1e0425;
+        -fx-border-color: #210c27;
+        -fx-border-radius: 8px;
+        -fx-background-radius: 8px;
+        -fx-padding: 20;
+        -fx-effect: dropshadow(gaussian, rgb(52,114,126), 8, 0, 0, 2);
+      ">
+
+    <Label text="Create New Community"
+           style="
+             -fx-font-weight: bold;
+             -fx-font-size: 18;
+             -fx-text-fill: #FFFFFF;
+           "/>
+
+    <Label text="Hackathon"
+           style="-fx-text-fill: #A9A9A9; -fx-font-size: 12;"/>
+    <ComboBox fx:id="hackathonComboBox" promptText="Select Hackathon"
+              prefWidth="260.0"
+              style="
+                -fx-background-color: #FFFFFF;
+                -fx-background-radius: 5;
+                -fx-font-size: 12;
+              "/>
+
+    <Label text="Community Name"
+           style="-fx-text-fill: #A9A9A9; -fx-font-size: 12;"/>
+    <TextField fx:id="communityNameField" promptText="Enter community name"
+               prefWidth="260.0"
+               style="
+                 -fx-background-color: #FFFFFF;
+                 -fx-background-radius: 5;
+                 -fx-font-size: 12;
+               "/>
+
+    <Label text="Description"
+           style="-fx-text-fill: #A9A9A9; -fx-font-size: 12;"/>
+    <TextArea fx:id="descriptionField" promptText="Enter description"
+              prefHeight="80.0" prefWidth="260.0"
+              wrapText="true"
+              style="
+                -fx-background-color: #FFFFFF;
+                -fx-background-radius: 5;
+                -fx-font-size: 12;
+              "/>
+
+    <Button fx:id="createButton" text="Create Community" onAction="#handleCreate"
+            style="
+              -fx-background-color: #34727e;
+              -fx-text-fill: #FFFFFF;
+              -fx-background-radius: 5;
+              -fx-padding: 8 16 8 16;
+              -fx-font-size: 12;
+            "/>
+
+</VBox>
