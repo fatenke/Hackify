@@ -41,6 +41,10 @@
             <font>
                <Font size="18.0" />
             </font></Button>
+            <Button fx:id="btAfiicherCommunaute" mnemonicParsing="false" onAction="#AfficherCommunaute" prefHeight="55.0" prefWidth="363.0" style="-fx-text-fill: white; -fx-background-color: #1b3347; -fx-background-radius: 15px;" text="Vos Communautés">
+                <font>
+                    <Font size="18.0" />
+                </font></Button>
         </children>
     </VBox>
 

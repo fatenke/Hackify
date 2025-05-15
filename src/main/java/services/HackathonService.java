@@ -1,19 +1,19 @@
 package services;
 
 import Interfaces.GlobalInterface;
+import models.Communaute;
 import models.Hackathon;
 
 import util.MyConnection;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HackathonService implements GlobalInterface<Hackathon> {
 
     private final Connection connection;
+    private final CommunauteService commuService = new CommunauteService() ;
 
 
 
@@ -24,10 +24,8 @@ public class HackathonService implements GlobalInterface<Hackathon> {
 
     @Override
     public void add(Hackathon hackathon) {
-        String req = "INSERT INTO `hackathon`(`id_organisateur`, `nom_hackathon`, `description`, `date_debut`, `date_fin`, `lieu`, `theme`, `max_participants`)  VALUES (?,?,?,?,?,?,?,?)";
-        PreparedStatement statement;
-        try {
-            statement = connection.prepareStatement(req);
+        String req = "INSERT INTO `hackathon`(`id_organisateur`, `nom_hackathon`, `description`, `date_debut`, `date_fin`, `lieu`, `theme`, `max_participants`) VALUES (?,?,?,?,?,?,?,?)";
+        try (PreparedStatement statement = connection.prepareStatement(req)) {
             statement.setInt(1, hackathon.getId_organisateur());
             statement.setString(2, hackathon.getNom_hackathon());
             statement.setString(3, hackathon.getDescription());
@@ -37,15 +35,38 @@ public class HackathonService implements GlobalInterface<Hackathon> {
             statement.setString(7, hackathon.getTheme());
             statement.setInt(8, hackathon.getMax_participants());
             int rowsAffected = statement.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Hackathon ajouté avec succès !");
-            } else {
-                System.out.println(" Aucune ligne insérée, vérifie la requête !");
+            if (rowsAffected == 0) {
+                throw new SQLException("Échec de l'insertion du hackathon.");
+            }
+
+            // Query the ID afterward
+            String queryId = "SELECT id_hackathon FROM hackathon WHERE nom_hackathon = ? AND id_organisateur = ? AND date_debut = ?";
+            try (PreparedStatement queryStmt = connection.prepareStatement(queryId)) {
+                queryStmt.setString(1, hackathon.getNom_hackathon());
+                queryStmt.setInt(2, hackathon.getId_organisateur());
+                queryStmt.setTimestamp(3, java.sql.Timestamp.valueOf(hackathon.getDate_debut()));
+                ResultSet rs = queryStmt.executeQuery();
+                if (rs.next()) {
+                    int hackathonId = rs.getInt("id_hackathon");
+                    hackathon.setId_hackathon(hackathonId);
+                    System.out.println("Hackathon ajouté avec succès, ID: " + hackathonId);
+
+                    // Create Communaute
+                    Communaute communaute = new Communaute();
+                    communaute.setIdHackathon(hackathonId);
+                    communaute.setNom(hackathon.getNom_hackathon());
+                    communaute.setDescription(hackathon.getDescription());
+                    communaute.setDateCreation(new Timestamp(System.currentTimeMillis()));
+                    communaute.setActive(true);
+                    commuService.add(communaute);
+                    System.out.println("Communauté associée créée pour le hackathon ID: " + hackathonId);
+                } else {
+                    throw new SQLException("Échec de la récupération de l'ID du hackathon.");
+                }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Erreur lors de l'ajout du hackathon: " + e.getMessage(), e);
         }
-
     }
 
     @Override

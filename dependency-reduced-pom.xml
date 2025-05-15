@@ -19,7 +19,17 @@
         <artifactId>javafx-maven-plugin</artifactId>
         <version>${javafx.maven.plugin.version}</version>
         <configuration>
-          <mainClass>org.example.TestFX</mainClass>
+          <mainClass>main.TestFX</mainClass>
+          <options>
+            <option>--add-opens</option>
+            <option>javafx.base/com.sun.javafx=ALL-UNNAMED</option>
+            <option>--add-opens</option>
+            <option>javafx.graphics/com.sun.javafx.scene=ALL-UNNAMED</option>
+            <option>--add-opens</option>
+            <option>javafx.graphics/com.sun.javafx.scene.text=ALL-UNNAMED</option>
+            <option>--add-opens</option>
+            <option>javafx.graphics/com.sun.javafx.geom=ALL-UNNAMED</option>
+          </options>
         </configuration>
       </plugin>
       <plugin>
@@ -34,7 +44,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>org.example.TestFX</mainClass>
+                  <mainClass>main.TestFX</mainClass>
                 </transformer>
               </transformers>
             </configuration>

@@ -68,6 +68,10 @@ public class Hackathon {
         return id_hackathon;
     }
 
+    public void setId_hackathon(int id_hackathon) {
+        this.id_hackathon = id_hackathon;
+    }
+
     public String getNom_hackathon() {
         return nom_hackathon;
     }

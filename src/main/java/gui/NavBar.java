@@ -70,6 +70,18 @@ public class NavBar {
         }
     }
 
+    @FXML
+    void AfficherCommunaute(ActionEvent event) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("views/MainLayout.fxml"));
+        try {
+            Parent newContent = loader.load();
+            Stage stage = (Stage) btAjouterHackathon.getScene().getWindow();
+            stage.getScene().setRoot(newContent);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     @FXML
     private void btn_view_profile(MouseEvent event) throws IOException {

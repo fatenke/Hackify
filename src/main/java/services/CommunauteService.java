@@ -10,7 +10,7 @@ import java.util.List;
 
 public class CommunauteService implements GlobalInterface<Communaute> {
     private ChatService chatService;
-    private Connection conn;
+    private  Connection conn;
 
     public CommunauteService() {
         this.conn = MyConnection.getInstance().getConnection();
