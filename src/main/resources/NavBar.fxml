@@ -52,7 +52,79 @@
                 <font>
                     <Font size="18.0" />
                 </font></Button>
-         <com.jfoenix.controls.JFXButton fx:id="btn_logout" mnemonicParsing="false" onAction="#logoutuser" prefHeight="55.0" prefWidth="363.0" style="-fx-text-fill: white; -fx-background-color: #1b3347; -fx-background-radius: 15px;" text="Log out">
+            <Button fx:id="btAjouterEvaluation"
+                    text="Ajouter Evaluation"
+                    onAction="#AjouterEvaluation"
+                    mnemonicParsing="false"
+                    prefHeight="55.0"
+                    prefWidth="363.0"
+                    style="-fx-text-fill: white; -fx-background-color: #1b3347; -fx-background-radius: 15px;">
+                <font>
+                    <Font size="18.0" />
+                </font>
+            </Button>
+
+            <Button fx:id="btAfficherEvaluation"
+                    text="Afficher Evaluation"
+                    onAction="#AfficherEvaluation"
+                    mnemonicParsing="false"
+                    prefHeight="55.0"
+                    prefWidth="363.0"
+                    style="-fx-text-fill: white; -fx-background-color: #1b3347; -fx-background-radius: 15px;">
+                <font>
+                    <Font size="18.0" />
+                </font>
+            </Button>
+
+            <Button fx:id="btAjouterVote"
+                    text="Ajouter Vote"
+                    onAction="#AjouterVote"
+                    mnemonicParsing="false"
+                    prefHeight="55.0"
+                    prefWidth="363.0"
+                    style="-fx-text-fill: white; -fx-background-color: #1b3347; -fx-background-radius: 15px;">
+                <font>
+                    <Font size="18.0" />
+                </font>
+            </Button>
+
+            <Button fx:id="btAfficherVote"
+                    text="Afficher Vote"
+                    onAction="#AfficherVote"
+                    mnemonicParsing="false"
+                    prefHeight="55.0"
+                    prefWidth="363.0"
+                    style="-fx-text-fill: white; -fx-background-color: #1b3347; -fx-background-radius: 15px;">
+                <font>
+                    <Font size="18.0" />
+                </font>
+            </Button>
+
+            <Button fx:id="btChatbot"
+                    text="Chatbot"
+                    onAction="#Chatbot"
+                    mnemonicParsing="false"
+                    prefHeight="55.0"
+                    prefWidth="363.0"
+                    style="-fx-text-fill: white; -fx-background-color: #1b3347; -fx-background-radius: 15px;">
+                <font>
+                    <Font size="18.0" />
+                </font>
+            </Button>
+
+            <Button fx:id="btAnalyse"
+                    text="Analyse"
+                    onAction="#Analyse"
+                    mnemonicParsing="false"
+                    prefHeight="55.0"
+                    prefWidth="363.0"
+                    style="-fx-text-fill: white; -fx-background-color: #1b3347; -fx-background-radius: 15px;">
+                <font>
+                    <Font size="18.0" />
+                </font>
+            </Button>
+
+            <com.jfoenix.controls.JFXButton fx:id="btn_logout" mnemonicParsing="false" onAction="#logoutuser" prefHeight="55.0" prefWidth="363.0" style="-fx-text-fill: white; -fx-background-color: #1b3347; -fx-background-radius: 15px;" text="Log out">
             <font>
                <Font size="18.0" />
             </font>
@@ -60,6 +132,7 @@
                <Insets top="450.0" />
             </VBox.margin>
          </com.jfoenix.controls.JFXButton>
+
         </children>
     </VBox>
 

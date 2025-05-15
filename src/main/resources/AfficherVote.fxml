@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AfficherVote" prefHeight="578.0" prefWidth="825.0">
+    <!-- Left Navigation Bar -->
+    <left>
+        <fx:include source="NavBar.fxml"/>
+    </left>
+
+    <!-- Center Content (Main Page) -->
+    <center>
+        <AnchorPane prefHeight="578.0" prefWidth="625.0" style="-fx-background-color: #800080;">
+            <children>
+                <!-- Logo -->
+                <ImageView fx:id="imageView" fitHeight="100.0" fitWidth="100.0" layoutX="480.0" layoutY="110.0">
+                    <image>
+                        <Image url="@ss.png" />
+                    </image>
+                </ImageView>
+
+                <!-- Title -->
+                <Text fill="WHITE" layoutX="85.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Liste des votes">
+                    <font>
+                        <Font size="25.0" />
+                    </font>
+                </Text>
+
+                <!-- Search -->
+                <TextField fx:id="searchField" layoutX="11.0" layoutY="165.0" prefWidth="200.0" promptText="Recherche par id du projet" />
+                <Button layoutX="220.0" layoutY="165.0" onAction="#searchVotes" style="-fx-background-color: #4fa3f7; -fx-text-fill: #FFFFFF;" text="Rechercher" />
+
+                <!-- List View -->
+                <ListView fx:id="listView" layoutX="11.0" layoutY="205.0" prefHeight="298.0" prefWidth="602.0"
+                          style="-fx-background-color: #e6f2ff; -fx-border-color: #4fa3f7; -fx-border-width: 2px;
+                                 -fx-font-size: 14px; -fx-padding: 10px; -fx-background-insets: 0;
+                                 -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 5, 0, 2, 2);" />
+
+                <!-- PDF Button -->
+                <Button fx:id="generatePdfButton" layoutX="380.0" layoutY="515.0" onAction="#generateVotePdf"
+                        style="-fx-background-color: #4fa3f7; -fx-text-fill: #FFFFFF; -fx-font-size: 14px;" text="Generate PDF" />
+            </children>
+        </AnchorPane>
+    </center>
+</BorderPane>

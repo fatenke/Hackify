@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.GeminiApiController" prefHeight="600" prefWidth="900">
+    <!-- Left Navigation Bar -->
+    <left>
+        <fx:include source="NavBar.fxml"/>
+    </left>
+
+    <!-- Center Content (Main Page) -->
+    <center>
+        <AnchorPane style="-fx-background-color: #800080;">
+            <VBox layoutY="100" spacing="10" alignment="TOP_CENTER" style="-fx-padding: 20;">
+                <Label text="Ask Gemini API" style="-fx-font-size: 18px; -fx-text-fill: white;"/>
+                <TextField fx:id="questionField" promptText="Type your question here..."
+                           style="-fx-background-color: #e6f2ff; -fx-border-color: #4fa3f7; -fx-border-width: 2px;
+                                  -fx-font-size: 14px; -fx-padding: 10px;" />
+                <Button fx:id="sendButton" text="Send" onAction="#handleSendRequest"
+                        style="-fx-background-color: #4fa3f7; -fx-text-fill: white;" />
+                <TextArea fx:id="responseArea" editable="false" wrapText="true" prefHeight="400"
+                          style="-fx-background-color: #e6f2ff; -fx-border-color: #4fa3f7; -fx-border-width: 2px;
+                                 -fx-font-size: 14px; -fx-padding: 10px;" />
+            </VBox>
+        </AnchorPane>
+    </center>
+</BorderPane>

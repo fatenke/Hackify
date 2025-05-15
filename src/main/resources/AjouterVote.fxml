@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AjouterVote" prefHeight="657.0" prefWidth="825.0">
+    <!-- Left Navigation Bar -->
+    <left>
+        <fx:include source="NavBar.fxml"/>
+    </left>
+
+    <!-- Center Content (Main Page) -->
+    <center>
+        <AnchorPane prefHeight="657.0" prefWidth="711.0" style="-fx-background-color: #800080;">
+            <children>
+                <ImageView fx:id="imageView" fitHeight="100.0" fitWidth="100.0" layoutX="480.0" layoutY="110.0">
+                    <image>
+                        <Image url="@ss.png" />
+                    </image>
+                </ImageView>
+
+                <!-- Form Fields -->
+                <TextField fx:id="TFIdVotant" layoutX="76.0" layoutY="192.0" promptText="IdVotant" style="-fx-font-size: 14px; -fx-background-color: #FFFFFF;" />
+                <ComboBox fx:id="CBIdHackathon" layoutX="76.0" layoutY="264.0" promptText="Sélectionnez un Hackathon" style="-fx-font-size: 14px;" />
+                <ComboBox fx:id="CBIdProjet" layoutX="76.0" layoutY="333.0" promptText="Sélectionnez un Projet" style="-fx-font-size: 14px;" />
+                <ComboBox fx:id="CBIdEvaluation" layoutX="76.0" layoutY="402.0" promptText="Sélectionnez une évaluation" style="-fx-font-size: 14px;" />
+                <TextField fx:id="TFValeurVote" layoutX="76.0" layoutY="469.0" promptText="ValeurVote" style="-fx-font-size: 14px; -fx-background-color: #FFFFFF;" />
+
+                <!-- Labels -->
+                <Label layoutX="76.0" layoutY="167.0" style="-fx-font-size: 14px; -fx-text-fill: #FFFFFF;" text="idVotant" />
+                <Label layoutX="76.0" layoutY="239.0" style="-fx-font-size: 14px; -fx-text-fill: #FFFFFF;" text="idHackathon" />
+                <Label layoutX="76.0" layoutY="309.0" style="-fx-font-size: 14px; -fx-text-fill: #FFFFFF;" text="idProjet" />
+                <Label layoutX="77.0" layoutY="381.0" style="-fx-font-size: 14px; -fx-text-fill: #FFFFFF;" text="idEvaluation" />
+                <Label layoutX="76.0" layoutY="443.0" style="-fx-font-size: 14px; -fx-text-fill: #FFFFFF;" text="valeurVote" />
+                <Label layoutX="79.0" layoutY="503.0" style="-fx-font-size: 14px; -fx-text-fill: #FFFFFF;" text="Date" />
+
+                <!-- Date Picker -->
+                <DatePicker fx:id="TFDate" layoutX="79.0" layoutY="530.0" style="-fx-font-size: 14px;" />
+
+                <!-- Buttons -->
+                <Button layoutX="415.0" layoutY="572.0" mnemonicParsing="false" onAction="#ajouter" style="-fx-background-color: #4fa3f7; -fx-text-fill: #FFFFFF;" text="Ajouter" />
+                <Button layoutX="487.0" layoutY="572.0" mnemonicParsing="false" onAction="#afficher" style="-fx-background-color: #4fa3f7; -fx-text-fill: #FFFFFF;" text="Afficher" />
+            </children>
+        </AnchorPane>
+    </center>
+</BorderPane>

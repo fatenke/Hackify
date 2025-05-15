@@ -1,0 +1,65 @@
+.list-view {
+    -fx-background-color: #e6f2ff;  /* Light blue background */
+    -fx-border-color: #4fa3f7;      /* Blue border color */
+    -fx-border-width: 2px;          /* Border width */
+    -fx-font-size: 14px;             /* Font size */
+    -fx-padding: 10px;               /* Padding */
+    -fx-background-insets: 0;        /* No inset */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 5, 0, 2, 2);  /* Shadow effect */
+}
+
+/* Style for each ListCell (items in ListView) */
+.list-cell {
+    -fx-background-color: #ffffff;  /* White background for each item */
+    -fx-font-size: 14px;             /* Font size */
+    -fx-text-fill: #333333;          /* Dark text color */
+    -fx-padding: 10px;               /* Padding */
+    -fx-background-insets: 0;        /* No inset */
+}
+
+/* Hover effect for list items */
+.list-cell:hover {
+    -fx-background-color: #cce0ff;  /* Light blue on hover */
+    -fx-cursor: hand;                /* Hand cursor on hover */
+}
+/* Style for the entire TabPane */
+.tab-pane {
+    -fx-background-color: #f0f0f0; /* Light grey background for the TabPane */
+    -fx-padding: 10; /* Padding around the TabPane */
+}
+
+/* Style for the individual Tab */
+.tab {
+    -fx-background-color: #800080; /* Dark background for each tab */
+    -fx-text-fill: white; /* White text color */
+    -fx-font-size: 14px; /* Font size */
+    -fx-font-weight: bold; /* Bold text */
+    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-background-radius: 5px; /* Rounded corners */
+    -fx-padding: 10px 15px; /* Padding inside each tab */
+}
+
+/* Style for the selected tab */
+.tab:selected {
+    -fx-background-color: #800080; /* Slightly darker background when selected */
+    -fx-text-fill: #ffcc00; /* Yellow text when selected */
+}
+
+/* Style for the hover effect on tabs */
+.tab:hover {
+    -fx-background-color: #800080; /* Darker background on hover */
+}
+
+/* Style for the tab content inside the Tab */
+.tab .content {
+    -fx-padding: 20px; /* Padding around content */
+    -fx-background-color: #ffffff; /* White background for the content */
+    -fx-border-radius: 5px; /* Rounded corners for content */
+}
+
+/* Optional: Style for the TabPane's border */
+.tab-pane {
+    -fx-border-color: #800080;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+}

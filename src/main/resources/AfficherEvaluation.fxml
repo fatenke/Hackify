@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.AfficherEvaluation" prefHeight="598.0" prefWidth="825.0">
+    <!-- Left Navigation Bar -->
+    <left>
+        <fx:include source="NavBar.fxml"/>
+    </left>
+
+    <!-- Center Content (Main Page) -->
+    <center>
+        <AnchorPane prefHeight="598.0" prefWidth="625.0" style="-fx-background-color: #800080;">
+            <children>
+                <ImageView fx:id="imageView" fitHeight="100.0" fitWidth="100.0" layoutX="480.0" layoutY="110.0">
+                    <image>
+                        <Image url="@ss.png" />
+                    </image>
+                </ImageView>
+
+                <!-- Header text -->
+                <Text fill="WHITE" layoutX="75.0" layoutY="135.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Liste des évaluations">
+                    <font>
+                        <Font size="25.0" />
+                    </font>
+                </Text>
+
+                <!-- Search field and button -->
+                <TextField fx:id="searchField" layoutX="11.0" layoutY="160.0" prefWidth="200.0" promptText="Taper l'identifiant du projet" />
+                <Button fx:id="searchButton" layoutX="220.0" layoutY="160.0" onAction="#searchByProjectId" text="Rechercher" style="-fx-background-color: #4fa3f7; -fx-text-fill: #FFFFFF;"/>
+
+                <!-- ListView -->
+                <ListView fx:id="listView" layoutX="11.0" layoutY="200.0" prefHeight="298.0" prefWidth="602.0" style="-fx-background-color: #e6f2ff; -fx-border-color: #4fa3f7; -fx-border-width: 2px; -fx-font-size: 14px; -fx-padding: 10px;" />
+
+                <!-- PDF Button -->
+                <Button fx:id="generatePdfButton" layoutX="380.0" layoutY="510.0" onAction="#generatePdf" style="-fx-background-color: #4fa3f7; -fx-text-fill: #FFFFFF;" text="Generate PDF" />
+            </children>
+        </AnchorPane>
+    </center>
+</BorderPane>
