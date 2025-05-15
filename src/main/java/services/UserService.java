@@ -33,7 +33,7 @@ public class UserService implements IService<User> {
 
     @Override
     public void modifier(User user) throws SQLException {
-        String req = "UPDATE user SET nom_user = ?, prenom_user = ?, adresse_user = ? , photo_user = ? , email_user = ? , tel_user = ?,status_user = ? WHERE id_user = ?";
+        String req = "UPDATE user SET nom_user = ?, prenom_user = ?, adresse_user = ? , photo_user = ? , email_user = ? , tel_user = ?,status_user = ? WHERE id = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(req);
             ps.setString(1, user.getNom());
@@ -57,7 +57,7 @@ public class UserService implements IService<User> {
 
     @Override
     public void supprimer(int id) throws SQLException {
-        String req = "DELETE FROM user WHERE id_user = ?";
+        String req = "DELETE FROM user WHERE id = ?";
         PreparedStatement ps = connection.prepareStatement(req);
         ps.setInt(1, id);
         ps.executeUpdate();
@@ -72,7 +72,7 @@ public class UserService implements IService<User> {
 
         while (rs.next()){
             User user = new User();
-            user.setId(rs.getInt("id_user"));
+            user.setId(rs.getInt("id"));
             user.setTel(rs.getInt("tel_user"));
             user.setNom(rs.getString("nom_user"));
             user.setPrenom(rs.getString("prenom_user"));
@@ -104,7 +104,7 @@ public class UserService implements IService<User> {
                         
                         if (userStatus == Status.ACTIVE) {
                             User user = new User(
-                                resultSet.getInt("id_user"),
+                                resultSet.getInt("id"),
                                 resultSet.getInt("tel_user"),
                                 resultSet.getString("nom_user"),
                                 resultSet.getString("prenom_user"),
@@ -197,7 +197,7 @@ public class UserService implements IService<User> {
             ResultSet rs = st.executeQuery(query);
             while (rs.next()) {
 
-                t = new User(rs.getInt("id_user"), rs.getInt("tel_user"), rs.getString("nom_user"), rs.getString("prenom_user"), rs.getString("email_user"),
+                t = new User(rs.getInt("id"), rs.getInt("tel_user"), rs.getString("nom_user"), rs.getString("prenom_user"), rs.getString("email_user"),
                         rs.getString("mdp_user"), rs.getString("role_user"), rs.getString("adresse_user"), Status.valueOf(rs.getString("status_user").toUpperCase()),
                         rs.getString("photo_user"));
             }
@@ -222,14 +222,14 @@ public class UserService implements IService<User> {
         }    }
 
     public User getUserById(int id){
-        String sql = "SELECT * FROM users WHERE id_user = ?";
+        String sql = "SELECT * FROM users WHERE id = ?";
         try{
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1,id);
             ResultSet rs = stm.executeQuery();
             if(rs.next()){
                 User user = new User();
-                user.setId(rs.getInt("id_user"));
+                user.setId(rs.getInt("id"));
                 user.setTel(rs.getInt("tel_user"));
                 user.setNom(rs.getString("nom_user"));
                 user.setEmail(rs.getString("email_user"));
@@ -260,7 +260,7 @@ public class UserService implements IService<User> {
 
             while (rs.next()) {
                 User user = new User();
-                user.setId(rs.getInt("id_user"));
+                user.setId(rs.getInt("id"));
                 user.setTel(rs.getInt("tel_user"));
                 user.setNom(rs.getString("nom_user"));
                 user.setEmail(rs.getString("email_user"));
@@ -283,7 +283,7 @@ public class UserService implements IService<User> {
 
 
     public boolean isPasswordConfirmed(int idUser,String password){
-        String qry = "SELECT mdp_user FROM user WHERE  id_user = ? AND mdp_user = ?";
+        String qry = "SELECT mdp_user FROM user WHERE  id = ? AND mdp_user = ?";
         try{
             PreparedStatement stm = connection.prepareStatement(qry);
             stm.setInt(1,idUser);

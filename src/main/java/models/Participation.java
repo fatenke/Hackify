@@ -26,8 +26,13 @@ public class Participation {
         this.dateInscription = LocalDateTime.now();
         this.statut = statut;
     }
+    public Participation(int idHackathon , int idParticipant) {
+        this.id_hackathon=idHackathon;
+        this.idParticipant = idParticipant;
+    }
     public Participation(int idHackathon) {
         this.id_hackathon=idHackathon;
+
     }
 
     public int getIdParticipation() {

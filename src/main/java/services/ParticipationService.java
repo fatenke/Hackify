@@ -3,11 +3,15 @@ package services;
 import Interfaces.GlobalInterface;
 import models.Hackathon;
 import models.Participation;
+import models.User;
 import util.MyConnection;
+import util.SessionManager;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,26 +25,46 @@ public class ParticipationService implements GlobalInterface<Participation> {
         this.connection = MyConnection.getInstance().getConnection();
     }
 
+
     @Override
     public void add(Participation participation) {
-        String req = "INSERT INTO `participation`(`id_hackathon`, `id_participant`) VALUES (?,?)";
+        String req = "INSERT INTO `participation`(`id_hackathon`, `id_participant`, `date_inscription`, `statut`) VALUES (?,?,?,?)";
         PreparedStatement statement;
+
         try {
+            // Récupérer l'utilisateur connecté
+            User userConnecte = SessionManager.getSession(SessionManager.getLastSessionId());
+            if (userConnecte == null) {
+                System.out.println("Aucun utilisateur connecté !");
+                return;
+            }
+
+            // Créer un nouvel objet Participation avec l'ID utilisateur
+            Participation updatedParticipation = new Participation(
+                    participation.getIdHackathon(),
+                    userConnecte.getId()
+            );
+
             statement = connection.prepareStatement(req);
-            statement.setInt(1, participation.getIdHackathon());
-            statement.setInt(2, participation.getIdParticipant());
+            statement.setInt(1, updatedParticipation.getIdHackathon());
+            statement.setInt(2, updatedParticipation.getIdParticipant());
+            statement.setTimestamp(3, java.sql.Timestamp.valueOf(LocalDateTime.now()));
+            statement.setString(4, "En attente");
+
+
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected > 0) {
-                System.out.println("Participation ajouté avec succès !");
-                sendParticipationRequestEmail(participation,"fatenkerrou@gmail.com");
+                System.out.println("Participation ajoutée avec succès !");
+
             } else {
-                System.out.println(" Aucune ligne insérée");
+                System.out.println("Aucune ligne insérée");
             }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
+
 
     @Override
     public void update(Participation participation) {

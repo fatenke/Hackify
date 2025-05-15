@@ -7,6 +7,7 @@ import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import models.Hackathon;
 import models.Participation;
+import models.User;
 import services.ParticipationService;
 
 import java.time.format.DateTimeFormatter;
@@ -31,7 +32,7 @@ public class HackathonDetails {
 
     @FXML
     private Label labelTheme;
-
+    private User user ;
     private Hackathon hackathon;
     public void setHackathon(Hackathon hackathon) {
         this.hackathon = hackathon;
@@ -46,7 +47,7 @@ public class HackathonDetails {
     @FXML
     void ParticiperIndiv(ActionEvent event) {
         System.out.println("Bouton Participer en Individuel cliqué !");
-        Participation p= new Participation(hackathon.getId_hackathon());
+        Participation p= new Participation(hackathon.getId_hackathon() );
         participationService.add(p);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Participation");
