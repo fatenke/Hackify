@@ -57,7 +57,7 @@ public class ChapitreController {
             chapitre.setFormatFichier(formatFichierField.getText());
 
             if (chapitreService.validateChapitre(chapitre)) {
-                chapitreService.add(chapitre);
+                chapitreService.ajouter(chapitre);
                 showAlert("Succès", "Chapitre ajouté avec succès !");
                 displayChapitreList();
                 clearFields();// Refresh the chapter list
@@ -175,7 +175,7 @@ public class ChapitreController {
             Chapitre chapitre = new Chapitre();
             chapitre.setId(id);
 
-            chapitreService.delete(chapitre);
+            chapitreService.supprimer(chapitre);
             showAlert("Succès", "Chapitre supprimé avec succès !");
             displayChapitreList();
             clearFields();
