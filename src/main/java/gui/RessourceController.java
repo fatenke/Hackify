@@ -77,7 +77,7 @@ public class RessourceController {
         }
     @FXML
         private void loadRessources() {
-            List<Ressource> ressources = ressourceService.getAll();
+            List<Ressource> ressources = ressourceService.recuperer();
             ressourceList = FXCollections.observableArrayList(ressources);
             tableRessources.setItems(ressourceList);
         }
@@ -90,7 +90,7 @@ public class RessourceController {
             }
 
             Ressource ressource = new Ressource(txtTitre.getText(), txtType.getText(), txtDescription.getText(), java.sql.Date.valueOf(dpdate_ajout.getValue()), chkValide.isSelected());
-            ressourceService.add(ressource);
+            ressourceService.ajouter(ressource);
             loadRessources();
             clearFields();
         }
@@ -104,7 +104,7 @@ public class RessourceController {
                 return;
             }
 
-            ressourceService.delete(selectedRessource);
+            ressourceService.supprimer(selectedRessource);
             loadRessources();
             clearFields();
         }
@@ -134,7 +134,7 @@ public class RessourceController {
         selectedRessource.setValide(chkValide.isSelected());
 
         // Appeler le service pour mettre à jour la ressource dans la base de données
-        ressourceService.update(selectedRessource);
+        ressourceService.modifier(selectedRessource);
 
         // Rafraîchir la table pour afficher la ressource modifiée
         tableRessources.refresh();
