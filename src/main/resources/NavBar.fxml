@@ -123,6 +123,17 @@
                     <Font size="18.0" />
                 </font>
             </Button>
+           <Button fx:id="btGestionRessource"
+                    text="Gestion des Ressources"
+                    onAction="#openRessourceView"
+                    mnemonicParsing="false"
+                    prefHeight="55.0"
+                    prefWidth="363.0"
+                    style="-fx-text-fill: white; -fx-background-color: #1b3347; -fx-background-radius: 15px;">
+                <font>
+                    <Font size="18.0" />
+                </font>
+            </Button>
 
             <com.jfoenix.controls.JFXButton fx:id="btn_logout" mnemonicParsing="false" onAction="#logoutuser" prefHeight="55.0" prefWidth="363.0" style="-fx-text-fill: white; -fx-background-color: #1b3347; -fx-background-radius: 15px;" text="Log out">
             <font>
