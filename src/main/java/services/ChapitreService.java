@@ -38,7 +38,7 @@ public class ChapitreService implements IService<Chapitre> {
 
 
     @Override
-    public void add(Chapitre chapitre) {
+    public void ajouter(Chapitre chapitre) {
         String SQL = "INSERT INTO chapitres (id_ressources, titre, url_fichier, contenu, format_fichier) VALUES (?, ?, ?, ?, ?)";
         try {
             PreparedStatement pst = conn.prepareStatement(SQL);
