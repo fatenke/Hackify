@@ -24,106 +24,107 @@ public  class RessourceService implements IService<Ressource> {
         return true;
     }
 
-    @Override
-    public void add(Ressource ressource) {
+  public void ajouter(Ressource ressource) {
         String SQL = "INSERT INTO ressources (titre, type, description, date_ajout, valide) VALUES (?, ?, ?, ?, ?)";
+
         try {
-            PreparedStatement pst = conn.prepareStatement(SQL);
+            PreparedStatement pst = this.conn.prepareStatement(SQL);
             pst.setString(1, ressource.getTitre());
             pst.setString(2, ressource.getType());
             pst.setString(3, ressource.getDescription());
-            pst.setDate(4, new java.sql.Date(ressource.getDateAjout().getTime())); // Conversion
+            pst.setDate(4, new Date(ressource.getDateAjout().getTime()));
             pst.setBoolean(5, ressource.isValide());
-
             pst.executeUpdate();
             System.out.println("✅ Ressource ajoutée avec succès !");
-        } catch (SQLException e) {
+        } catch (SQLException var4) {
+            SQLException e = var4;
             System.out.println("❌ Erreur lors de l'ajout : " + e.getMessage());
         }
+
     }
 
-
-
-    @Override
     public void delete(Ressource ressource) {
         String SQL = "DELETE FROM ressources WHERE id = ?";
-        try {
-            PreparedStatement pst = conn.prepareStatement(SQL);
-            pst.setInt(1, ressource.getId());
 
+        SQLException e;
+        try {
+            PreparedStatement pst = this.conn.prepareStatement(SQL);
+            pst.setInt(1, ressource.getId());
             int rowsDeleted = pst.executeUpdate();
             if (rowsDeleted > 0) {
                 System.out.println("✅ Ressource supprimée avec succès !");
             } else {
                 System.out.println("❌ Aucune ressource trouvée avec cet ID !");
             }
-        } catch (SQLException e) {
+        } catch (SQLException var7) {
+            e = var7;
             System.out.println("❌ Erreur lors de la suppression : " + e.getMessage());
         }
+
         System.out.println("Tentative de suppression de : " + ressource.getTitre());
+
         try {
             String query = "DELETE FROM ressources WHERE id = ?";
-            PreparedStatement pst = conn.prepareStatement(query);
+            PreparedStatement pst = this.conn.prepareStatement(query);
             pst.setInt(1, ressource.getId());
             int affectedRows = pst.executeUpdate();
-
             if (affectedRows > 0) {
                 System.out.println("Ressource supprimée avec succès !");
             } else {
                 System.out.println("Échec de la suppression !");
             }
-        } catch (SQLException e) {
+        } catch (SQLException var6) {
+            e = var6;
             e.printStackTrace();
         }
+
     }
-    public void update(Ressource ressource) {
+
+    public void modifier(Ressource ressource) {
         System.out.println("Tentative de modification de : " + ressource.getTitre());
+
         try {
             String query = "UPDATE ressources SET titre = ?, type = ?, description = ?, dateAjout = ?, valide = ? WHERE id = ?";
-            PreparedStatement pst = conn.prepareStatement(query);
-
+            PreparedStatement pst = this.conn.prepareStatement(query);
             pst.setString(1, ressource.getTitre());
             pst.setString(2, ressource.getType());
             pst.setString(3, ressource.getDescription());
-
-            // ✅ Conversion de java.util.Date en java.sql.Date
-            java.sql.Date sqlDate = new java.sql.Date(ressource.getDateAjout().getTime());
+            Date sqlDate = new Date(ressource.getDateAjout().getTime());
             pst.setDate(4, sqlDate);
-
             pst.setBoolean(5, ressource.isValide());
             pst.setInt(6, ressource.getId());
-
             int affectedRows = pst.executeUpdate();
-
             if (affectedRows > 0) {
                 System.out.println("Ressource modifiée avec succès !");
             } else {
                 System.out.println("Échec de la modification !");
             }
-        } catch (SQLException e) {
+        } catch (SQLException var6) {
+            SQLException e = var6;
             e.printStackTrace();
         }
+
     }
 
+    public void supprimer(int id) throws SQLException {
+    }
 
-
-    @Override
-    public List<Ressource> getAll() {
-        List<Ressource> ressources = new ArrayList<>();
-        String checkTableSQL = "SHOW TABLES LIKE 'ressources'"; // Vérifier l'existence de la table
+    public List<Ressource> recuperer() {
+        List<Ressource> ressources = new ArrayList();
+        String checkTableSQL = "SHOW TABLES LIKE 'ressources'";
         String SQL = "SELECT * FROM ressources";
 
         try {
-            Statement stmt = conn.createStatement();
+            Statement stmt = this.conn.createStatement();
             ResultSet rsCheck = stmt.executeQuery(checkTableSQL);
-
             if (!rsCheck.next()) {
                 System.out.println("❌ Erreur : La table 'ressource' n'existe pas. Vérifiez votre base de données !");
                 return ressources;
             }
 
             ResultSet rs = stmt.executeQuery(SQL);
-            while (rs.next()) {
+
+            while(rs.next()) {
                 Ressource r = new Ressource();
                 r.setId(rs.getInt("id"));
                 r.setTitre(rs.getString("titre"));
@@ -131,15 +132,15 @@ public  class RessourceService implements IService<Ressource> {
                 r.setDescription(rs.getString("description"));
                 r.setDateAjout(rs.getDate("date_ajout"));
                 r.setValide(rs.getBoolean("valide"));
-
                 ressources.add(r);
             }
-        } catch (SQLException e) {
+        } catch (SQLException var8) {
+            SQLException e = var8;
             System.out.println("❌ Erreur lors de la récupération des ressources : " + e.getMessage());
         }
+
         return ressources;
     }
-
 
    /* public Ressource getById(int id) {
         Ressource r = null;
