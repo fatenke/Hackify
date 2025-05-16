@@ -190,6 +190,7 @@ public class ChapitreService implements IService<Chapitre> {
         }
 
     }
+    @Override
 
     public void modifier(Chapitre chapitre) {
         String SQL = "UPDATE chapitres SET id_ressources = ?, titre = ?, url_fichier = ?, contenu = ?, format_fichier = ? WHERE id = ?";
@@ -214,6 +215,7 @@ public class ChapitreService implements IService<Chapitre> {
         }
 
     }
+    @Override
 
     public void supprimer(int id) throws SQLException {
     }
@@ -236,6 +238,7 @@ public class ChapitreService implements IService<Chapitre> {
         }
 
     }
+    @Override
 
     public List<Chapitre> recuperer() {
         List<Chapitre> chapitres = new ArrayList();
