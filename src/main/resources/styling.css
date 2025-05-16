@@ -1,0 +1,71 @@
+/* Application des couleurs à l'arrière-plan des différentes scènes */
+.root {
+    -fx-background-color: #1e0425;  /* Couleur d'arrière-plan sombre */
+}
+
+/* Titre principal */
+.label-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e26ec0;  /* Couleur principale */
+}
+
+/* Conteneur principal (ex: GridPane) */
+.grid-pane {
+    -fx-background-color: #1e0425;  /* Arrière-plan principal sombre */
+}
+
+/* Labels des champs */
+.label-field {
+    -fx-text-fill: #82e9f1;  /* Texte clair */
+}
+
+/* Style des boutons */
+.button-style {
+    -fx-background-color: #82e9f1;  /* Bouton clair */
+    -fx-text-fill: #1e0425;  /* Texte foncé */
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+}
+
+
+.button-style-blue:hover {
+    -fx-background-color: #0056b3;
+}
+
+
+/* Barre de navigation */
+.hbox-style {
+    -fx-background-color: #34727e;  /* Couleur secondaire */
+}
+
+/* Style des cartes (ex: Hackathons en vedette) */
+.card {
+    -fx-background-color: #1e0425;  /* Fond sombre */
+    -fx-border-color: #82e9f1;  /* Bordure claire */
+    -fx-border-radius: 10px;
+    -fx-padding: 10px;
+}
+
+/* Style des TableView et ListView */
+.table-view,
+.list-view {
+    -fx-background-color: #1e0425;  /* Fond sombre */
+    -fx-text-fill: #82e9f1;  /* Texte clair */
+    -fx-border-color: #82e9f1;
+}
+
+/* Champ de saisie */
+.text-field {
+    -fx-background-color: #ffffff;  /* Fond blanc */
+    -fx-text-fill: #1e0425;  /* Texte foncé */
+    -fx-background-radius: 5px;
+    -fx-border-color: #82e9f1;
+}
+
+/* Style du champ de recherche */
+.search-box {
+    -fx-background-color: #34727e;  /* Fond bleu */
+    -fx-text-fill: #82e9f1;  /* Texte clair */
+    -fx-background-radius: 5px;
+}

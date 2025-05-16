@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.ChapitreController" stylesheets="@styling.css">
+    <children>
+        <VBox spacing="10" alignment="CENTER" prefWidth="700" prefHeight="500" styleClass="root">
+            <Label text="Gestion des Chapitres" styleClass="label-title" />
+
+            <GridPane hgap="10" vgap="10" styleClass="grid-pane">
+                <columnConstraints>
+                    <ColumnConstraints halignment="RIGHT" />
+                    <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" />
+                </columnConstraints>
+
+                <!-- Champ ID (caché) -->
+                <TextField fx:id="idField" GridPane.rowIndex="0" GridPane.columnIndex="1" visible="false" />
+
+                <Label text="ID Ressource:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="label-field"/>
+                <TextField fx:id="idRessourceField" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="150" editable="true"/>
+
+                <Label text="Titre:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="label-field"/>
+                <TextField fx:id="titreField" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="150" editable="true" />
+
+                <TextArea fx:id="contenuField" GridPane.rowIndex="3" GridPane.columnIndex="1" prefWidth="600" prefHeight="200" wrapText="true" editable="true"/>
+
+
+                <Label text="URL Fichier:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="label-field"/>
+                <TextField fx:id="urlFichierField" GridPane.rowIndex="4" GridPane.columnIndex="1" prefWidth="150" editable="true"/>
+
+                <Label text="Format Fichier:" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="label-field"/>
+                <TextField fx:id="formatFichierField" GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="150" editable="true"/>
+            </GridPane>
+
+            <HBox spacing="10" styleClass="hbox-style">
+                <Button text="Ajouter Chapitre" onAction="#addChapitre" styleClass="button-style"/>
+                <Button text="Mettre à jour Chapitre" onAction="#updateChapitre" styleClass="button-style"/>
+                <Button text="Supprimer Chapitre" onAction="#deleteChapitre" styleClass="button-style"/>
+                <Button text="Générer le contenu" onAction="#generateChapterContent" styleClass="button-style" />
+                <Button text="Exporter en PDF" onAction="#exportSelectedChapitreToPDF" fx:id="exportPDFButton" styleClass="button-style"/>
+
+            </HBox>
+
+            <!-- ListView agrandi pour une meilleure visibilité -->
+            <ListView fx:id="chapitreListView" prefHeight="250" prefWidth="500" onMouseClicked="#fillFieldsFromSelection"/>
+
+        </VBox>
+    </children>
+</AnchorPane>

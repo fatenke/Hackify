@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.RessourceController" stylesheets="@styling.css">
+    <children>
+        <VBox spacing="10" alignment="CENTER" prefWidth="700" prefHeight="500" styleClass="root">
+            <Label text="Gestion des Ressources" styleClass="label-title" />
+
+            <GridPane hgap="10" vgap="10" styleClass="grid-pane">
+                <columnConstraints>
+                    <ColumnConstraints halignment="RIGHT" />
+                    <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" />
+                </columnConstraints>
+
+                <!-- Champ ID (caché) -->
+                <TextField fx:id="txtId" GridPane.rowIndex="0" GridPane.columnIndex="1" visible="false" />
+
+                <Label text="Titre:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="label-field"/>
+                <TextField fx:id="txtTitre" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="150"/>
+
+                <Label text="Type:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="label-field"/>
+                <TextField fx:id="txtType" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="150"/>
+
+                <Label text="Description:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="label-field"/>
+                <TextArea fx:id="txtDescription" GridPane.rowIndex="3" GridPane.columnIndex="1" prefWidth="400" prefHeight="120"/>
+
+                <Label text="Date d'Ajout:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="label-field"/>
+                <DatePicker fx:id="dpdate_ajout" GridPane.rowIndex="4" GridPane.columnIndex="1" prefWidth="150"/>
+
+                <Label text="Valide:" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="label-field"/>
+                <CheckBox fx:id="chkValide" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+            </GridPane>
+
+            <HBox spacing="10" styleClass="hbox-style">
+                <Button text="Ajouter" onAction="#ajouterRessource" styleClass="button-style"/>
+                <Button text="Modifier" onAction="#modifierRessource" styleClass="button-style"/>
+                <Button text="Supprimer" onAction="#supprimerRessource" styleClass="button-style"/>
+                <Button text="Afficher tout" onAction="#loadRessources" styleClass="button-style"/>
+                <Button text="Gérer les Chapitres" onAction="#openChapitreWindow" styleClass="button-style"/>
+            </HBox>
+
+            <!-- TableView agrandie pour une meilleure visibilité -->
+            <TableView fx:id="tableRessources" prefHeight="250" prefWidth="600">
+                <columns>
+                    <TableColumn text="ID" fx:id="colId" prefWidth="50"/>
+                    <TableColumn text="Titre" fx:id="colTitre" prefWidth="150"/>
+                    <TableColumn text="Type" fx:id="colType" prefWidth="100"/>
+                    <TableColumn text="Description" fx:id="colDescription" prefWidth="300"/>
+                    <TableColumn text="Date" fx:id="colDate" prefWidth="100"/>
+                    <TableColumn text="Valide" fx:id="colValide" prefWidth="80"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </children>
+</AnchorPane>
