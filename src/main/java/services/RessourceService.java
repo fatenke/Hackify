@@ -23,6 +23,7 @@ public  class RessourceService implements IService<Ressource> {
         }
         return true;
     }
+    @Override
 
   public void ajouter(Ressource ressource) {
         String SQL = "INSERT INTO ressources (titre, type, description, date_ajout, valide) VALUES (?, ?, ?, ?, ?)";
@@ -79,6 +80,8 @@ public  class RessourceService implements IService<Ressource> {
         }
 
     }
+        @Override
+
 
     public void modifier(Ressource ressource) {
         System.out.println("Tentative de modification de : " + ressource.getTitre());
@@ -105,9 +108,12 @@ public  class RessourceService implements IService<Ressource> {
         }
 
     }
+        @Override
+
 
     public void supprimer(int id) throws SQLException {
     }
+        @Override
 
     public List<Ressource> recuperer() {
         List<Ressource> ressources = new ArrayList();
