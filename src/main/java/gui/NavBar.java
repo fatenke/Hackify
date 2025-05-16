@@ -222,4 +222,18 @@ public class NavBar {
             throw new RuntimeException(e);
         }
     }
+     @FXML
+    private void openRessourceView(ActionEvent event) {
+        try {
+            Parent ressourceView = (Parent)FXMLLoader.load(this.getClass().getResource("/CrudRessource.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Gestion des Ressources");
+            stage.setScene(new Scene(ressourceView));
+            stage.show();
+        } catch (IOException var4) {
+            IOException e = var4;
+            e.printStackTrace();
+        }
+
+    }
 }
