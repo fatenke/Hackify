@@ -40,177 +40,212 @@ public class ChapitreService implements IService<Chapitre> {
     @Override
     public void ajouter(Chapitre chapitre) {
         String SQL = "INSERT INTO chapitres (id_ressources, titre, url_fichier, contenu, format_fichier) VALUES (?, ?, ?, ?, ?)";
+
         try {
-            PreparedStatement pst = conn.prepareStatement(SQL);
+            PreparedStatement pst = this.conn.prepareStatement(SQL);
             pst.setInt(1, chapitre.getIdRessource());
             pst.setString(2, chapitre.getTitre());
             pst.setString(3, chapitre.getUrlFichier());
             pst.setString(4, chapitre.getContenu());
             pst.setString(5, chapitre.getFormatFichier());
-
             pst.executeUpdate();
             System.out.println("✅ Chapitre ajouté avec succès !");
-        } catch (SQLException e) {
+        } catch (SQLException var4) {
+            SQLException e = var4;
             System.out.println("❌ Erreur lors de l'ajout : " + e.getMessage());
         }
+
     }
-    private static final String API_URL = "https://api-inference.huggingface.co/models/gpt2"; // Vous pouvez changer de modèle ici
-    private static final String API_TOKEN = "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"; // Remplacez par votre token API Hugging Face
 
     public String generateChapterContent(String prompt) {
         try {
-            // URL de l'API Hugging Face
-            URL url = new URL(API_URL);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-            // Définir les headers
+            URL url = new URL("https://api-inference.huggingface.co/models/gpt2");
+            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             connection.setRequestMethod("POST");
-            connection.setRequestProperty("Authorization", "Bearer " + API_TOKEN);
+            connection.setRequestProperty("Authorization", "Bearer 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");
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setDoOutput(true);
-
-            // Corps de la requête JSON
             String jsonInputString = "{\"inputs\": \"" + prompt + "\"}";
+            OutputStream os = connection.getOutputStream();
 
-            // Écrire la requête
-            try (OutputStream os = connection.getOutputStream()) {
+            try {
                 byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
+            } catch (Throwable var12) {
+                if (os != null) {
+                    try {
+                        os.close();
+                    } catch (Throwable var11) {
+                        var12.addSuppressed(var11);
+                    }
+                }
+
+                throw var12;
             }
 
-            // Lire la réponse
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
+            if (os != null) {
+                os.close();
+            }
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+
+            String var9;
+            try {
                 StringBuilder response = new StringBuilder();
-                String responseLine;
-                while ((responseLine = br.readLine()) != null) {
+
+                while(true) {
+                    String responseLine;
+                    if ((responseLine = br.readLine()) == null) {
+                        String generatedText = response.toString();
+                        var9 = this.extractGeneratedText(generatedText);
+                        break;
+                    }
+
                     response.append(responseLine.trim());
                 }
-                // La réponse contient la génération du texte
-                String generatedText = response.toString();
-                return extractGeneratedText(generatedText); // Extrait le texte généré de la réponse
+            } catch (Throwable var13) {
+                try {
+                    br.close();
+                } catch (Throwable var10) {
+                    var13.addSuppressed(var10);
+                }
+
+                throw var13;
             }
 
-        } catch (IOException e) {
+            br.close();
+            return var9;
+        } catch (IOException var14) {
+            IOException e = var14;
             e.printStackTrace();
             return "Erreur lors de la génération de contenu.";
         }
     }
 
-    // Méthode pour extraire le texte généré à partir de la réponse JSON
     private String extractGeneratedText(String response) {
-        // Extraction simple du texte généré, selon la structure de la réponse de Hugging Face
         String[] parts = response.split("\"generated_text\":\"");
-        if (parts.length > 1) {
-            return parts[1].split("\"")[0];
-        }
-        return "Texte non généré";
+        return parts.length > 1 ? parts[1].split("\"")[0] : "Texte non généré";
     }
 
     public void exportToPDF(Chapitre chapitre) {
         try {
-            // Récupérer le chemin du fichier
             String pdfPath = chapitre.getUrlFichier();
-
-            // Si le chemin est vide ou null, on génère un chemin par défaut
             if (pdfPath == null || pdfPath.trim().isEmpty()) {
-                pdfPath = System.getProperty("user.home") + "/Desktop/" + chapitre.getTitre().replaceAll("\\s+", "_") + ".pdf";
+                String var10000 = System.getProperty("user.home");
+                pdfPath = var10000 + "/Desktop/" + chapitre.getTitre().replaceAll("\\s+", "_") + ".pdf";
             }
 
-            // Vérifier si l'extension .pdf est présente, sinon l'ajouter
             if (!pdfPath.toLowerCase().endsWith(".pdf")) {
-                pdfPath += ".pdf";
+                pdfPath = pdfPath + ".pdf";
             }
 
-            // Création du fichier PDF
             File file = new File(pdfPath);
             PdfWriter writer = new PdfWriter(file);
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
-
-            // Ajouter le contenu au PDF
             document.add(new Paragraph("Titre : " + chapitre.getTitre()));
             document.add(new Paragraph("\nContenu : \n" + chapitre.getContenu()));
-
-            // Mettre à jour la base de données avec le chemin et le format du fichier
             chapitre.setUrlFichier(pdfPath);
             chapitre.setFormatFichier("pdf");
-            updateChapitreInDatabase(chapitre);
-
+            this.updateChapitreInDatabase(chapitre);
             document.close();
             System.out.println("✅ PDF généré avec succès : " + pdfPath);
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException var7) {
+            FileNotFoundException e = var7;
             System.out.println("❌ Erreur lors de la création du PDF : " + e.getMessage());
         }
+
     }
-    // Ajout de la méthode updateChapitreInDatabase
+
     public void updateChapitreInDatabase(Chapitre chapitre) {
         String sql = "UPDATE chapitres SET url_fichier = ?, format_fichier = ? WHERE id = ?";
 
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {  // Utilisation de conn, qui est déjà défini dans la classe
-            pstmt.setString(1, chapitre.getUrlFichier());
-            pstmt.setString(2, chapitre.getFormatFichier());
-            pstmt.setInt(3, chapitre.getId());
+        try {
+            PreparedStatement pstmt = this.conn.prepareStatement(sql);
 
-            pstmt.executeUpdate();
-            System.out.println("✅ Chapitre mis à jour dans la base de données.");
+            try {
+                pstmt.setString(1, chapitre.getUrlFichier());
+                pstmt.setString(2, chapitre.getFormatFichier());
+                pstmt.setInt(3, chapitre.getId());
+                pstmt.executeUpdate();
+                System.out.println("✅ Chapitre mis à jour dans la base de données.");
+            } catch (Throwable var7) {
+                if (pstmt != null) {
+                    try {
+                        pstmt.close();
+                    } catch (Throwable var6) {
+                        var7.addSuppressed(var6);
+                    }
+                }
 
-        } catch (SQLException e) {
+                throw var7;
+            }
+
+            if (pstmt != null) {
+                pstmt.close();
+            }
+        } catch (SQLException var8) {
+            SQLException e = var8;
             System.out.println("❌ Erreur lors de la mise à jour du chapitre : " + e.getMessage());
         }
+
     }
 
-
-
-    @Override
-    public void update(Chapitre chapitre) {
+    public void modifier(Chapitre chapitre) {
         String SQL = "UPDATE chapitres SET id_ressources = ?, titre = ?, url_fichier = ?, contenu = ?, format_fichier = ? WHERE id = ?";
+
         try {
-            PreparedStatement pst = conn.prepareStatement(SQL);
+            PreparedStatement pst = this.conn.prepareStatement(SQL);
             pst.setInt(1, chapitre.getIdRessource());
             pst.setString(2, chapitre.getTitre());
             pst.setString(3, chapitre.getUrlFichier());
             pst.setString(4, chapitre.getContenu());
             pst.setString(5, chapitre.getFormatFichier());
             pst.setInt(6, chapitre.getId());
-
             int rowsUpdated = pst.executeUpdate();
             if (rowsUpdated > 0) {
                 System.out.println("✅ Chapitre mis à jour avec succès !");
             } else {
                 System.out.println("❌ Aucun chapitre trouvé avec cet ID !");
             }
-        } catch (SQLException e) {
+        } catch (SQLException var5) {
+            SQLException e = var5;
             System.out.println("❌ Erreur lors de la mise à jour : " + e.getMessage());
         }
+
     }
 
-    @Override
-    public void delete(Chapitre chapitre) {
-        String SQL = "DELETE FROM chapitres WHERE id = ?";
-        try {
-            PreparedStatement pst = conn.prepareStatement(SQL);
-            pst.setInt(1, chapitre.getId());
+    public void supprimer(int id) throws SQLException {
+    }
 
+    public void supprimer(Chapitre chapitre) {
+        String SQL = "DELETE FROM chapitres WHERE id = ?";
+
+        try {
+            PreparedStatement pst = this.conn.prepareStatement(SQL);
+            pst.setInt(1, chapitre.getId());
             int rowsDeleted = pst.executeUpdate();
             if (rowsDeleted > 0) {
                 System.out.println("✅ Chapitre supprimé avec succès !");
             } else {
                 System.out.println("❌ Aucun chapitre trouvé avec cet ID !");
             }
-        } catch (SQLException e) {
+        } catch (SQLException var5) {
+            SQLException e = var5;
             System.out.println("❌ Erreur lors de la suppression : " + e.getMessage());
         }
+
     }
 
-    @Override
-    public List<Chapitre> getAll() {
-        List<Chapitre> chapitres = new ArrayList<>();
+    public List<Chapitre> recuperer() {
+        List<Chapitre> chapitres = new ArrayList();
         String SQL = "SELECT * FROM chapitres";
+
         try {
-            Statement stmt = conn.createStatement();
+            Statement stmt = this.conn.createStatement();
             ResultSet rs = stmt.executeQuery(SQL);
 
-            while (rs.next()) {
+            while(rs.next()) {
                 Chapitre c = new Chapitre();
                 c.setId(rs.getInt("id"));
                 c.setIdRessource(rs.getInt("id_ressources"));
@@ -218,23 +253,24 @@ public class ChapitreService implements IService<Chapitre> {
                 c.setUrlFichier(rs.getString("url_fichier"));
                 c.setContenu(rs.getString("contenu"));
                 c.setFormatFichier(rs.getString("format_fichier"));
-
                 chapitres.add(c);
             }
-        } catch (SQLException e) {
+        } catch (SQLException var6) {
+            SQLException e = var6;
             System.out.println("❌ Erreur lors de la récupération des chapitres : " + e.getMessage());
         }
+
         return chapitres;
     }
 
     public Chapitre getById(int id) {
         Chapitre c = null;
         String SQL = "SELECT * FROM chapitres WHERE id = ?";
+
         try {
-            PreparedStatement pst = conn.prepareStatement(SQL);
+            PreparedStatement pst = this.conn.prepareStatement(SQL);
             pst.setInt(1, id);
             ResultSet rs = pst.executeQuery();
-
             if (rs.next()) {
                 c = new Chapitre();
                 c.setId(rs.getInt("id"));
@@ -244,9 +280,11 @@ public class ChapitreService implements IService<Chapitre> {
                 c.setContenu(rs.getString("contenu"));
                 c.setFormatFichier(rs.getString("format_fichier"));
             }
-        } catch (SQLException e) {
+        } catch (SQLException var6) {
+            SQLException e = var6;
             System.out.println("❌ Erreur lors de la récupération du chapitre : " + e.getMessage());
         }
+
         return c;
     }
 }
