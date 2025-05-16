@@ -196,7 +196,7 @@ public class ChapitreController {
 
     // Méthode pour afficher tous les chapitres dans le ListView
     private void displayChapitreList() {
-        ObservableList<Chapitre> chapitreList = FXCollections.observableArrayList(chapitreService.getAll());
+        ObservableList<Chapitre> chapitreList = FXCollections.observableArrayList(chapitreService.recuperer());
         chapitreListView.setItems(chapitreList);  // Assigner la liste des chapitres
 
         // Définir comment afficher les chapitres dans la liste (uniquement le titre)
