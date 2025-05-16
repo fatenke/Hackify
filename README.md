@@ -13,7 +13,6 @@ L'absence d'une plateforme unifiée pour la gestion complète de hackathons, du 
   - Inscriptions des participants.
   - Évaluation des projets par un jury avec attribution de notes.
   - Ajout de ressources et accompagnement par des coachs.
-  - Visualisation sur carte via Geoapify.
   - Notifications par email (acceptation/refus).
 
 ### Contexte du Projet
@@ -37,11 +36,11 @@ git clone https://github.com/fatenke/hackify_javafx
 
 3. Assurez-vous que les éléments suivants sont installés :
 
--Java JDK 17+
+   -Java JDK 17+
 
--Scene Builder
+   -Scene Builder
 
--Maven (ou utilisez Gradle si configuré)
+   -Maven (ou utilisez Gradle si configuré)
 
 4. Importez le projet en tant que projet Maven
 
@@ -49,7 +48,7 @@ git clone https://github.com/fatenke/hackify_javafx
 
 6. Créez la base de données MySQL (si elle n'existe pas encore) :
 
--Utilisez phpMyAdmin ou exécutez :
+   -Utilisez phpMyAdmin ou exécutez :
 
 ```bash
 CREATE DATABASE hackify;
@@ -100,7 +99,6 @@ mvn -v
 - Soumission de projets par les participants
 - Évaluation des projets par un jury avec notation
 - Ajout de ressources par les coachs pour les projets
-- Visualisation des lieux des hackathons sur une carte
 
 ## Contributions
 
